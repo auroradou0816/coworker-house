@@ -1124,8 +1124,8 @@ export class CodeAgentModelGateway {
     } else {
       headers.authorization = `Bearer ${providerKey}`;
       if (provider === 'openrouter') {
-        headers['HTTP-Referer'] = req.header('HTTP-Referer') || req.header('Referer') || 'https://room.ruit.me';
-        headers['X-Title'] = 'RoomTalk Coco Agent';
+        headers['HTTP-Referer'] = req.header('HTTP-Referer') || req.header('Referer') || 'https://github.com/auroradou0816/coworker-house';
+        headers['X-Title'] = 'CoWorker House Agent';
       }
     }
     return headers;

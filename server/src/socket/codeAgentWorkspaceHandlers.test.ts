@@ -14,7 +14,7 @@ class FakeSocket {
   id: string;
   handshake = {
     headers: {
-      origin: 'https://room.ruit.me',
+      origin: 'https://coworker.example.com',
     },
   };
   handlers = new Map<string, (...args: any[]) => unknown>();
@@ -436,7 +436,7 @@ describe('code-agent workspace socket handlers', () => {
         {
           slug: 'roomtalk-demo',
           title: 'RoomTalk Demo',
-          url: 'https://room.ruit.me/p/roomtalk-demo/',
+          url: 'https://coworker.example.com/p/roomtalk-demo/',
           entry: 'index.html',
           versionId: '20260630T120000Z_aaaaaaaa',
           fileCount: 1,
@@ -445,7 +445,7 @@ describe('code-agent workspace socket handlers', () => {
           updatedAt: '2026-06-30T12:00:00.000Z',
           versions: [{
             versionId: '20260630T120000Z_aaaaaaaa',
-            url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+            url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
             entry: 'index.html',
             fileCount: 1,
             totalBytes: 128,
@@ -493,7 +493,7 @@ describe('code-agent workspace socket handlers', () => {
       {
         slug: 'roomtalk-demo',
         title: 'RoomTalk Demo',
-        url: 'https://room.ruit.me/p/roomtalk-demo/',
+        url: 'https://coworker.example.com/p/roomtalk-demo/',
         entry: 'index.html',
         versionId: '20260630T120000Z_aaaaaaaa',
         fileCount: 1,
@@ -502,7 +502,7 @@ describe('code-agent workspace socket handlers', () => {
         updatedAt: '2026-06-30T12:00:00.000Z',
         versions: [{
           versionId: '20260630T120000Z_aaaaaaaa',
-          url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+          url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
           entry: 'index.html',
           fileCount: 1,
           totalBytes: 128,
@@ -513,7 +513,7 @@ describe('code-agent workspace socket handlers', () => {
     ]);
     assert.deepEqual(response.snapshot.commands, [{ id: 'tool-1', name: 'Read', status: 'succeeded', exitCode: undefined, preview: 'ok' }]);
     assert.deepEqual(getWorkspaceChangesCalls, [{ sandboxId: 'sandbox-1' }]);
-    assert.deepEqual(listSitesForRoomCalls, [{ roomId: 'room-1', requestBaseUrl: 'https://room.ruit.me' }]);
+    assert.deepEqual(listSitesForRoomCalls, [{ roomId: 'room-1', requestBaseUrl: 'https://coworker.example.com' }]);
     assert.deepEqual(listWorkspaceEntriesCalls, []);
   });
 

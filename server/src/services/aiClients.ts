@@ -21,7 +21,7 @@ export function createAIClients(env: NodeJS.ProcessEnv = process.env) {
   });
 
   const openrouterHeaders: Record<string, string> = {
-    'X-Title': env.OPENROUTER_APP_NAME || 'RoomTalk',
+    'X-Title': env.OPENROUTER_APP_NAME || 'CoWorker House',
   };
   const openrouterReferer = env.OPENROUTER_HTTP_REFERER || env.CLIENT_URL;
   if (openrouterReferer) {

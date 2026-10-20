@@ -1112,7 +1112,7 @@ def test_run_request_rejects_coco_steer_when_engine_cannot_abort(tmp_path: Path,
 
 
 def test_current_code_agent_engine_file_tools_resolve_relative_paths_against_scoped_cwd(tmp_path: Path, monkeypatch):
-    engine_source = Path(os.environ.get("CODE_AGENT_SOURCE_DIR") or "/Users/sky/projects/code-agent-engine/src")
+    engine_source = Path(os.environ.get("CODE_AGENT_SOURCE_DIR") or Path.home() / "projects/code-agent-engine/src")
     if not (engine_source / "core/tools/file_read.py").exists():
         pytest.skip("Code-agent engine source is not available for file tool contract testing")
 

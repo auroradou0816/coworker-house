@@ -9,7 +9,7 @@ const baseEnv = {
   CODE_AGENT_ARTIFACT_MODE: 'development',
   // Development artifact mode requires a source path, but this unit test only
   // validates configuration shaping and never reads the local filesystem.
-  CODE_AGENT_SOURCE_DIR: '/Users/sky/projects/code-agent-engine/src',
+  CODE_AGENT_SOURCE_DIR: '/path/to/projects/code-agent-engine/src',
   CODE_AGENT_MODE: 'plan',
   DEEPSEEK_API_KEY: 'deepseek-test-key',
 };

@@ -1,4 +1,6 @@
-# RoomTalk 文档
+> Historical engineering reference inherited from the upstream project. Operator names and endpoints are examples, not evidence of a CoWorker House deployment. See [project origin](../PROJECT_ORIGIN.md).
+
+# CoWorker House 文档
 
 [English](README.md)
 
@@ -99,4 +101,4 @@
 
 ## 面试资料
 
-[RoomTalk 面试准备](interview-preparation.html) 是详细的单文件双语叙事，按执行与信任、浏览器连续性、持久同步、扩展、安全和测试组织。按仓库约定，它不从顶层 README 链接。
+[CoWorker House 面试准备](interview-preparation.html) 是详细的单文件双语叙事，按执行与信任、浏览器连续性、持久同步、扩展、安全和测试组织。按仓库约定，它不从顶层 README 链接。

@@ -648,7 +648,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
     <>
       <aside
         ref={sidebarRef}
-        className="relative hidden h-full flex-shrink-0 flex-col border-r border-[#dbe3ee] bg-[#f8fafc] transition-[width] duration-200 dark:border-[#253247] dark:bg-[#101827] md:flex"
+        className="studio-sidebar relative hidden h-full flex-shrink-0 flex-col border-r border-[#dbe3ee] bg-[#f8fafc] transition-[width] duration-200 dark:border-[#253247] dark:bg-[#101827] md:flex"
         style={{
           width: isCollapsed ? DESKTOP_SIDEBAR_COLLAPSED_WIDTH : `var(--desktop-sidebar-width, ${sidebarWidth}px)`,
           maxWidth: isCollapsed
@@ -707,8 +707,14 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           }`}
         >
           <SidebarNavItem
+            icon="lucide:layout-dashboard"
+            label={t('studioLabel')}
+            isActive={view === 'rooms'}
+            onPress={() => setView('rooms')}
+            isCollapsed={isCollapsed}
+          />
+          <SidebarNavItem
             icon="lucide:bot"
-            emoji="🦊"
             label={t('personalAgent')}
             isActive={view === 'personal' || (view === 'chat' && Boolean(currentRoom?.personalAgentOwnerId))}
             onPress={() => setView('personal')}

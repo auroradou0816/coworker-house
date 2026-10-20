@@ -1,4 +1,4 @@
-# RoomTalk Security
+# CoWorker House Security
 
 [中文](SECURITY.zh.md)
 
@@ -7,7 +7,7 @@ Updated: 2026-07-20
 
 ## Trust Boundaries
 
-RoomTalk separates a trusted control plane from untrusted execution:
+CoWorker House separates a trusted control plane from untrusted execution:
 
 - The Node control plane owns identity, room authorization, durable records, scoped capability issuance, object metadata, and sandbox lifecycle.
 - PostgreSQL or Redis owns durable application facts; Redis also owns realtime coordination and bounded cache state.
@@ -21,11 +21,11 @@ Room access combines client identity, optional password/token authentication, Go
 
 ## Scoped Capabilities
 
-RoomTalk issues short-lived, purpose-specific credentials for model access, room-context reads, static publishing, workspace assets, and Codex auth refresh. Claims bind the operation to the authorized client, room, turn, mode, model, budget, or path as applicable. Plan mode does not receive write/shell capabilities.
+CoWorker House issues short-lived, purpose-specific credentials for model access, room-context reads, static publishing, workspace assets, and Codex auth refresh. Claims bind the operation to the authorized client, room, turn, mode, model, budget, or path as applicable. Plan mode does not receive write/shell capabilities.
 
 ## User-Owned Connections
 
-Codex subscription auth and GitHub personal access tokens belong to individual users. RoomTalk encrypts them at rest, never returns raw material to the browser, and materializes secret files only for that user's authorized sandbox turn. Refresh/update paths use version checks and leases to prevent stale concurrent writes. Secret files are removed after use.
+Codex subscription auth and GitHub personal access tokens belong to individual users. CoWorker House encrypts them at rest, never returns raw material to the browser, and materializes secret files only for that user's authorized sandbox turn. Refresh/update paths use version checks and leases to prevent stale concurrent writes. Secret files are removed after use.
 
 ## Media and Published Artifacts
 

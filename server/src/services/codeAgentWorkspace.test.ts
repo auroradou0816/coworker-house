@@ -160,7 +160,7 @@ describe('code-agent workspace snapshots', () => {
       [{
         slug: 'roomtalk-demo',
         title: 'RoomTalk Demo',
-        url: 'https://room.ruit.me/p/roomtalk-demo/',
+        url: 'https://coworker.example.com/p/roomtalk-demo/',
         entry: 'index.html',
         versionId: '20260630T120000Z_aaaaaaaa',
         fileCount: 1,
@@ -169,7 +169,7 @@ describe('code-agent workspace snapshots', () => {
         updatedAt: '2026-06-30T12:00:00.000Z',
         versions: [{
           versionId: '20260630T120000Z_aaaaaaaa',
-          url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+          url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
           entry: 'index.html',
           fileCount: 1,
           totalBytes: 128,
@@ -182,7 +182,7 @@ describe('code-agent workspace snapshots', () => {
     assert.deepEqual(snapshot.artifacts, [{
       slug: 'roomtalk-demo',
       title: 'RoomTalk Demo',
-      url: 'https://room.ruit.me/p/roomtalk-demo/',
+      url: 'https://coworker.example.com/p/roomtalk-demo/',
       entry: 'index.html',
       versionId: '20260630T120000Z_aaaaaaaa',
       fileCount: 1,
@@ -191,7 +191,7 @@ describe('code-agent workspace snapshots', () => {
       updatedAt: '2026-06-30T12:00:00.000Z',
       versions: [{
         versionId: '20260630T120000Z_aaaaaaaa',
-        url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+        url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
         entry: 'index.html',
         fileCount: 1,
         totalBytes: 128,

@@ -197,7 +197,7 @@ describe('MarkdownContent math rendering', () => {
   });
 
   it('turns bare URLs after surrounding text into clickable links', () => {
-    const url = 'https://room.ruit.me/p/coffee/';
+    const url = 'https://coworker.example.com/p/coffee/';
     const { getByText } = render(
       <MarkdownContent content={`地址：${url}。`} />,
     );
@@ -208,7 +208,7 @@ describe('MarkdownContent math rendering', () => {
   });
 
   it('keeps hyphenated bare URLs intact when markdown parsing splits text nodes', () => {
-    const url = 'https://github.com/Skymore/bay-area-coffee-map';
+    const url = 'https://github.com/example/sample-project';
     const { container } = render(
       <MarkdownContent content={`现在 ${url} 首页就能看到完整项目介绍了。`} />,
     );

@@ -187,100 +187,83 @@ export const RoomList: React.FC<RoomListProps> = ({ rooms, isLoading = false, on
     />
   );
 
-  if (isLoading && rooms.length === 0) {
-    return (
-      <div className="flex h-full flex-col p-4 md:p-6" role="status" aria-live="polite" aria-busy="true">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="font-sans text-2xl font-medium text-[#0b101b] dark:text-[#f8fafc]">{t('chatRooms')}</h2>
-          <Icon icon="lucide:loader-circle" className="h-5 w-5 animate-spin text-[#0891b2] dark:text-[#67e8f9]" aria-hidden="true" />
-          <span className="sr-only">{t('loading')}</span>
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-32 animate-pulse rounded-lg border border-[#dbe3ee] bg-[#f8fafc] shadow-[0_0_0_1px_rgba(194,192,182,0.35)] dark:border-[#253247] dark:bg-[#101827]"
-            />
-          ))}
-        </div>
-        {createModal}
-      </div>
-    );
-  }
-
-  if (rooms.length === 0) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e2e8f0] text-[#0891b2] shadow-[0_0_0_1px_rgba(194,192,182,0.75)] dark:bg-[#253247] dark:text-[#67e8f9]">
-          <Icon icon="lucide:message-square" className="h-7 w-7" />
-        </div>
-        <h2 className="mb-2 font-sans text-xl font-medium text-[#0b101b] dark:text-[#f8fafc]">{t('noRoomsAvailable')}</h2>
-        <p className="mb-6 max-w-md text-sm leading-6 text-[#526176] dark:text-[#a8b6cc]">
-          {t('noRoomsDescription')}
-        </p>
-
-        <div className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
-          <RoomJoinControl
-            value={joinRoomId}
-            onValueChange={setJoinRoomId}
-            onJoin={handleJoinRoom}
-            containerClassName="flex min-w-0 flex-1"
-            inputHeightClassName="h-12"
-            buttonClassName="h-12 min-w-[88px]"
-          />
-          <Button
-            color="secondary"
-            onPress={handleOpenCreateModal}
-            className="h-12 w-full bg-secondary px-4 text-sm font-medium text-secondary-foreground shadow-[0_0_0_1px_#0891b2] sm:w-auto sm:min-w-[104px]"
-          >
-            {t('create')}
-          </Button>
-        </div>
-
-        {createModal}
-      </div>
-    );
-  }
-
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-        <h2 className="font-sans text-2xl font-medium text-[#0b101b] dark:text-[#f8fafc]">{t('chatRooms')}</h2>
-        <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
-          <RoomJoinControl
-            value={joinRoomId}
-            onValueChange={setJoinRoomId}
-            onJoin={handleJoinRoom}
-            containerClassName="flex min-w-0 flex-1 md:flex-none"
-            buttonClassName="h-10 min-w-[88px]"
-          />
-          <Button
-            color="secondary"
-            onPress={handleOpenCreateModal}
-            className="h-10 w-full bg-secondary px-4 text-sm font-medium text-secondary-foreground shadow-[0_0_0_1px_#0891b2] sm:w-auto sm:min-w-[104px]"
-          >
+    <div className="studio-home">
+      <header className="studio-masthead">
+        <span className="studio-eyebrow">{t('studioLabel')}</span>
+        <span className="studio-wordmark">CoWorker House</span>
+      </header>
+      <section className="studio-hero" aria-labelledby="studio-title">
+        <div className="studio-hero-copy">
+          <p className="studio-kicker">{t('studioKicker')}</p>
+          <h2 id="studio-title">{t('studioTitle')}</h2>
+          <p className="studio-description">{t('studioDescription')}</p>
+          <Button onPress={handleOpenCreateModal} className="studio-create" endContent={<Icon icon="lucide:arrow-up-right" className="h-5 w-5" />}>
             {t('create')}
           </Button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {rooms.map(room => (
-          <RoomCard
-            key={room.id}
-            room={room}
-            clientId={clientId}
-            copiedRoomId={copiedRoomId}
-            copiedLinkId={copiedLinkId}
-            onSelect={onRoomSelect}
-            onCopyRoomId={handleCopyRoomId}
-            onCopyRoomLink={handleCopyRoomLink}
-            onRename={openRenameModal}
-            onDelete={openDeleteModal}
-            codeAgentDefaultBackend={codeAgentDefaultBackend}
-          />
-        ))}
-      </div>
+        <div className="studio-art" aria-hidden="true">
+          <div className="studio-orbit" />
+          <div className="studio-art-tile studio-art-tile-chat"><Icon icon="lucide:messages-square" /></div>
+          <div className="studio-art-tile studio-art-tile-code"><Icon icon="lucide:code-2" /></div>
+          <div className="studio-art-spark">✳</div>
+          <span className="studio-art-dot" />
+        </div>
+      </section>
+      <section className="studio-join" aria-label={t('joinButton')}>
+        <div>
+          <h3>{t('studioJoinTitle')}</h3>
+          <p>{t('studioJoinDescription')}</p>
+        </div>
+        <RoomJoinControl
+          value={joinRoomId}
+          onValueChange={setJoinRoomId}
+          onJoin={handleJoinRoom}
+          containerClassName="flex w-full min-w-0 sm:max-w-sm"
+          inputHeightClassName="h-12"
+          buttonClassName="h-12 min-w-[88px]"
+        />
+      </section>
+      <section className="studio-rooms" aria-labelledby="studio-rooms-title">
+        <div className="studio-section-heading">
+          <h3 id="studio-rooms-title">{t('studioRoomsTitle')}</h3>
+          <span className="studio-room-count">{isLoading ? '…' : rooms.length}</span>
+        </div>
+        {isLoading && rooms.length === 0 ? (
+          <div role="status" aria-live="polite" aria-busy="true">
+            <span className="sr-only">{t('loading')}</span>
+            <div className="studio-room-grid">
+              {[0, 1, 2].map(index => <div key={index} className="studio-skeleton motion-safe:animate-pulse" />)}
+            </div>
+          </div>
+        ) : rooms.length === 0 ? (
+          <div className="studio-empty">
+            <span className="studio-empty-icon" aria-hidden="true"><Icon icon="lucide:move-up-right" /></span>
+            <div><h4>{t('noRoomsAvailable')}</h4><p>{t('noRoomsDescription')}</p></div>
+            <Button variant="light" onPress={handleOpenCreateModal} className="shrink-0" aria-label={t('create')}>
+              <Icon icon="lucide:plus" className="mr-1 h-4 w-4" />{t('create')}
+            </Button>
+          </div>
+        ) : (
+          <div className="studio-room-grid">
+            {rooms.map(room => (
+              <RoomCard
+                key={room.id}
+                room={room}
+                clientId={clientId}
+                copiedRoomId={copiedRoomId}
+                copiedLinkId={copiedLinkId}
+                onSelect={onRoomSelect}
+                onCopyRoomId={handleCopyRoomId}
+                onCopyRoomLink={handleCopyRoomLink}
+                onRename={openRenameModal}
+                onDelete={openDeleteModal}
+                codeAgentDefaultBackend={codeAgentDefaultBackend}
+              />
+            ))}
+          </div>
+        )}
+      </section>
 
       <AppConfirmDialog
         isOpen={roomToDelete !== null}

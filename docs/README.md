@@ -1,4 +1,6 @@
-# RoomTalk Documentation
+> Historical engineering reference inherited from the upstream project. Operator names and endpoints are examples, not evidence of a CoWorker House deployment. See [project origin](../PROJECT_ORIGIN.md).
+
+# CoWorker House Documentation
 
 [中文](README.zh.md)
 
@@ -99,4 +101,4 @@ Source code and tests are always the final authority. Start with the current arc
 
 ## Interview Guide
 
-[RoomTalk interview preparation](interview-preparation.html) is a detailed bilingual narrative organized around execution and trust, browser continuity, durable synchronization, scaling, security, and testing. It is intentionally not linked from the top-level README.
+[CoWorker House interview preparation](interview-preparation.html) is a detailed bilingual narrative organized around execution and trust, browser continuity, durable synchronization, scaling, security, and testing. It is intentionally not linked from the top-level README.

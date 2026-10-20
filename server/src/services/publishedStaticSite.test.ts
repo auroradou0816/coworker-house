@@ -409,13 +409,13 @@ describe('PublishedStaticSiteService', () => {
       files: [textFile('index.html', '<!doctype html>second')],
     }, claims);
 
-    const artifacts = await service.listSitesForRoom('room-1', 'https://room.ruit.me/room/abc');
+    const artifacts = await service.listSitesForRoom('room-1', 'https://coworker.example.com/room/abc');
 
     assert.deepEqual(artifacts.map(artifact => artifact.slug), ['first-demo', 'second-demo']);
     assert.deepEqual(artifacts.map(artifact => artifact.title), ['First Demo', 'Second Demo']);
     assert.deepEqual(artifacts.map(artifact => artifact.url), [
-      'https://room.ruit.me/p/first-demo/',
-      'https://room.ruit.me/p/second-demo/',
+      'https://coworker.example.com/p/first-demo/',
+      'https://coworker.example.com/p/second-demo/',
     ]);
     assert.equal(artifacts[0].fileCount, 1);
     assert.equal(artifacts[0].entry, 'index.html');
@@ -423,37 +423,37 @@ describe('PublishedStaticSiteService', () => {
 
   it('uses an allowed production client origin for publish URLs', () => {
     const { service } = createService({
-      publicBaseUrl: 'https://room.ruit.me',
-      allowedPublicBaseUrls: ['https://room.ruit.me', 'https://admin.room.ruit.me'],
+      publicBaseUrl: 'https://coworker.example.com',
+      allowedPublicBaseUrls: ['https://coworker.example.com', 'https://admin.coworker.example.com'],
       nodeEnv: 'production',
     });
 
     assert.equal(
-      service.publishApiUrlForRequest('https://room.ruit.me/rooms/abc', 'http://127.0.0.1:3012'),
-      'https://room.ruit.me/api/code-agent/publish-static-site'
+      service.publishApiUrlForRequest('https://coworker.example.com/rooms/abc', 'http://127.0.0.1:3012'),
+      'https://coworker.example.com/api/code-agent/publish-static-site'
     );
     assert.equal(
-      service.publicBaseUrlForRequest('https://room.ruit.me/rooms/abc', 'http://127.0.0.1:3012'),
-      'https://room.ruit.me'
+      service.publicBaseUrlForRequest('https://coworker.example.com/rooms/abc', 'http://127.0.0.1:3012'),
+      'https://coworker.example.com'
     );
     assert.equal(
       service.publishApiUrlForRequest('https://evil.example', 'http://127.0.0.1:3012'),
-      'https://room.ruit.me/api/code-agent/publish-static-site'
+      'https://coworker.example.com/api/code-agent/publish-static-site'
     );
   });
 
   it('uses the local server origin outside production even when a public fallback is configured', () => {
     const { service } = createService({
-      publicBaseUrl: 'https://room.ruit.me',
+      publicBaseUrl: 'https://coworker.example.com',
       nodeEnv: 'development',
     });
 
     assert.equal(
-      service.publishApiUrlForRequest('https://room.ruit.me', 'http://127.0.0.1:3012'),
+      service.publishApiUrlForRequest('https://coworker.example.com', 'http://127.0.0.1:3012'),
       'http://127.0.0.1:3012/api/code-agent/publish-static-site'
     );
     assert.equal(
-      service.publicBaseUrlForRequest('https://room.ruit.me', 'http://127.0.0.1:3012'),
+      service.publicBaseUrlForRequest('https://coworker.example.com', 'http://127.0.0.1:3012'),
       'http://127.0.0.1:3012'
     );
   });
@@ -465,7 +465,7 @@ describe('PublishedStaticSiteService', () => {
       env: {
         NODE_ENV: 'development',
         CLIENT_URL: 'http://localhost:3011',
-        CODE_AGENT_STATIC_PUBLISH_PUBLIC_URL: 'https://room.ruit.me',
+        CODE_AGENT_STATIC_PUBLISH_PUBLIC_URL: 'https://coworker.example.com',
         CODE_AGENT_STATIC_PUBLISH_TOKEN_SECRET: 'static-publish-secret',
       } as NodeJS.ProcessEnv,
     });
@@ -486,20 +486,20 @@ describe('PublishedStaticSiteService', () => {
       logger,
       env: {
         NODE_ENV: 'production',
-        CLIENT_URL: 'https://room.ruit.me',
-        CLIENT_URLS: 'https://room.ruit.me, https://admin.room.ruit.me',
-        CODE_AGENT_STATIC_PUBLISH_PUBLIC_URL: 'https://room.ruit.me',
+        CLIENT_URL: 'https://coworker.example.com',
+        CLIENT_URLS: 'https://coworker.example.com, https://admin.coworker.example.com',
+        CODE_AGENT_STATIC_PUBLISH_PUBLIC_URL: 'https://coworker.example.com',
         CODE_AGENT_STATIC_PUBLISH_TOKEN_SECRET: 'static-publish-secret',
       } as NodeJS.ProcessEnv,
     });
 
     assert.equal(
-      service.publishApiUrlForRequest('https://room.ruit.me', 'http://127.0.0.1:3012'),
-      'https://room.ruit.me/api/code-agent/publish-static-site'
+      service.publishApiUrlForRequest('https://coworker.example.com', 'http://127.0.0.1:3012'),
+      'https://coworker.example.com/api/code-agent/publish-static-site'
     );
     assert.equal(
       service.publishApiUrlForRequest('https://not-allowed.example', 'http://127.0.0.1:3012'),
-      'https://room.ruit.me/api/code-agent/publish-static-site'
+      'https://coworker.example.com/api/code-agent/publish-static-site'
     );
   });
 

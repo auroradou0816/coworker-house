@@ -1,14 +1,16 @@
-# RoomTalk 房间可靠性架构
+> Historical engineering reference inherited from the upstream project. Operator names and endpoints are examples, not evidence of a CoWorker House deployment. See [project origin](../PROJECT_ORIGIN.md).
+
+# CoWorker House 房间可靠性架构
 
 [English](room-reliability-architecture.md)
 
-状态：已实现并部署到 `room.ruit.me`
+状态：已实现并部署到 `coworker.example.com`
 
 更新：2026-07-21
 
 ## 一个持久同步边界
 
-RoomTalk 现在每个房间只使用一个由 PostgreSQL 分配的事件序列。旧的房间/消息双版本字段不再属于运行模型。
+CoWorker House 现在每个房间只使用一个由 PostgreSQL 分配的事件序列。旧的房间/消息双版本字段不再属于运行模型。
 
 | 值 | 含义 | 生命周期 |
 | --- | --- | --- |
@@ -111,7 +113,7 @@ Codex workspace 恢复沿用同一 ownership 规则。PostgreSQL 为每个房间
 
 普通 Chat AI 使用独立调度边界。一个事务同时创建 streaming placeholder、`assistant_runs`、对应 room event 与 `task_dispatch_outbox`。App relay 只把 `{ schemaVersion: 1, runId }` 以 `jobId=runId` 送入 BullMQ，再确认精确的 fenced dispatch claim。Redis 不可用时 row 回到 pending，已经接受的用户请求仍留在 PostgreSQL。Dispatch 确认后还有一轮受 PostgreSQL advisory lock 保护的对账：只检查尚未终态的 run，BullMQ job 缺失时补建，failed 或业务仍 active 却提前 completed 时重试。它覆盖空 Redis 恢复和 infrastructure attempts 耗尽，但不会把 PostgreSQL 重新变成 polling scheduler。独立 `ai-worker` claim 精确 run，按配置做有界并发，持续续租 PostgreSQL generation，并通过版本化 Redis channel 发布 transient event；每个 App 在 `io.local` 前重新校验本机 socket 权限。
 
-BullMQ 只拥有 waiting、并发、backoff、stalled recovery 与运维 retention，不拥有业务状态或 result backend。`assistant_runs` 拥有 request snapshot、status、generation、immutable terminal payload、error 与 usage；终态事务只累计一次 Message 和 room cost。系统刻意不建立 `assistant_run_usage` ledger，因为锁定的唯一 run transition 已提供幂等边界，而 immutable terminal payload 已保留审计依据。这里的 exactly-once 只到 RoomTalk 的 PostgreSQL 边界：如果 Provider 已接受请求，但进程在 terminal payload 落库前退出，新 generation 仍可能再次调用外部 Provider。有可靠 idempotency key 的 Provider 可单独接入；基础可迁移契约是 Provider 至少一次、旧 generation 不能落结果、终态 projection 与内部费用只结算一次。
+BullMQ 只拥有 waiting、并发、backoff、stalled recovery 与运维 retention，不拥有业务状态或 result backend。`assistant_runs` 拥有 request snapshot、status、generation、immutable terminal payload、error 与 usage；终态事务只累计一次 Message 和 room cost。系统刻意不建立 `assistant_run_usage` ledger，因为锁定的唯一 run transition 已提供幂等边界，而 immutable terminal payload 已保留审计依据。这里的 exactly-once 只到 CoWorker House 的 PostgreSQL 边界：如果 Provider 已接受请求，但进程在 terminal payload 落库前退出，新 generation 仍可能再次调用外部 Provider。有可靠 idempotency key 的 Provider 可单独接入；基础可迁移契约是 Provider 至少一次、旧 generation 不能落结果、终态 projection 与内部费用只结算一次。
 
 ## 协议切换边界
 

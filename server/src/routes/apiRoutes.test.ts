@@ -1542,14 +1542,14 @@ describe('API routes', () => {
 
   it('updates membership and grants credits through the protected admin boundary', async () => {
     await server.close();
-    server = await createTestServer({ platformAdminEmails: ['[redacted-account]@gmail.com'] });
+    server = await createTestServer({ platformAdminEmails: ['maintainer@example.com'] });
     const adminAccount = sampleClientAccount({
       accountId: 'admin-account',
       primaryClientId: 'admin-client',
       provider: 'google',
-      providerSubject: '[redacted-account]-google-subject',
+      providerSubject: 'maintainer-google-subject',
       googleLinked: true,
-      email: '[redacted-account]@gmail.com',
+      email: 'maintainer@example.com',
       emailVerified: true,
     });
     const memberAccount = sampleClientAccount({

@@ -113,7 +113,7 @@ export const notifyRoomMessage = async (params: {
     type: 'room_message',
     roomId: message.roomId,
     messageId: message.id,
-    title: room.name || 'RoomTalk',
+    title: room.name || 'CoWorker House',
     body: `${getSenderName(message)}: ${getMessagePreview(message)}`,
     url: `/?room=${encodeURIComponent(message.roomId)}`,
   });

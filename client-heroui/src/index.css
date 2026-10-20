@@ -242,3 +242,79 @@ body {
   transform: none !important;
   margin-bottom: 7px;
 }
+
+/* CoWorker House studio: editorial workspace with playful geometric accents. */
+.studio-home {
+  --studio-accent: #d6f58b;
+  --studio-surface: #ffffff;
+  --studio-line: #dbe3ee;
+  --studio-muted: #526176;
+  max-width: 1440px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 28px clamp(20px, 4vw, 64px) 48px;
+  color: #17202b;
+}
+.dark .studio-home {
+  --studio-surface: #131d29;
+  --studio-line: #2a3542;
+  --studio-muted: #a8b6c6;
+  color: #f7f8f2;
+}
+.studio-masthead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; padding-bottom: 24px; border-bottom: 1px solid var(--studio-line); }
+.studio-eyebrow { font-size: 12px; letter-spacing: .13em; font-weight: 700; text-transform: uppercase; }
+.studio-wordmark { font-family: ui-monospace, monospace; font-size: 11px; color: var(--studio-muted); }
+.studio-hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(180px, .75fr); gap: 28px; align-items: center; padding: 54px 0 46px; }
+.studio-kicker { margin-bottom: 20px; color: var(--studio-muted); font-size: 12px; letter-spacing: .08em; }
+.studio-hero h2 { max-width: 740px; font-size: clamp(38px, 4.6vw, 72px); font-weight: 650; letter-spacing: -.055em; line-height: 1.12; text-wrap: balance; }
+.studio-description { max-width: 490px; margin-top: 24px; color: var(--studio-muted); font-size: 15px; line-height: 1.85; }
+.studio-create { min-height: 48px; margin-top: 28px; padding: 0 24px; border-radius: 999px; background: var(--studio-accent); color: #17220d; font-weight: 650; }
+.studio-art { position: relative; height: 280px; width: 100%; max-width: 330px; justify-self: end; }
+.studio-orbit { position: absolute; width: 230px; height: 230px; top: 20px; left: 20px; border: 1px solid var(--studio-line); border-radius: 50%; }
+.studio-orbit::after { content: ''; position: absolute; inset: 25px; border: 1px dashed var(--studio-line); border-radius: 50%; }
+.studio-art-tile { position: absolute; width: 134px; height: 134px; display: grid; place-items: center; border-radius: 32px; box-shadow: 0 18px 40px #00000014; }
+.studio-art-tile svg { width: 56px; height: 56px; stroke-width: 1.4; }
+.studio-art-tile-chat { left: 10px; top: 24px; transform: rotate(-13deg); background: #d6f58b; color: #344820; }
+.studio-art-tile-code { right: 12px; bottom: 22px; transform: rotate(12deg); background: #ffc09f; color: #5c3528; }
+.studio-art-spark { position: absolute; top: -10px; right: 25px; color: #c6aff7; font-size: 88px; line-height: 1; }
+.studio-art-dot { position: absolute; left: 35px; bottom: 24px; width: 20px; height: 20px; border-radius: 50%; background: #c6aff7; }
+.studio-join { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 22px; padding: 24px; border: 1px solid var(--studio-line); border-radius: 20px; background: var(--studio-surface); }
+.studio-join h3 { font-size: 15px; font-weight: 650; }
+.studio-join p { margin-top: 5px; color: var(--studio-muted); font-size: 12px; line-height: 1.6; }
+.studio-rooms { margin-top: 38px; }
+.studio-section-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.studio-section-heading h3 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+.studio-room-count { min-width: 26px; padding: 3px 8px; border: 1px solid var(--studio-line); border-radius: 99px; font-size: 11px; text-align: center; color: var(--studio-muted); }
+.studio-room-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.studio-skeleton { height: 190px; border: 1px solid var(--studio-line); border-radius: 20px; background: var(--studio-surface); }
+.studio-empty { display: flex; align-items: center; gap: 20px; padding: 30px 24px; border: 1px dashed var(--studio-line); border-radius: 20px; }
+.studio-empty h4 { font-size: 15px; font-weight: 600; }
+.studio-empty p { margin-top: 6px; max-width: 550px; font-size: 13px; line-height: 1.7; color: var(--studio-muted); }
+.studio-empty-icon { display: grid; place-items: center; width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; background: #c6aff733; color: #7c4ba8; }
+.dark .studio-empty-icon { color: #c6aff7; }
+.studio-room-card { min-height: 190px; padding: 24px; border: 1px solid #dbe3ee; border-radius: 20px; background: #fff; box-shadow: none; transition: border-color .2s, background-color .2s; }
+.dark .studio-room-card { background: #131d29; border-color: #2a3542; }
+.studio-room-card:hover { border-color: #7b9655; }
+.studio-room-open { gap: 24px; border-radius: 8px; }
+.studio-room-open:focus-visible { outline: 2px solid #7b9655; outline-offset: 5px; }
+.studio-room-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #d6f58b; color: #344820; }
+.studio-room-card:nth-child(3n + 2) .studio-room-icon { background: #ffc09f; color: #5c3528; }
+.studio-room-card:nth-child(3n) .studio-room-icon { background: #c6aff7; color: #44305e; }
+.studio-sidebar { border-right-style: dashed; }
+.studio-sidebar > div:first-of-type { height: 88px; }
+.studio-sidebar button:focus-visible { outline: 2px solid #9dbb68; outline-offset: 2px; }
+@media (max-width: 1100px) {
+  .studio-room-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-hero { grid-template-columns: minmax(0, 1fr); padding: 36px 0; }
+  .studio-art { display: none; }
+}
+@media (max-width: 600px) {
+  .studio-home { padding-top: 20px; }
+  .studio-room-grid { grid-template-columns: minmax(0, 1fr); }
+  .studio-empty { align-items: flex-start; flex-wrap: wrap; padding: 22px; }
+  .studio-empty > div { flex: 1; min-width: 160px; }
+  .studio-join { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-room-card { transition: none; }
+}

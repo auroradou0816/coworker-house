@@ -90,7 +90,7 @@ export default {
             },
             secondary: {
               // Dark cyan keeps light-theme action labels readable.
-              DEFAULT: "#0e7490",
+              DEFAULT: "#476526",
               foreground: "#f8fafc",
             },
           },
@@ -110,7 +110,7 @@ export default {
               foreground: "#0b101b",
             },
             secondary: {
-              DEFAULT: "#67e8f9",
+              DEFAULT: "#d6f58b",
               foreground: "#0b101b",
             },
           },

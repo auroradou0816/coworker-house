@@ -1,4 +1,4 @@
-# Contributing to RoomTalk
+# Contributing to CoWorker House
 
 [中文](CONTRIBUTING.zh.md)
 
@@ -7,7 +7,7 @@ Updated: 2026-07-20
 
 ## Scope
 
-RoomTalk contains a React/Vite client, a Node/Express/Socket.IO control plane, and a Python runner/daemon packaged into pinned E2B artifacts. Make changes at the owning boundary and preserve unrelated work in a dirty checkout.
+CoWorker House contains a React/Vite client, a Node/Express/Socket.IO control plane, and a Python runner/daemon packaged into pinned E2B artifacts. Make changes at the owning boundary and preserve unrelated work in a dirty checkout.
 
 ## Local Development
 
@@ -48,7 +48,7 @@ npm run test:e2e:postgres
 
 ## Code-Agent Artifact Rule
 
-Production code-agent rooms do not run runner source directly from the RoomTalk application image. Changes to any of the following require a new pinned E2B artifact:
+Production code-agent rooms do not run runner source directly from the CoWorker House application image. Changes to any of the following require a new pinned E2B artifact:
 
 - `server/roomtalk_code_agent_runner/`
 - runner tools or system prompts

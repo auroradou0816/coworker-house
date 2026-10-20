@@ -1,312 +1,35 @@
 # CoWorker House
 
-[Project origin and history / 项目来源与历史说明](PROJECT_ORIGIN.md)
+**让好点子，在这里发生。** 由 [Yijia Dou](https://github.com/auroradou0816) 维护。
 
-RoomTalk 是一个以共享房间和可持续工作的沙盒化 Code Agent 工作区为核心的实时 AI 协作平台。人类和多种 Agent backend 可以在同一个房间中协作；RoomTalk 统一负责身份、权限、持久化 transcript、工作区访问、产物和故障恢复。
+[English](README.md) · [部署指南](部署指南.md) · [项目来源](PROJECT_ORIGIN.md) · [安全说明](SECURITY.zh.md)
 
-仓库包含 React/Vite 客户端、Node/Express/Socket.IO control plane，以及打包进固定 E2B sandbox artifact 的 Python JSONL runner。
+CoWorker House 是一个共享协作空间，将实时房间聊天、可选的 AI 对话和沙盒编程工作区结合起来。新版创意工作室首页提供创建房间、邀请加入和项目卡片，支持桌面与手机。
 
-## 核心能力
+## 功能与边界
 
-### 共享 AI 协作
+- 多人房间、持久化消息、成员权限、图片上传和断线补同步。
+- 创意工作室首页、房间卡片、深浅主题和五种界面语言。
+- 独立 BullMQ Worker 执行的 AI 对话，需要自行配置模型密钥。
+- 文件、终端、预览和编程 Agent 工作区，需要自行配置 E2B 沙盒与凭据。
+- Google 登录需要自己的 OAuth 配置，仓库不附带可直接使用的登录配置。
 
-- 实时房间、邀请链接、密码、成员角色、管理员、所有权转移、发言时间段、收藏房间和多客户端在线状态。
-- 跨 Anthropic、OpenAI、DeepSeek 和 OpenRouter 兼容模型的 provider-neutral AI 流式运行时，支持角色/上下文控制、usage/cost 计费、中断流恢复和 A2UI 界面。
-- 文本、私有媒体、贴纸、回复、编辑、reaction、语音转写、Web Push、Google 登录，以及中英印日韩五种 UI 语言。
-- 针对移动端重连、BFCache 恢复、键盘 viewport、基于 cursor 的房间事件重放和 read-your-write 房间更新的可靠性保护。
+## 技术结构
 
-### 沙盒化 Code Agent 房间
+React / TypeScript / Vite / HeroUI 前端通过 HTTP 和 Socket.IO 连接 Node.js 后端。PostgreSQL 保存业务数据与房间事件，Redis 提供在线状态、临时通知和缓存，BullMQ 安排任务。独立 AI Worker 执行模型请求，SeaweedFS 提供兼容 S3 的文件存储，E2B 是可选的代码执行环境。
 
-- 每个 Code Agent 房间拥有一个共享 E2B 工作区，支持 Coco（RoomTalk 自研 CLI coding agent）和 Codex；房主可以连接 Codex 订阅和 GitHub PAT，并把这些能力共享给获准使用工作区的成员。
-- 沙盒内可复用的 JSONL daemon 顺序执行 turn、流式输出文本/工具/model-step 事件、接收 interrupt/steer 控制，并在沙盒或服务退出时回收。
-- Plan、Ask、Auto、Full 四种权限预设。它们组合三种与 Codex 对齐的 sandbox mode（`read-only`、`workspace-write`、`danger-full-access`）、approval policy 和 reviewer 选择；Auto 保持 workspace sandbox，只把符合条件的提权请求交给 Coco 原生 model reviewer。
-- 每个 turn 独立签发 model gateway、room context 和 static publish 凭据。Provider key 与 RoomTalk 服务端 secret 不进入浏览器和 Agent prompt。
-- Agent 可通过沙盒内 `roomtalk` CLI 按需读取有界历史、增量、单条消息、搜索结果和已发布站点。
-- AI/工具消息按真实执行顺序持久化并按 turn 分组，同时支持图片输入、model-step usage、排队 prompt、运行中 steer、interrupt、retry 和审批事件。
+房间事件用于补齐漏掉的实时通知；AI 任务与派发意图同事务写入 PostgreSQL，再转交 BullMQ。`docs/` 中的历史工程记录说明继承的设计与能力，不代表当前部署已启用所有功能。
 
-### 浏览器工作区
+## 运行与部署
 
-- 文件树与搜索、源码编辑、图片/Markdown/媒体预览、workspace asset 读取和 panel 状态保存。
-- Git changed-files tree、branch/base-ref 选择、unified/split diff、viewed 状态，以及可附加到下一轮 Agent prompt 的行级 review comment。
-- 基于认证 Socket.IO session 的交互式 PTY terminal，包含 resize、输入缓冲、本地 echo 和有界输出 snapshot。
-- Workspace 文件和已探测 dev server 的内嵌浏览器预览、响应式 viewport、截图、录屏和 preview server 状态。
-- 将静态站点持久发布到 RoomTalk 对象存储。E2B 暂停或替换后 URL 仍可访问，并显示在 workspace 的 Artifacts 视图中。
-- Idle/active sandbox TTL、重连与 stale state 恢复、全局/用户级配额、Git baseline 初始化，以及固定 artifact 升级时的 archive workspace migration。
+开发环境需要 Node.js 24.18.0 或更高版本。Dockerfile 会构建前后端，由 App 提供网页。
 
-## 关键工程设计
+按[部署指南](部署指南.md)生成私有配置，再启动 Compose。不要提交 `.env.compose`、私钥或真实凭据。
 
-RoomTalk 不只覆盖功能的 happy path，也系统处理了实时协作与 AI 系统中的可靠性问题：
+当前维护者环境是 AWS Lightsail 上的 Ubuntu，App、Worker、PostgreSQL、Redis、SeaweedFS 已通过健康检查。网页目前通过 SSH 通道访问，尚未发布公开域名；AI 和 E2B 尚未启用。
 
-| 问题 | 设计 |
-| --- | --- |
-| 共享的不可信代码执行 | 将可信的 RoomTalk control plane 与每房间 E2B execution plane 分离，通过版本化 JSONL 协议和短期 scoped capability 连接。 |
-| AI 文本与工具事件顺序 | 在最早知道真实顺序的 engine/runner 层保留文本与工具边界，再持久化服务端单调递增的 `position`；客户端只展示顺序，不用 timestamp 猜测。 |
-| 多客户端一致性 | Canonical PostgreSQL 写入同事务保存有界、不可变的 after-image changelog；Socket.IO 直接推送精确的已提交 RoomEvent，缺失区间按房间序列补拉，超过 500 个事件直接切 repeatable-read snapshot。 |
-| 移动端断连恢复 | 由唯一 `RoomSessionController` 管理 connect/register/join/retry；epoch 只随房间或 socket identity 变化，lifecycle signal 合并成消息 resync 而不重复 join，暂态恢复保留已显示的消息和媒体。 |
-| 持久层边界 | PostgreSQL 保存业务事实与确定性重放，BullMQ/Redis 负责运行时调度；事务型 dispatch outbox 只桥接两者，不让任一侧冒充另一侧的状态源。 |
-| 缓存一致性 | 最近消息缓存以持久 room-event head 守卫，写回前再次校验，只在 mutation 成功后失效；缓存故障时降级直读 PostgreSQL。 |
-| 房间并发写 | PostgreSQL 在同一事务串行 canonical 写入并分配连续 room-event 序列；Redis Lua 只协调临时多 socket presence。 |
-| 产品级移动体验 | 用锁定模式的手势状态机解决媒体手势冲突，以 `requestAnimationFrame` 批量更新 transform，组合 Object URL/Cache API/network 媒体缓存，并处理 IME 与 Visual Viewport。 |
-| 模型可移植性与上下文限制 | 通过 model registry + client factory 统一 provider，并用语义截断、消息条数上限和保守的 CJK-aware token budget 选择历史上下文。 |
+## 维护与来源
 
-## 架构
+维护者：**Yijia Dou**；联系邮箱：**auroradou0816@gmail.com**。
 
-```mermaid
-flowchart LR
-  Browser["React client"] <-->|"Socket.IO + HTTP"| Control["RoomTalk control plane\nNode 24 + Express"]
-
-  Control --> Store["CompositeRoomStore"]
-  Store --> Durable["PostgreSQL\ndurable state + room event log"]
-  Store --> Realtime["Redis\npresence, sessions, pub/sub, cache"]
-
-  Control --> Dispatch["PostgreSQL dispatch relay"]
-  Dispatch --> Queue["Redis 上的 BullMQ"]
-  Queue --> ChatAI["独立 AI worker\nprovider clients + fenced runs"]
-  ChatAI --> Durable
-  ChatAI -.->|"transient stream"| Realtime
-  Control --> Media["S3-compatible storage\nSeaweedFS、Tigris 或 AWS S3"]
-
-  Control --> Lifecycle["Sandbox lifecycle + access control"]
-  Lifecycle --> E2B["Per-room E2B sandbox"]
-  E2B --> Daemon["RoomTalk JSONL daemon"]
-  Daemon --> Backends["Coco | Codex app-server"]
-  Daemon --> Workspace["/workspace\nfiles, Git, PTY, previews, processes"]
-
-  Backends --> Broker["Turn-scoped RoomTalk broker\ncontext, model gateway, site publishing"]
-  Broker --> Control
-```
-
-系统边界是刻意设计的：
-
-- **RoomTalk control plane**：拥有房间、成员、权限、消息/turn 持久化、scoped credential、sandbox lifecycle、对象存储和浏览器 API。
-- **E2B execution plane**：在 `/workspace` 中承载不可信文件、进程、terminal、dev server 和 Agent 执行。
-- **Agent backend**：拥有推理和原生工具循环，通过窄 JSONL/CLI 合约使用 RoomTalk 能力，不接触数据库或基础设施凭据。
-
-### 当前生产拓扑
-
-```mermaid
-flowchart LR
-  Browser["浏览器 / 手机客户端"] --> Edge["Cloudflare DNS + TLS"]
-  Edge --> Tunnel["MacBook 上的 Cloudflare Tunnel"]
-  Tunnel -->|"room.ruit.me<br/>roomtalk.ruit.me"| App["RoomTalk app container<br/>Node + Express + Socket.IO"]
-  Tunnel -->|"roomtalk-objects.ruit.me"| Objects["SeaweedFS 4.29<br/>S3-compatible 对象存储"]
-
-  App --> Postgres["PostgreSQL 17<br/>canonical state + room events + dispatch intent"]
-  App --> Redis["Redis 7<br/>realtime + AOF BullMQ"]
-  Redis --> Worker["AI worker container<br/>BullMQ consumer"]
-  Worker --> Postgres
-  Worker --> Providers["AI providers"]
-  App --> Objects
-  App --> E2BProd["E2B<br/>每房间 execution sandbox"]
-  App --> Providers["Google / GitHub / Codex / AI providers"]
-```
-
-MacBook 长期运行 app、独立 `ai-worker`、PostgreSQL、Redis、SeaweedFS 与两个 `cloudflared` connector。主 connector 承载 `ruit.me` 域名，第二个 connector 在单独管理的 Cloudflare 账户中承载 `ai-chat.wenlin.dev`。PostgreSQL 与 Redis 都使用 named volume；由于 Redis 现在既承载可重建的 realtime/cache key，也承载 BullMQ 运行任务，因此启用 AOF `everysec` 与 `noeviction`。浏览器媒体通过独立对象域名使用预签名 URL 传输；服务端对象操作留在 Compose 私网。
-
-`room.ruit.me` 是主域名，`roomtalk.ruit.me` 是兼容入口。`ai-chat.wenlin.dev` 通过其 Cloudflare 账户中的专用 Tunnel 到达同一个 App。旧 Fly app 已暂停；Supabase、Tigris 和 Upstash 仅作为临时回滚资源保留，不再接收生产写入。
-
-### 房间事件 fan-out 拓扑
-
-```mermaid
-flowchart LR
-  Write["Canonical PostgreSQL mutation"] -->|"同一事务"| Log["room_events\n不可变 after-image + room seq"]
-  Log -->|"commit 后 NOTIFY hint"| A["App 实例 A LISTEN"]
-  Log -->|"commit 后 NOTIFY hint"| B["App 实例 B LISTEN"]
-  A -->|"io.local fast path"| CA["A 的本机 sockets"]
-  B -->|"io.local fast path"| CB["B 的本机 sockets"]
-  CA -->|"有 gap: get_room_events"| A
-  CB -->|"有 gap: get_room_events"| B
-  A -->|"精确读取 / replay"| Log
-  B -->|"精确读取 / replay"| Log
-  A <-.->|"仅 transient/global"| Redis["Redis Socket.IO adapter"]
-  Redis <-.->|"仅 transient/global"| B
-```
-
-`room_events` 保存带 schema version 的安全 after-image，不再只存实体 ID、读取时再用“今天的规范行”回填。PostgreSQL `NOTIFY` 只是 commit 后唤醒 hint：每个 app 用固定的 per-room min/max state 合并水位；本机无订阅者时跳过 payload 读取，有订阅者才读取已提交的连续 range，再用 `io.local` 通知本机 socket。完整 payload 发出前会从 Redis 或认证后由服务端保存的 `socket.data` 解析身份，并一次查询 PostgreSQL membership。明确 unauthorized 才移除连接；身份无法解析、身份冲突或授权依赖 unavailable 时保留 socket，只发 head-only hint。
-
-连续 payload 直接应用；缺失 payload 从 `lastAppliedSeq` replay；单条 event 超限、cursor 过期或保留窗口内差距超过 500 events 时取 repeatable-read snapshot。Deleted stream 直接返回最终 tombstone，不会逐页追向一个已经不存在的 snapshot。Per-room 的 `idle/replay/replace/prepend` 状态机让实时 replay 优先于分页；实时 mutation 会使在途 prepend 失效，过期 `beforeMessageId` 会 replace window。数据库恢复返回 `CURSOR_AHEAD` 时同时清除旧目标水位与 gap target，并保留 snapshot 期间的新通知。V1 payload 严格解码，坏事件返回 `EVENT_PAYLOAD_INVALID`。公共成员事件只有 `members.changed {}`，但 durable replay 会刷新页面权限；`room.deleted` / `ROOM_ACCESS_DENIED` 会真正退出旧页面。
-
-这是一份有界状态传输 changelog，不是 Event Sourcing；规范表仍是事实源，旧事件前缀可清理。系统不需要 realtime delivery outbox，也不需要 `messageVersion`。普通 Chat AI 使用另一条职责清晰的路径：placeholder、`assistant_runs` 与窄化的 `task_dispatch_outbox` 同事务提交，App relay 只把 `{ runId }` 以确定性 job ID 送入 BullMQ。BullMQ 管 waiting、并发、延迟重试、stalled recovery 与运行记录；PostgreSQL 才描述 queued/running/finalizing/terminal 业务状态、不可变 Provider 结果与费用。Worker 按 generation lease claim 精确 run，旧进程接管后不能继续写 chunk 或终态；terminal payload 已落库时，重试只做 projection，不会再次调用 Provider。Worker 的瞬时 chunk 经 Redis Pub/Sub 到达每个 App，由 App 重新鉴权本机 socket 后 `io.local` 投递；丢失仍由最终 durable room event 收敛。客户端会暂存早到事件、丢弃旧 generation，并保留 optimistic message。
-
-横向进程 ownership 也已经收敛。每个 app 用唯一 runtime instance ID 与 TTL heartbeat 只拥有自己的 Redis presence；滚动启动不会清空其他活实例。Code Agent turn/sandbox 只在 fenced lease 过期后恢复，recovery/retention 通过 PostgreSQL advisory lock 保证每轮 singleton。这些边界已有两实例 presence test 和真实 PostgreSQL 17 lease/advisory-lock tests。首次引入 AI owner lease 时必须先停止所有 pre-`0006` App，因为旧 binary 不会为新表续租；跨过该边界后，ECS/EKS 才能滚动发布后续协议兼容版本。不兼容 room-event 或 lease schema 仍需维护窗口或两阶段协议。
-
-运行健康也有明确的失败语义。`/api/health/live` 只证明 Node 进程还能响应；`/api/status` 与 `/api/health/ready` 会执行真实的 `rooms` 表查询、Redis `PING`、对象存储 bucket 探测和 Socket adapter 检查。任一依赖不可用时返回 HTTP 503、`status: "degraded"` 与 `rooms: null`，基础设施故障不会再伪装成“房间数为 0”。
-
-### 关键难点是怎么工作的
-
-- **Code Agent turn** 会先授权并持久化，再用 durable fenced room lease 串行执行，随后把 turn-scoped model/context/publish capability 和用户自有 connection 交给可复用 sandbox daemon。文本、工具、审批、usage 和 lifecycle 事件经同一有序协议返回，先持久化再广播。
-- **顺序由源头拥有。** Coco/Codex adapter 保留原生文本/工具边界；RoomTalk 分配单调 message position，并按 durable turn 分组。浏览器只展示这个顺序，不用 timestamp 猜执行过程。
-- **恢复跨越多个进程边界。** PostgreSQL 保存 durable turn/message、owner lease 与重放 cursor，Redis 协调 instance-owned 实时客户端，E2B 拥有可变 workspace，Node 进程只保留可替换 live handle。周期 singleton reconciliation 只恢复已过期 owner/lease，不会在新实例启动时把其他活进程的任务当成中断。
-- **发布产物不依赖执行生命周期。** 静态文件在 sandbox 内校验，通过预签名 URL 直传对象存储，最终写入不可变版本和 manifest；源 sandbox 暂停或替换后仍由 RoomTalk 服务。
-
-完整 lifecycle 和验证证据见[房间事件同步与可迁移部署](docs/room-event-sync-portable-deployment.zh.md)和 [Code Agent 运行时架构](docs/code-agent-runtime-architecture.md)。
-
-## 仓库结构
-
-```text
-client-heroui/                    React + TypeScript + Vite 客户端
-server/src/                       Express/Socket.IO control plane
-server/roomtalk_code_agent_runner Python runner、daemon、backend 和 RoomTalk CLI
-ops/code-agent-sandbox/           固定 E2B artifact 定义与 lock
-scripts/code-agent/               artifact context 准备脚本
-docs/                             架构、runbook、方案和复盘
-```
-
-## 快速开始
-
-环境要求：
-
-- Node.js 24.18.0 或更高版本。
-- PostgreSQL 与 Redis。PostgreSQL 是强制业务事实源；Redis 保存实时/缓存状态和 AOF-backed BullMQ 运行队列。
-- 真实 Code Agent 房间还需要 E2B 凭据和固定 template 配置。
-
-最快的完整本地运行方式是先复制 `.env.compose.example` 为 `.env.compose`，生成必需的 PostgreSQL 与 S3 凭据，再运行 `docker compose --env-file .env.compose up -d --build`。一次性 `migrate` 成功后，同一镜像分别启动 App 与 `ai-worker`；PostgreSQL 和 Redis 使用持久 named volume，SeaweedFS 使用配置的宿主机目录。生产 Mac 通过 `node scripts/local-production.mjs --profile edge up -d --build` 从 macOS Keychain 注入真实 secret。手动开发时，在 `server/.env` 中配置 `DATABASE_URL`、`REDIS_URL` 和可选的 `QUEUE_REDIS_URL`，然后分别启动 App 与 `npm run start:ai-worker`。
-
-安装依赖并创建本地配置：
-
-```bash
-cd server && npm install
-cd ../client-heroui && npm install
-cp ../server/.env.example ../server/.env
-```
-
-启动前后端：
-
-```bash
-./start.sh
-```
-
-客户端地址为 [http://localhost:3011](http://localhost:3011)，服务端地址为 `http://localhost:3012`。
-
-手动开发：
-
-```bash
-cd server && npm run dev
-cd client-heroui && npm run dev
-```
-
-## 常用命令
-
-服务端：
-
-```bash
-cd server
-npm run build
-npm test
-npm run smoke:persistence
-npm run smoke:code-agent:e2b
-npm run smoke:codex:e2b
-npm run migrate:redis-to-postgres
-npm run migrate:media-to-object-storage
-```
-
-客户端：
-
-```bash
-cd client-heroui
-npm run lint
-npm run check:i18n
-npm test
-npm run build
-npm run test:e2e
-npm run test:e2e:postgres
-```
-
-## 配置
-
-通用后端配置以 `server/.env.example` 为起点。主要分组如下：
-
-| 范围 | 示例 |
-| --- | --- |
-| HTTP 与 origin | `PORT`、`CLIENT_URL`、`CLIENT_URLS`、`NODE_ENV` |
-| 持久/实时/队列 | `PERSISTENCE_STORE`、`DATABASE_URL`、`REDIS_URL`、`QUEUE_REDIS_URL`、PostgreSQL TLS、message cache 与 BullMQ 参数 |
-| 普通 Chat AI | Provider API key、默认模型、OpenRouter 路由 metadata |
-| 媒体与 artifact | `MEDIA_STORAGE_MODE`；S3-compatible bucket、endpoint、region 与凭据；文件系统模式只保留为开发 fallback |
-| 可选服务 | Google OAuth、AssemblyAI、Web Push VAPID |
-| Code Agent control plane | Backend allowlist、E2B template/artifact pin、TTL/配额、model gateway 与 publish token secret |
-
-只有浏览器可公开的值才能放入 `VITE_*`。Code Agent provider key、model-gateway token、room-context token 和 static-publish token 都不能暴露给客户端。
-
-生产 Code Agent 房间使用固定 E2B artifact。Runner、工具、prompt、Dockerfile 或 Code Agent engine 发生变化时，必须 bump artifact version、构建新 E2B template、同步生产 pin，并执行 E2B smoke。详见 [Code Agent sandbox artifact](docs/code-agent-sandbox-artifact.md)。
-
-## 持久化与对象存储
-
-`CompositeRoomStore` 分离持久与实时职责：
-
-- Runtime 启动强制要求 `PERSISTENCE_STORE=postgres` 与 `DATABASE_URL`。PostgreSQL 保存 canonical record 和有界 room-event replay log。
-- Redis 负责可重建的 presence、socket session、pub/sub、counter、短 TTL message cache，以及 BullMQ 的运行队列。它不是业务事实源，但 active job 通过 AOF 保存，不能再按 disposable cache 处理。
-- `migrate:redis-to-postgres` 只保留为旧 Redis durable snapshot 的可重复、支持 dry-run 的 importer，不是受支持 serving mode 或回滚目标。
-- 本地 Compose 运行 SeaweedFS 4.29 作为私有 S3-compatible 服务；Fly 使用 Tigris、AWS 使用 S3，三者共用同一套 SDK/配置边界。文件系统 adapter 只保留为开发或恢复 fallback。
-
-迁移和上线参考：
-
-- [可迁移部署与直接切换设计](docs/room-event-sync-portable-deployment.zh.md)
-- [旧 Redis 到 PostgreSQL 导入 runbook](docs/postgres-rollout-runbook.zh.md)
-- [媒体对象存储迁移](docs/image-object-storage-migration-runbook.md)
-
-## AWS 可迁移性
-
-当前部署刻意保持可迁移，但迁移仍是受控的数据切换，不是“一键换宿主机”。App 与 Worker 共享同一镜像，业务状态隔离在 PostgreSQL，运行任务位于 BullMQ/Redis，全部媒体使用 S3 API。
-
-| 当前边界 | AWS 映射 | 迁移合约 |
-| --- | --- | --- |
-| App container + Cloudflare Tunnel | ALB 后的 ECS Fargate；EKS 可选 | 运行同一个根镜像，通过 ECS 与 Secrets Manager 注入环境变量和 secret。Cloudflare 可以继续放在 AWS origin 前，也可以换成 Route 53/CloudFront。 |
-| PostgreSQL 17 | RDS PostgreSQL 或 Aurora PostgreSQL | 维护窗口方案使用 `pg_dump` 恢复；数据规模要求更短停写时使用 logical replication 或 AWS DMS。 |
-| Redis 7 | ElastiCache for Redis OSS | 切换前恢复或排空 BullMQ job；realtime/cache key 可自然预热。以后只需设置 `QUEUE_REDIS_URL` 就能迁到独立 replication group。 |
-| SeaweedFS S3 | Amazon S3 | 保持 bucket object key 不变，使用现有幂等 `migrate:s3-to-s3` 工具复制并逐对象校验。 |
-| E2B sandbox | E2B 保持不变 | 保持固定 template/artifact，只更新 RoomTalk control-plane origin 与 scoped callback URL。 |
-
-实际 AWS 切换顺序是：
-
-1. 先建立 ECS、RDS、ElastiCache、S3、Secrets Manager、健康检查、日志和公网 edge 的 shadow stack；
-2. 恢复 PostgreSQL、执行当前 schema migration，并 dry-run 后完整复制校验全部 S3 objects；
-3. 让 RoomTalk 连接 RDS/ElastiCache/S3，执行 HTTP、Socket.IO、event replay、预签名媒体、Google/GitHub/Codex 与 E2B smoke；
-4. 开启短暂 write gate，应用最后的 PostgreSQL 与 S3 增量，然后切 DNS；
-5. 在回滚窗口内把 Mac stack 保持只读；AWS 接受新写入后，不能只改 DNS 回滚。
-
-以当前部署规模，维护窗口迁移在运维上比较直接。真正零停机还需要 PostgreSQL CDC/logical replication 与明确的写入/回滚协议；room event log 用来修复客户端同步，不能替代数据库复制。
-
-## 测试
-
-仓库采用分层验证：
-
-- Node test runner 覆盖 service、protocol、store、socket handler、E2B adapter、lifecycle、model gateway 和 static publishing。
-- Vitest + Testing Library 覆盖客户端状态、消息、workspace 文件/diff/review、terminal、browser preview、queue control 和响应式 view。
-- GitHub CI 会启动 PostgreSQL 17 并提供 `ROOM_EVENT_TEST_DATABASE_URL`，因此 trigger、事务、retention clock 与跨房间 message invariant 测试不会静默 skip。
-- Playwright 覆盖桌面/移动端房间流程、恢复、多客户端实时行为、媒体、AI 和 PostgreSQL parity。
-- 真实 E2B smoke 覆盖固定 artifact metadata、daemon health、Coco/Codex 执行、权限、context access、发布和 workspace 行为。
-
-修改后先运行同目录 focused test；再根据实际风险扩展到受影响的 production build 或跨边界 smoke test。
-
-## 部署
-
-`master` 仍是 release branch。Event sync、自托管 runtime、域名切换和凭据加固的 change set 已提交并推送到 `origin/master`；旧定时 Fly workflow 已手工禁用，因此 source push 不会重新启动 Fly。
-
-`room.ruit.me` 生产现在通过 Docker Compose 与 Cloudflare Tunnel 在 MacBook 上运行根镜像，使用 PostgreSQL 17、Redis 7 和 SeaweedFS 4.29 S3-compatible 存储；`roomtalk.ruit.me` 继续作为兼容入口，每房间 execution sandbox 仍由 E2B 提供。旧 Fly app 已暂停；Supabase、Tigris 与 Upstash 仅在回滚窗口内保留，不再作为 live writer。
-
-基础设施切换于 2026-07-20 完成。不可变 room-event 边界在 2026-07-21 的独立维护窗口上线：先生成同一时间点的 PostgreSQL/SeaweedFS 成对备份，停止所有旧 app，再执行 migration `0003` 和 `0004`，最后才重新开放流量。公网 WSS 验证覆盖已提交事件 fast path、snapshot、replay 与删除 tombstone。
-
-## 精选工程参考
-
-当前架构与历史记录都是工程证据的一部分：
-
-- [Redis 到 PostgreSQL 生产迁移](docs/postgres-migration-development-summary.zh.md)：写入冻结切换、provider 响应限制、幂等、回滚边界，以及真正零停机所需的设计。
-- [房间可靠性架构](docs/room-reliability-architecture.zh.md)：当前 session recovery、消息/媒体连续性、event-cursor 收敛、read-your-write ack、posting boundary 与生产诊断的完整合约。
-- [Code Agent 工具顺序](docs/code-agent-tool-ordering-fix-plan.zh.md)：从 engine 源头到持久化和渲染，保留文本/工具/model event 的交错顺序。
-- [A2UI streaming 实现](docs/a2ui-streaming-implementation.zh.md)：结构化 UI streaming、持久化、修复和 provider-independent validation。
-- [CI/CD 构建优化](docs/ci-cd-build-optimization.zh.md)：Docker build 边界、cache 行为、release detection 和生产验证。
-
-## 文档
-
-- [文档索引](docs/README.zh.md)：当前架构、runbook、子系统参考、复盘、历史方案、报告和语言版本。
-- [可迁移部署与切换记录](docs/room-event-sync-portable-deployment.zh.md)：当前 Mac 生产 runtime、event sync、对象存储 edge、备份与回滚边界。
-- [生产部署指南](部署指南.md)：当前 MacBook/Compose 的发布、验证、备份、回滚与 AWS 交接 runbook。
-- [配置参考](docs/configuration.zh.md)：环境变量分组、存储模式、secret 边界和生产/开发差异。
-- [安全](SECURITY.zh.md)：身份、授权、credential 处理、scoped capability、媒体访问和 sandbox trust boundary。
-- [贡献指南](CONTRIBUTING.zh.md)：开发、验证、artifact、commit 和 release 要求。
-
-当前文档标注 `Updated` 或 `Verified` 日期；历史方案和复盘保留原始语境，并指向当前事实源。
-
-## 许可证
-
-MIT。
+本项目经原作者授权进行二次开发。来源及 Git 元数据改写说明见 [PROJECT_ORIGIN.md](PROJECT_ORIGIN.md)。保留已有第三方许可证；仓库公开本身不等于为全部组件授予新的统一许可证。

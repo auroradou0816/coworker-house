@@ -1,4 +1,4 @@
-# 贡献 RoomTalk
+# 贡献 CoWorker House
 
 [English](CONTRIBUTING.md)
 
@@ -7,7 +7,7 @@
 
 ## 范围
 
-RoomTalk 包含 React/Vite 客户端、Node/Express/Socket.IO control plane，以及被打包进固定 E2B artifact 的 Python runner/daemon。修改应落在真正拥有该职责的边界，并保留工作区中与任务无关的改动。
+CoWorker House 包含 React/Vite 客户端、Node/Express/Socket.IO control plane，以及被打包进固定 E2B artifact 的 Python runner/daemon。修改应落在真正拥有该职责的边界，并保留工作区中与任务无关的改动。
 
 ## 本地开发
 
@@ -48,7 +48,7 @@ npm run test:e2e:postgres
 
 ## Code Agent Artifact 规则
 
-生产 Code Agent 房间不会直接运行 RoomTalk 应用镜像里的 runner 源码。以下改动需要新的固定 E2B artifact：
+生产 Code Agent 房间不会直接运行 CoWorker House 应用镜像里的 runner 源码。以下改动需要新的固定 E2B artifact：
 
 - `server/roomtalk_code_agent_runner/`
 - runner 工具或 system prompt

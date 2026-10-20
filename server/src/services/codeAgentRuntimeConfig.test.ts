@@ -209,7 +209,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
       CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
-      CODE_AGENT_SOURCE_DIR: '/Users/sky/projects/code-agent-engine/src',
+      CODE_AGENT_SOURCE_DIR: '/path/to/projects/code-agent-engine/src',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
     }), /must use the pinned sandbox artifact/);
@@ -298,7 +298,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_MODE: 'plan',
       CODE_AGENT_ARTIFACT_MODE: 'development',
       CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dev',
-      CODE_AGENT_SOURCE_DIR: '/Users/sky/projects/code-agent-engine/src',
+      CODE_AGENT_SOURCE_DIR: '/path/to/projects/code-agent-engine/src',
       ...e2bCredentialEnv,
     });
 
@@ -306,7 +306,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
     assert.equal(config.runnerEnv.PYTHONPATH, DEFAULT_CODE_AGENT_RUNNER_PYTHONPATH);
     assert.equal(config.runnerEnv.PLAYWRIGHT_BROWSERS_PATH, DEFAULT_PLAYWRIGHT_BROWSERS_PATH);
     assert.equal(config.runnerEnv.NODE_PATH, DEFAULT_NODE_PATH);
-    assert.equal(config.runnerEnv.CODE_AGENT_SOURCE_DIR, '/Users/sky/projects/code-agent-engine/src');
+    assert.equal(config.runnerEnv.CODE_AGENT_SOURCE_DIR, '/path/to/projects/code-agent-engine/src');
     assert.equal(config.artifactVersion, undefined);
     assert.equal(config.codeAgentSourceRef, undefined);
   });

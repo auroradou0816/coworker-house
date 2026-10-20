@@ -5181,8 +5181,8 @@ describe('CodeAgentSessionService', () => {
       mediaObjectStorage: new MemoryMediaObjectStorage(),
       logger,
       tokenSecret: 'static-publish-secret',
-      publicBaseUrl: 'https://room.ruit.me',
-      allowedPublicBaseUrls: ['https://room.ruit.me', 'https://admin.room.ruit.me'],
+      publicBaseUrl: 'https://coworker.example.com',
+      allowedPublicBaseUrls: ['https://coworker.example.com', 'https://admin.coworker.example.com'],
       nodeEnv: 'production',
       nowMs: () => Date.parse('2026-05-03T00:00:00.000Z'),
       createId: () => 'static-publish-token-id',
@@ -5200,13 +5200,13 @@ describe('CodeAgentSessionService', () => {
       roomId: 'room-1',
       clientId: 'client-1',
       selectedModel,
-      clientOrigin: 'https://room.ruit.me',
+      clientOrigin: 'https://coworker.example.com',
       serverOrigin: 'http://127.0.0.1:3012',
     });
 
     const env = sandboxService.startedRunnerEnvs[0];
-    assert.equal(env.ROOMTALK_STATIC_PUBLISH_URL, 'https://room.ruit.me/api/code-agent/publish-static-site');
-    assert.equal(env.ROOMTALK_STATIC_PUBLISH_PUBLIC_BASE_URL, 'https://room.ruit.me');
+    assert.equal(env.ROOMTALK_STATIC_PUBLISH_URL, 'https://coworker.example.com/api/code-agent/publish-static-site');
+    assert.equal(env.ROOMTALK_STATIC_PUBLISH_PUBLIC_BASE_URL, 'https://coworker.example.com');
   });
 
   it('injects local static publish URLs from the local server origin outside production', async () => {
@@ -5217,7 +5217,7 @@ describe('CodeAgentSessionService', () => {
       mediaObjectStorage: new MemoryMediaObjectStorage(),
       logger,
       tokenSecret: 'static-publish-secret',
-      publicBaseUrl: 'https://room.ruit.me',
+      publicBaseUrl: 'https://coworker.example.com',
       nodeEnv: 'development',
       nowMs: () => Date.parse('2026-05-03T00:00:00.000Z'),
       createId: () => 'static-publish-token-id',

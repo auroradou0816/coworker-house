@@ -517,7 +517,7 @@ describe('CodeAgentWorkspacePanel', () => {
             {
               slug: 'roomtalk-demo',
               title: 'RoomTalk Demo',
-              url: 'https://room.ruit.me/p/roomtalk-demo/',
+              url: 'https://coworker.example.com/p/roomtalk-demo/',
               entry: 'index.html',
               versionId: '20260630T120000Z_aaaaaaaa',
               fileCount: 1,
@@ -526,7 +526,7 @@ describe('CodeAgentWorkspacePanel', () => {
               updatedAt: '2026-06-30T12:00:00.000Z',
               versions: [{
                 versionId: '20260630T120000Z_aaaaaaaa',
-                url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+                url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
                 entry: 'index.html',
                 fileCount: 1,
                 totalBytes: 128,
@@ -534,7 +534,7 @@ describe('CodeAgentWorkspacePanel', () => {
                 isCurrent: true,
               }, {
                 versionId: '20260629T120000Z_bbbbbbbb',
-                url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/',
+                url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/',
                 entry: 'index.html',
                 fileCount: 1,
                 totalBytes: 120,
@@ -572,23 +572,23 @@ describe('CodeAgentWorkspacePanel', () => {
 
     fireEvent.click(screen.getByText('codeAgentArtifacts'));
     const link = screen.getByText('RoomTalk Demo').closest('a');
-    expect(link?.getAttribute('href')).toBe('https://room.ruit.me/p/roomtalk-demo/');
+    expect(link?.getAttribute('href')).toBe('https://coworker.example.com/p/roomtalk-demo/');
     expect(screen.getByText('V2 · codeAgentArtifactLatest')).toBeTruthy();
     fireEvent.click(screen.getByLabelText('codeAgentArtifactVersions'));
     expect(screen.getByText(/^V1 · /)).toBeTruthy();
     expect(screen.getByRole('menu').parentElement?.className).toContain('max-h-80');
     expect(screen.getByRole('menu').parentElement?.className).toContain('overflow-y-auto');
     fireEvent.click(await screen.findByText('bbbbbbbb'));
-    expect(link?.getAttribute('href')).toBe('https://room.ruit.me/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/');
+    expect(link?.getAttribute('href')).toBe('https://coworker.example.com/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/');
     expect(screen.getAllByText(/^V1 · /).length).toBeGreaterThan(0);
     fireEvent.click(link!);
     expect(readCodeAgentRightPanelState('room-1')).toMatchObject({
       isOpen: true,
-      activeSurfaceId: 'browser:url:https%3A%2F%2Froom.ruit.me%2Fp%2Froomtalk-demo%2F__versions%2F20260629T120000Z_bbbbbbbb%2F',
+      activeSurfaceId: 'browser:url:https%3A%2F%2Fcoworker.example.com%2Fp%2Froomtalk-demo%2F__versions%2F20260629T120000Z_bbbbbbbb%2F',
       surfaces: [{
         kind: 'preview',
         relativePath: null,
-        url: 'https://room.ruit.me/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/',
+        url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260629T120000Z_bbbbbbbb/',
       }],
     });
   });

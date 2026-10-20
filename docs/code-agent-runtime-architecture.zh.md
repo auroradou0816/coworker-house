@@ -1,4 +1,6 @@
-# RoomTalk Code Agent 运行时架构
+> Historical engineering reference inherited from the upstream project. Operator names and endpoints are examples, not evidence of a CoWorker House deployment. See [project origin](../PROJECT_ORIGIN.md).
+
+# CoWorker House Code Agent 运行时架构
 
 [English](code-agent-runtime-architecture.md)
 
@@ -11,24 +13,24 @@
 
 | 房间 | 主要用途 | 执行环境 |
 | --- | --- | --- |
-| Chat room | 人类对话、普通 AI streaming、媒体、角色和实时协作 | RoomTalk Node 进程调用配置 provider |
-| Code Agent room | 共享对话绑定一个可持续开发 workspace | RoomTalk 控制每房间一个 E2B sandbox 和 sandbox-local daemon |
+| Chat room | 人类对话、普通 AI streaming、媒体、角色和实时协作 | CoWorker House Node 进程调用配置 provider |
+| Code Agent room | 共享对话绑定一个可持续开发 workspace | CoWorker House 控制每房间一个 E2B sandbox 和 sandbox-local daemon |
 
 Code Agent room 不是给 remote shell 包一层 chat prompt，而是一个 room-scoped control plane：
 
 - Room 是 membership、prompt、turn、tool event、permission 和 artifact 的共享事实源。
 - Sandbox 是 file、Git、process、terminal 和 dev server 的可变 runtime state。
-- Coco 是 RoomTalk 自研 CLI coding agent/engine，其 reasoning/tool loop 位于 runner contract 之后。
-- Codex 由房主提供：房主连接自己的 Codex subscription，RoomTalk 加密存储，并为获准使用工作区的成员 turn 物化房主连接。
-- OpenCode 与 Hermes Agent 作为隔离的 ACP harness 运行。模型访问只使用 RoomTalk 的 turn-scoped gateway；room access、turn ownership、approval、持久化和 artifact 发布仍由 RoomTalk 负责。
+- Coco 是 CoWorker House 自研 CLI coding agent/engine，其 reasoning/tool loop 位于 runner contract 之后。
+- Codex 由房主提供：房主连接自己的 Codex subscription，CoWorker House 加密存储，并为获准使用工作区的成员 turn 物化房主连接。
+- OpenCode 与 Hermes Agent 作为隔离的 ACP harness 运行。模型访问只使用 CoWorker House 的 turn-scoped gateway；room access、turn ownership、approval、持久化和 artifact 发布仍由 CoWorker House 负责。
 - GitHub 也是用户自有 connection：加密 PAT 只以 turn-scoped secret file 形式供 `gh`/Git 使用，轮次后删除。
-- Browser 永远不获得 E2B、provider、database 或 RoomTalk service secret。
+- Browser 永远不获得 E2B、provider、database 或 CoWorker House service secret。
 
 ## 高层架构
 
 ```mermaid
 flowchart TB
-  UI["Browser UI"] -->|"Socket.IO + HTTP"| Node["RoomTalk control plane"]
+  UI["Browser UI"] -->|"Socket.IO + HTTP"| Node["CoWorker House control plane"]
   Node --> Durable["PostgreSQL durable state + room events"]
   Node --> Redis["Redis realtime/cache + BullMQ"]
   Node --> Objects["SeaweedFS/S3-compatible media + artifacts"]
@@ -40,7 +42,7 @@ flowchart TB
   Daemon --> OpenCode["OpenCode ACP"]
   Daemon --> Hermes["Hermes ACP"]
   E2B --> Workspace["Files / Git / PTY / previews"]
-  Daemon --> Broker["Turn-scoped RoomTalk capabilities"]
+  Daemon --> Broker["Turn-scoped CoWorker House capabilities"]
   Broker --> Node
 ```
 
@@ -49,21 +51,21 @@ flowchart TB
 | 组件 | 拥有 | 不拥有 |
 | --- | --- | --- |
 | Browser | UI state、用户输入、本地 view preference | 服务 secret、基础设施凭据、权威 turn state |
-| RoomTalk control plane | Identity、membership、authorization、durable turn/transcript、scoped credential、sandbox lifecycle、object metadata | Agent reasoning、workspace process |
+| CoWorker House control plane | Identity、membership、authorization、durable turn/transcript、scoped credential、sandbox lifecycle、object metadata | Agent reasoning、workspace process |
 | E2B execution plane | Workspace file、Git、process、PTY、preview server、Agent execution | Room authorization、database credential、public URL ownership |
-| Agent backend | Reasoning、原生 tool loop、backend session/thread state | RoomTalk auth、database access、sandbox lifecycle |
+| Agent backend | Reasoning、原生 tool loop、backend session/thread state | CoWorker House auth、database access、sandbox lifecycle |
 | PostgreSQL/Redis/S3-compatible storage | Durable fact 与 AI run、realtime coordination/BullMQ/cache、object body/manifest | Agent execution |
 
 ## Turn 生命周期
 
 1. Socket 已注册用户提交 `ask_ai` 或 send-and-ask。
-2. RoomTalk 校验 room type、membership、Code Agent access、mode、backend 和 rollout control。
+2. CoWorker House 校验 room type、membership、Code Agent access、mode、backend 和 rollout control。
 3. 一个 PostgreSQL 事务锁定 room、取得下一代 fenced lease、物化可选 queued prompt、创建 AI placeholder 与 durable turn，并把 room 标为 running；提交后才返回 ack。
 4. Session service 保存 `{ roomId, turnId, ownerId, fence }` claim，并在整个 turn 内续租；每次 durable write 都重新校验它。
 5. Lifecycle service 连接或创建固定 E2B sandbox，验证 artifact/source-ref，必要时迁移 workspace archive。
 6. Session service 发放 turn-scoped model/context/publish/asset credential，并注入房主的 Codex 与可选 GitHub secret。
 7. 可复用 daemon 串行执行 backend turn，同时接受 steer、interrupt 和 approval response。
-8. Text/tool/status/model-step event 被映射为 RoomTalk event；只有 fenced persistence 成功后才按真实顺序广播。
+8. Text/tool/status/model-step event 被映射为 CoWorker House event；只有 fenced persistence 成功后才按真实顺序广播。
 9. 一个 terminal transaction 关闭 pending tool call/placeholder，结算 usage/cost，保存 backend session ID，更新 room/turn 并释放精确 lease；随后 sandbox 回到 idle TTL。
 
 Turn control 不会绕过 durable scheduler：Queue 保存下一个 prompt；Steer 只在 backend 确认插入后消费；Interrupt 先停止 owned runner，再完成持久状态。Retry/edit-and-ask 保留原 turn mode/backend 且按 durable history 截断。
@@ -72,13 +74,13 @@ Turn control 不会绕过 durable scheduler：Queue 保存下一个 prompt；Ste
 
 每个 Code Agent room 绑定一个可持续 `/workspace`。Idle TTL 与 active TTL 分离；正在执行的 turn 会续租 active TTL，完成后回到 idle TTL。Sandbox 暂停/超时后可恢复；artifact 不匹配时可用 archive 迁移到 replacement sandbox。
 
-Daemon 是 sandbox-local JSONL process，不是 RoomTalk 权威状态存储。它复用 backend process/session，串行 turn/control/query，并发出版本化 event。RoomTalk 为 thread query 和 turn release 设置有界等待；丢失 release、query timeout 或 control connection 失败会使 daemon handle 中毒并重建，而不是永久卡住 room。
+Daemon 是 sandbox-local JSONL process，不是 CoWorker House 权威状态存储。它复用 backend process/session，串行 turn/control/query，并发出版本化 event。CoWorker House 为 thread query 和 turn release 设置有界等待；丢失 release、query timeout 或 control connection 失败会使 daemon handle 中毒并重建，而不是永久卡住 room。
 
 当前产品 backend 是 Coco（`code-agent`）、Codex app-server（`codex-app-server`）、OpenCode（`opencode`）与 Hermes Agent（`hermes-agent`）。OpenCode 与 Hermes 共享 capability-negotiated ACP adapter，统一映射 text/tool/usage/permission/cancel/session，而不是各自复制一套私有协议。Live steer、Codex thread 浏览和 checkpoint 仍按 backend capability 明确区分，ACP backend 不会宣称未实现的能力。Plan 模式除了 native permission 配置，还用 bubblewrap 把 workspace 强制挂成只读。
 
 PTY terminal、browser preview、dev server 和 file API 是独立 sandbox service，不属于 daemon protocol state。
 
-Codex 与 GitHub connection record 仍以 RoomTalk client 为存储键，但 Code Agent room 始终通过当前 `creatorId` 解析两类凭据。发起成员继续作为 prompt ownership、room authorization、observability 和 approval 的主体；房主提供 Codex subscription 与可选 GitHub PAT。签名 Codex refresh token 同时绑定发起成员与凭据房主，房间所有权在 turn 中途变化时不会静默切换账号。
+Codex 与 GitHub connection record 仍以 CoWorker House client 为存储键，但 Code Agent room 始终通过当前 `creatorId` 解析两类凭据。发起成员继续作为 prompt ownership、room authorization、observability 和 approval 的主体；房主提供 Codex subscription 与可选 GitHub PAT。签名 Codex refresh token 同时绑定发起成员与凭据房主，房间所有权在 turn 中途变化时不会静默切换账号。
 
 ## 权限与 Scoped Capability
 
@@ -98,7 +100,7 @@ Mode 不仅是 prompt 提示，它决定 runner 工具、sandbox policy、approv
 
 ## Browser Workspace
 
-Workspace UI 是 RoomTalk 对 sandbox 能力的授权视图：
+Workspace UI 是 CoWorker House 对 sandbox 能力的授权视图：
 
 - transcript 按 durable turn 分组，展示 text/tool/approval/usage/lifecycle；
 - file tree/search/editing、asset preview、Markdown/media preview；
@@ -143,4 +145,4 @@ Runtime 强制使用 PostgreSQL 保存 durable business state，同时仍需 Red
 
 验证从变更风险出发：protocol/store/auth/ordering 用 focused contract/service test；真实 PostgreSQL 测试覆盖原子 turn start、任一步失败整体 rollback、stale fence 接管、所有中间写拒绝旧 claim、terminal projection rollback/幂等，以及 abandoned queue recovery；client state 用 Vitest；跨 browser 流程用 Playwright；真实 sandbox/backend/artifact 边界用 E2B smoke。
 
-RoomTalk 应用镜像发布和 E2B artifact 发布是两条不同链路。修改 runner、tool、prompt、sandbox Dockerfile/dependency 或 code-agent-engine source ref 时，必须更新 lock/version、构建新 template、同步生产 pin 并完成真实验证。只推送 Node 源码不会更新已存 sandbox artifact。
+CoWorker House 应用镜像发布和 E2B artifact 发布是两条不同链路。修改 runner、tool、prompt、sandbox Dockerfile/dependency 或 code-agent-engine source ref 时，必须更新 lock/version、构建新 template、同步生产 pin 并完成真实验证。只推送 Node 源码不会更新已存 sandbox artifact。

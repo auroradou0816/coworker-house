@@ -60,9 +60,9 @@ const logger = {
 };
 
 const roomtalkOriginHeaders = {
-  origin: 'https://room.ruit.me',
+  origin: 'https://coworker.example.com',
   'x-forwarded-proto': 'https',
-  'x-forwarded-host': 'room.ruit.me',
+  'x-forwarded-host': 'coworker.example.com',
 };
 
 const selectedModel: AIModelOption = {
@@ -627,8 +627,8 @@ describe('AI socket handlers', () => {
       clientId: 'client-1',
       selectedModel,
       maxContextMessages: undefined,
-      clientOrigin: 'https://room.ruit.me',
-      serverOrigin: 'https://room.ruit.me',
+      clientOrigin: 'https://coworker.example.com',
+      serverOrigin: 'https://coworker.example.com',
     });
     assert.equal(Object.prototype.hasOwnProperty.call(calls[0][0], 'roleName'), false);
     assert.deepEqual(response, { success: true, messageId: 'code-agent-ai-1' });
@@ -687,8 +687,8 @@ describe('AI socket handlers', () => {
         serviceTier: 'priority',
       },
       maxContextMessages: undefined,
-      clientOrigin: 'https://room.ruit.me',
-      serverOrigin: 'https://room.ruit.me',
+      clientOrigin: 'https://coworker.example.com',
+      serverOrigin: 'https://coworker.example.com',
       requestedMode: 'fullAccess',
       requestedModeSource: 'originalTurn',
     });
@@ -1455,8 +1455,8 @@ describe('AI socket handlers', () => {
       clientId: 'client-1',
       selectedModel,
       maxContextMessages: undefined,
-      clientOrigin: 'https://room.ruit.me',
-      serverOrigin: 'https://room.ruit.me',
+      clientOrigin: 'https://coworker.example.com',
+      serverOrigin: 'https://coworker.example.com',
       promptMessage: store.messages.find(message => message.id === 'message-edited'),
       promptMessageId: 'message-edited',
     });
@@ -1614,8 +1614,8 @@ describe('AI socket handlers', () => {
       clientId: 'client-1',
       selectedModel,
       maxContextMessages: undefined,
-      clientOrigin: 'https://room.ruit.me',
-      serverOrigin: 'https://room.ruit.me',
+      clientOrigin: 'https://coworker.example.com',
+      serverOrigin: 'https://coworker.example.com',
       promptMessage: store.appendedMessages[0],
       promptMessageId: store.appendedMessages[0].id,
     });

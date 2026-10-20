@@ -48,23 +48,23 @@ export const RoomCard: React.FC<RoomCardProps> = ({
     <Card
       data-testid="room-card"
       data-room-id={room.id}
-      className="cursor-pointer rounded-lg border border-[#dbe3ee] bg-[#f8fafc] p-4 shadow-[0_0_0_1px_rgba(194,192,182,0.4)] transition-all duration-200 hover:bg-[#eaf0f7] active:bg-[#e2e8f0] dark:border-[#253247] dark:bg-[#101827] dark:hover:bg-[#253247]"
+      className="studio-room-card rounded-lg"
     >
       <div className="flex items-start">
         <button
           type="button"
-          className="flex min-w-0 flex-1 items-start text-left outline-none"
+          className="studio-room-open flex min-w-0 flex-1 flex-col items-start text-left"
           onClick={() => onSelect(room)}
         >
           <div
-            className="mr-3 rounded-xl bg-[#e2e8f0] p-2.5 text-[#0891b2] dark:bg-[#253247] dark:text-[#67e8f9]"
+            className="studio-room-icon"
             title={isCodeAgent ? t('codeAgentRoomType') : undefined}
           >
             <Icon icon={isCodeAgent ? 'lucide:terminal' : 'lucide:message-circle'} className="h-5 w-5" aria-hidden="true" />
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 w-full flex-1">
             <div className="mb-1 flex min-w-0 items-center">
-              <h3 className="min-w-0 flex-1 truncate font-medium text-[#0b101b] dark:text-[#f8fafc]">{room.name}</h3>
+              <h3 className="min-w-0 flex-1 truncate text-lg font-semibold text-[#0b101b] dark:text-[#f8fafc]">{room.name}</h3>
             </div>
             {room.description && (
               <p className="mb-2 line-clamp-2 text-xs text-[#526176] dark:text-[#a8b6cc]">{room.description}</p>

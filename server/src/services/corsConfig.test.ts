@@ -6,23 +6,23 @@ describe('resolveCorsOrigin', () => {
   it('uses CLIENT_URL when configured', () => {
     assert.equal(resolveCorsOrigin({
       NODE_ENV: 'production',
-      CLIENT_URL: ' https://room.ruit.me ',
-    }), 'https://room.ruit.me');
+      CLIENT_URL: ' https://coworker.example.com ',
+    }), 'https://coworker.example.com');
   });
 
   it('uses CLIENT_URLS for multiple production origins', () => {
     assert.deepEqual(resolveCorsOrigin({
       NODE_ENV: 'production',
-      CLIENT_URLS: ' https://room.ruit.me, https://admin.room.ruit.me ',
-    }), ['https://room.ruit.me', 'https://admin.room.ruit.me']);
+      CLIENT_URLS: ' https://coworker.example.com, https://admin.coworker.example.com ',
+    }), ['https://coworker.example.com', 'https://admin.coworker.example.com']);
   });
 
   it('combines CLIENT_URLS and CLIENT_URL without duplicates', () => {
     assert.deepEqual(resolveCorsOrigin({
       NODE_ENV: 'production',
-      CLIENT_URLS: 'https://room.ruit.me,https://admin.room.ruit.me',
-      CLIENT_URL: 'https://room.ruit.me',
-    }), ['https://room.ruit.me', 'https://admin.room.ruit.me']);
+      CLIENT_URLS: 'https://coworker.example.com,https://admin.coworker.example.com',
+      CLIENT_URL: 'https://coworker.example.com',
+    }), ['https://coworker.example.com', 'https://admin.coworker.example.com']);
   });
 
   it('falls back to wildcard for local development without CLIENT_URL', () => {

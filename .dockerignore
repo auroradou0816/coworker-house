@@ -52,3 +52,9 @@ server/scripts
 **/logs/*
 **/*/logs/*
 fly.toml
+
+# Deployment credentials and local data must never enter a build context.
+.env.compose
+.env.compose.*
+runtime
+backups

@@ -5,19 +5,19 @@ import { accountMatchesPlatformAdminEmail, resolvePlatformAdminEmails } from './
 describe('platform administrator configuration', () => {
   it('normalizes and deduplicates configured administrator emails', () => {
     assert.deepEqual(
-      resolvePlatformAdminEmails(' admin@example.com,[redacted-account]@gmail.com '),
-      ['[redacted-account]@gmail.com'],
+      resolvePlatformAdminEmails(' Maintainer@example.com,maintainer@example.com '),
+      ['maintainer@example.com'],
     );
   });
 
   it('requires a verified account email for configured administrator bootstrap', () => {
-    const configured = new Set(['[redacted-account]@gmail.com']);
+    const configured = new Set(['maintainer@example.com']);
     assert.equal(accountMatchesPlatformAdminEmail({
-      email: 'admin@example.com',
+      email: 'Maintainer@example.com',
       emailVerified: true,
     }, configured), true);
     assert.equal(accountMatchesPlatformAdminEmail({
-      email: '[redacted-account]@gmail.com',
+      email: 'maintainer@example.com',
       emailVerified: false,
     }, configured), false);
     assert.equal(accountMatchesPlatformAdminEmail({

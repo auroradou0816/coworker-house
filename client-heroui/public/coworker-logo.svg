@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="CoWorker House">
-  <rect width="120" height="120" rx="28" fill="#0b101b"/>
-  <path d="M53 36H43L26 60l17 24h10M67 36h10l17 24-17 24H67" fill="none" stroke="#67e8f9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="60" cy="60" r="6" fill="#f8fafc"/>
+  <rect width="120" height="120" rx="32" fill="#d6f58b"/>
+  <path d="M28 55 60 29l32 26v36H28Z" fill="none" stroke="#26391c" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M49 91V66h22v25" fill="none" stroke="#26391c" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="92" cy="29" r="12" fill="#ffc09f"/>
 </svg>

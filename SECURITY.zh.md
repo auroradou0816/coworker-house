@@ -1,4 +1,4 @@
-# RoomTalk 安全
+# CoWorker House 安全
 
 [English](SECURITY.md)
 
@@ -7,7 +7,7 @@
 
 ## 信任边界
 
-RoomTalk 将可信 control plane 与不可信执行分离：
+CoWorker House 将可信 control plane 与不可信执行分离：
 
 - Node control plane 拥有身份、room 授权、durable record、scoped capability 签发、object metadata 和 sandbox lifecycle。
 - PostgreSQL 或 Redis 拥有 durable application fact；Redis 还拥有实时协调和有界 cache state。
@@ -21,11 +21,11 @@ Room access 组合 client identity、可选 password/token auth、Google-linked 
 
 ## Scoped Capability
 
-RoomTalk 为 model access、room-context read、static publish、workspace asset 和 Codex auth refresh 签发短期、用途单一的凭据。Claim 根据场景绑定获授权 client、room、turn、mode、model、budget 或 path。Plan 模式不获得 write/shell capability。
+CoWorker House 为 model access、room-context read、static publish、workspace asset 和 Codex auth refresh 签发短期、用途单一的凭据。Claim 根据场景绑定获授权 client、room、turn、mode、model、budget 或 path。Plan 模式不获得 write/shell capability。
 
 ## 用户自有 Connection
 
-Codex subscription auth 和 GitHub personal access token 属于单个用户。RoomTalk 加密存储，不向浏览器返回原始凭据，只为该用户获授权的 sandbox turn 物化 secret file。Refresh/update 路径用版本检查和 lease 防止 stale concurrent write，使用后删除 secret file。
+Codex subscription auth 和 GitHub personal access token 属于单个用户。CoWorker House 加密存储，不向浏览器返回原始凭据，只为该用户获授权的 sandbox turn 物化 secret file。Refresh/update 路径用版本检查和 lease 防止 stale concurrent write，使用后删除 secret file。
 
 ## 媒体与发布 Artifact
 

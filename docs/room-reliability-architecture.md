@@ -1,14 +1,16 @@
+> Historical engineering reference inherited from the upstream project. Operator names and endpoints are examples, not evidence of a CoWorker House deployment. See [project origin](../PROJECT_ORIGIN.md).
+
 # Room Reliability Architecture
 
 [中文](room-reliability-architecture.zh.md)
 
-Status: implemented and deployed at `room.ruit.me`
+Status: implemented and deployed at `coworker.example.com`
 
 Updated: 2026-07-21
 
 ## One durable synchronization boundary
 
-RoomTalk uses one PostgreSQL-owned sequence per room. The retired room/message version counters are not part of the runtime model.
+CoWorker House uses one PostgreSQL-owned sequence per room. The retired room/message version counters are not part of the runtime model.
 
 | Value | Meaning | Lifetime |
 | --- | --- | --- |
@@ -111,7 +113,7 @@ Codex workspace recovery uses the same ownership rule. PostgreSQL stores an Agen
 
 Ordinary chat AI has a separate scheduling boundary. One transaction creates the streaming placeholder, `assistant_runs`, its room event, and a `task_dispatch_outbox` row. The App relay publishes only `{ schemaVersion: 1, runId }` to BullMQ with `jobId=runId`, then acknowledges that exact fenced dispatch claim. If Redis is unavailable, the row returns to pending and the accepted user request remains recoverable in PostgreSQL. After acknowledgement, a separate advisory-locked reconciliation pass compares non-terminal PostgreSQL runs with BullMQ: a missing job is recreated, and a failed or prematurely completed job is retried. This covers an empty Redis restore and exhausted infrastructure attempts without turning PostgreSQL into a second scheduler. A dedicated `ai-worker` claims the exact run, executes up to configured bounded concurrency, renews the PostgreSQL generation lease, and publishes transient events through a versioned Redis channel. Each App reauthorizes its local sockets before `io.local` emission.
 
-BullMQ owns scheduling mechanics—waiting, concurrency, backoff, stalled-job recovery, and operational retention—but not business truth or a result backend. `assistant_runs` owns request snapshot, status, generation, immutable terminal payload, error, and usage; the final transaction also updates the Message and room cost exactly once. There is deliberately no `assistant_run_usage` ledger because the locked run transition already provides the idempotency boundary and the immutable terminal payload retains the audit evidence. This exactly-once guarantee ends at RoomTalk's PostgreSQL boundary. If a process dies after a Provider accepts a request but before RoomTalk stages the terminal payload, a replacement generation may invoke that external Provider again. Where a Provider offers a reliable idempotency key it can be added, but the portable base contract is at-least-once Provider invocation plus fenced, exactly-once terminal projection and internal cost settlement.
+BullMQ owns scheduling mechanics—waiting, concurrency, backoff, stalled-job recovery, and operational retention—but not business truth or a result backend. `assistant_runs` owns request snapshot, status, generation, immutable terminal payload, error, and usage; the final transaction also updates the Message and room cost exactly once. There is deliberately no `assistant_run_usage` ledger because the locked run transition already provides the idempotency boundary and the immutable terminal payload retains the audit evidence. This exactly-once guarantee ends at CoWorker House's PostgreSQL boundary. If a process dies after a Provider accepts a request but before CoWorker House stages the terminal payload, a replacement generation may invoke that external Provider again. Where a Provider offers a reliable idempotency key it can be added, but the portable base contract is at-least-once Provider invocation plus fenced, exactly-once terminal projection and internal cost settlement.
 
 ## Protocol cutover boundary
 
@@ -142,6 +144,6 @@ The implementation is guarded by:
 - Playwright PostgreSQL tests for reload/fresh-context persistence, media/AI/share flows, two clients, and offline replay;
 - Compose health, restart persistence, and backup/restore checks.
 
-Health evidence distinguishes process liveness from serving readiness. `/api/health/live` has no downstream dependency and answers only whether the App can handle HTTP. `/api/status` and `/api/health/ready` execute a real RoomTalk table query, realtime Redis `PING`, S3-compatible bucket probe, and Socket adapter check. Failure of a serving dependency produces HTTP 503 and `rooms: null`; queue-only failure reports a ready but `degraded` App with deferred dispatch because PostgreSQL still accepts the request safely. The Worker exposes a separate health endpoint for PostgreSQL, queue Redis, transient Redis, and worker-loop state.
+Health evidence distinguishes process liveness from serving readiness. `/api/health/live` has no downstream dependency and answers only whether the App can handle HTTP. `/api/status` and `/api/health/ready` execute a real CoWorker House table query, realtime Redis `PING`, S3-compatible bucket probe, and Socket adapter check. Failure of a serving dependency produces HTTP 503 and `rooms: null`; queue-only failure reports a ready but `degraded` App with deferred dispatch because PostgreSQL still accepts the request safely. The Worker exposes a separate health endpoint for PostgreSQL, queue Redis, transient Redis, and worker-loop state.
 
 Deployment and portability details live in [Room Event Sync and Portable Deployment](room-event-sync-portable-deployment.md).
