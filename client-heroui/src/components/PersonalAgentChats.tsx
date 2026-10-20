@@ -88,7 +88,7 @@ export const PersonalAgentChats:React.FC<PersonalAgentChatsProps>=({clientId,roo
     ].map(item=><button key={item.key} type="button" className={rowClass} onClick={()=>{onClose();item.action();}}><Icon icon={item.icon} className="h-5 w-5 shrink-0"/><span className="flex-1">{t(item.title)}</span><Icon icon="lucide:chevron-right" className="h-4 w-4 text-default-500"/></button>)}</div>
     <div className="flex flex-wrap items-center justify-between gap-1 px-1">
       <Button size="sm" variant="light" className="text-xs text-default-500" startContent={<Icon icon="lucide:refresh-cw" className="h-4 w-4"/>} onPress={onRefresh}>{t('personalAgentRefreshWorkspace')}</Button>
-      {onBack && <Button size="sm" variant="light" className="text-xs text-default-500" onPress={()=>{onClose();onBack();}} startContent={<Icon icon="lucide:arrow-left" className="h-4 w-4"/>}>RoomTalk</Button>}
+      {onBack && <Button size="sm" variant="light" className="text-xs text-default-500" onPress={()=>{onClose();onBack();}} startContent={<Icon icon="lucide:arrow-left" className="h-4 w-4"/>}>CoWorker House</Button>}
     </div>
   </div></ModalBody></ModalContent></Modal>;
 };

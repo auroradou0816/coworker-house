@@ -5,19 +5,19 @@
 :root {
   --app-height: 100dvh;
   --app-viewport-top: 0px;
-  --rt-paper: #f5f4ed;
-  --rt-ivory: #faf9f5;
-  --rt-sand: #e8e6dc;
-  --rt-border: #dedbd0;
-  --rt-text: #141413;
-  --rt-muted: #5e5d59;
-  --rt-muted-foreground-rgb: 94 93 89;
-  --rt-terracotta: #c96442;
-  --rt-coral: #d97757;
-  --rt-dark: #141413;
-  --rt-dark-surface: #30302e;
-  --rt-dark-text: #faf9f5;
-  --rt-dark-muted: #b0aea5;
+  --rt-paper: #f1f5f9;
+  --rt-ivory: #f8fafc;
+  --rt-sand: #e2e8f0;
+  --rt-border: #dbe3ee;
+  --rt-text: #0b101b;
+  --rt-muted: #526176;
+  --rt-muted-foreground-rgb: 82 97 118;
+  --rt-terracotta: #0891b2;
+  --rt-coral: #67e8f9;
+  --rt-dark: #0b101b;
+  --rt-dark-surface: #253247;
+  --rt-dark-text: #f8fafc;
+  --rt-dark-muted: #a8b6cc;
   background: var(--rt-paper);
   color: var(--rt-text);
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -50,7 +50,7 @@ body {
 .dark {
   color-scheme: dark;
   color: var(--rt-dark-text);
-  --rt-muted-foreground-rgb: 176 174 165;
+  --rt-muted-foreground-rgb: 168 182 204;
 }
 
 .dark body,
@@ -140,33 +140,33 @@ body {
 
 [contenteditable]:empty:before {
   content: attr(data-placeholder);
-  color: #5e5d59;
+  color: #526176;
   cursor: text;
 }
 
 .dark [contenteditable]:empty:before {
-  color: #b0aea5;
+  color: #a8b6cc;
 }
 
 .roomtalk-audio-player {
-  background-color: #dedbd0;
+  background-color: #dbe3ee;
   border-radius: 9999px;
   box-shadow: 0 0 0 1px rgba(194, 192, 182, 1);
   color-scheme: light;
 }
 
 .roomtalk-audio-player::-webkit-media-controls-panel {
-  background-color: #dedbd0;
+  background-color: #dbe3ee;
 }
 
 .dark .roomtalk-audio-player {
-  background-color: #30302e;
+  background-color: #253247;
   box-shadow: 0 0 0 1px rgba(77, 76, 72, 0.9);
   color-scheme: dark;
 }
 
 .dark .roomtalk-audio-player::-webkit-media-controls-panel {
-  background-color: #30302e;
+  background-color: #253247;
 }
 
 .roomtalk-sender-outline {
@@ -194,7 +194,7 @@ body {
 
 .dark .bg-secondary.text-secondary-foreground[data-hover="true"] {
   background-color: #e08a6a !important;
-  color: #141413 !important;
+  color: #0b101b !important;
 }
 
 /* Custom RoomTalk motion must follow the same reduced-motion contract as

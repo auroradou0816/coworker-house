@@ -10,16 +10,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: "#f5f4ed",
-        ivory: "#faf9f5",
-        sand: "#e8e6dc",
-        warmBorder: "#dedbd0",
-        warmText: "#141413",
-        warmMuted: "#5e5d59",
+        paper: "#f1f5f9",
+        ivory: "#f8fafc",
+        sand: "#e2e8f0",
+        warmBorder: "#dbe3ee",
+        warmText: "#0b101b",
+        warmMuted: "#526176",
         "muted-foreground": "rgb(var(--rt-muted-foreground-rgb) / <alpha-value>)",
-        terracotta: "#c96442",
-        coral: "#d97757",
-        ink: "#30302e",
+        terracotta: "#0891b2",
+        coral: "#67e8f9",
+        ink: "#253247",
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -76,43 +76,42 @@ export default {
       themes: {
         light: {
           colors: {
-            background: "#f5f4ed",
-            foreground: "#141413",
-            content1: "#faf9f5",
-            content2: "#f0eee6",
-            content3: "#e8e6dc",
-            content4: "#d1cfc5",
-            divider: "#dedbd0",
+            background: "#f1f5f9",
+            foreground: "#0b101b",
+            content1: "#f8fafc",
+            content2: "#eaf0f7",
+            content3: "#e2e8f0",
+            content4: "#cbd5e1",
+            divider: "#dbe3ee",
             focus: "#3898ec",
             primary: {
-              DEFAULT: "#30302e",
-              foreground: "#faf9f5",
+              DEFAULT: "#253247",
+              foreground: "#f8fafc",
             },
             secondary: {
-              // Action terracotta is intentionally darker than the decorative
-              // brand accent so 12-14px ivory labels meet WCAG AA (4.94:1).
-              DEFAULT: "#ad5237",
-              foreground: "#faf9f5",
+              // Dark cyan keeps light-theme action labels readable.
+              DEFAULT: "#0e7490",
+              foreground: "#f8fafc",
             },
           },
         },
         dark: {
           colors: {
-            background: "#141413",
-            foreground: "#faf9f5",
-            content1: "#1d1d1b",
-            content2: "#30302e",
-            content3: "#3d3d3a",
-            content4: "#4d4c48",
-            divider: "#30302e",
+            background: "#0b101b",
+            foreground: "#f8fafc",
+            content1: "#101827",
+            content2: "#253247",
+            content3: "#334155",
+            content4: "#475569",
+            divider: "#253247",
             focus: "#3898ec",
             primary: {
-              DEFAULT: "#faf9f5",
-              foreground: "#141413",
+              DEFAULT: "#f8fafc",
+              foreground: "#0b101b",
             },
             secondary: {
-              DEFAULT: "#d97757",
-              foreground: "#141413",
+              DEFAULT: "#67e8f9",
+              foreground: "#0b101b",
             },
           },
         },

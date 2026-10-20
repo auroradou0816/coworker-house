@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="CoWorker House">
+  <rect width="120" height="120" rx="28" fill="#0b101b"/>
+  <path d="M53 36H43L26 60l17 24h10M67 36h10l17 24-17 24H67" fill="none" stroke="#67e8f9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="60" r="6" fill="#f8fafc"/>
+</svg>

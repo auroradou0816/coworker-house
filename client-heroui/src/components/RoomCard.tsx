@@ -48,7 +48,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
     <Card
       data-testid="room-card"
       data-room-id={room.id}
-      className="cursor-pointer rounded-lg border border-[#dedbd0] bg-[#faf9f5] p-4 shadow-[0_0_0_1px_rgba(194,192,182,0.4)] transition-all duration-200 hover:bg-[#f0eee6] active:bg-[#e8e6dc] dark:border-[#30302e] dark:bg-[#1d1d1b] dark:hover:bg-[#30302e]"
+      className="cursor-pointer rounded-lg border border-[#dbe3ee] bg-[#f8fafc] p-4 shadow-[0_0_0_1px_rgba(194,192,182,0.4)] transition-all duration-200 hover:bg-[#eaf0f7] active:bg-[#e2e8f0] dark:border-[#253247] dark:bg-[#101827] dark:hover:bg-[#253247]"
     >
       <div className="flex items-start">
         <button
@@ -57,21 +57,21 @@ export const RoomCard: React.FC<RoomCardProps> = ({
           onClick={() => onSelect(room)}
         >
           <div
-            className="mr-3 rounded-xl bg-[#e8e6dc] p-2.5 text-[#c96442] dark:bg-[#30302e] dark:text-[#d97757]"
+            className="mr-3 rounded-xl bg-[#e2e8f0] p-2.5 text-[#0891b2] dark:bg-[#253247] dark:text-[#67e8f9]"
             title={isCodeAgent ? t('codeAgentRoomType') : undefined}
           >
             <Icon icon={isCodeAgent ? 'lucide:terminal' : 'lucide:message-circle'} className="h-5 w-5" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex min-w-0 items-center">
-              <h3 className="min-w-0 flex-1 truncate font-medium text-[#141413] dark:text-[#faf9f5]">{room.name}</h3>
+              <h3 className="min-w-0 flex-1 truncate font-medium text-[#0b101b] dark:text-[#f8fafc]">{room.name}</h3>
             </div>
             {room.description && (
-              <p className="mb-2 line-clamp-2 text-xs text-[#5e5d59] dark:text-[#b0aea5]">{room.description}</p>
+              <p className="mb-2 line-clamp-2 text-xs text-[#526176] dark:text-[#a8b6cc]">{room.description}</p>
             )}
             <div className="mt-2 flex min-w-0 items-center gap-2">
               <p
-                className="flex min-w-0 items-center gap-1 text-xs text-[#5e5d59] dark:text-[#b0aea5]"
+                className="flex min-w-0 items-center gap-1 text-xs text-[#526176] dark:text-[#a8b6cc]"
                 title={room.id}
                 aria-label={`ID: ${room.id}`}
               >
@@ -83,7 +83,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
               </p>
 
               {activityAt && (
-                <span className="ml-2 hidden whitespace-nowrap text-xs text-[#5e5d59] dark:text-[#b0aea5] md:inline-block">
+                <span className="ml-2 hidden whitespace-nowrap text-xs text-[#526176] dark:text-[#a8b6cc] md:inline-block">
                   {formatDate(activityAt, i18n.language)}
                 </span>
               )}
@@ -98,7 +98,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
                 size="sm"
                 variant="light"
                 aria-label={`${t('moreActions')} ${room.name}`}
-                className="h-9 w-9 min-w-9 rounded-lg text-[#5e5d59] data-[hover=true]:bg-[#e8e6dc] dark:text-[#b0aea5] dark:data-[hover=true]:bg-[#30302e]"
+                className="h-9 w-9 min-w-9 rounded-lg text-[#526176] data-[hover=true]:bg-[#e2e8f0] dark:text-[#a8b6cc] dark:data-[hover=true]:bg-[#253247]"
               >
                 <Icon icon="lucide:ellipsis" className="h-4 w-4" />
               </Button>

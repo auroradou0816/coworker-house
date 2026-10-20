@@ -1,6 +1,6 @@
-# RoomTalk
+# CoWorker House
 
-[Live app](https://room.ruit.me/) · [中文说明](./README.zh.md)
+[Project origin and history / 项目来源与历史说明](PROJECT_ORIGIN.md)
 
 RoomTalk is a real-time AI collaboration platform built around shared rooms and persistent, sandboxed code-agent workspaces. Humans and multiple agent backends can work in the same room while RoomTalk owns identity, permissions, durable transcripts, workspace access, artifacts, and recovery.
 

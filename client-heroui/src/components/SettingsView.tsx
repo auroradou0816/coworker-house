@@ -60,7 +60,7 @@ const getGoogleClientId = () => import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
 const GOOGLE_BUTTON_MAX_WIDTH = 320;
 const GOOGLE_BUTTON_DARK_FRAME_GUTTER = 10;
 const GOOGLE_BUTTON_DARK_FRAME_HEIGHT = 44;
-const GITHUB_FINE_GRAINED_TOKEN_URL = 'https://github.com/settings/personal-access-tokens/new?name=RoomTalk&description=RoomTalk+agent+GitHub+access&expires_in=30&administration=write&contents=write&pull_requests=write&issues=write&actions=write&workflows=write&statuses=read';
+const GITHUB_FINE_GRAINED_TOKEN_URL = 'https://github.com/settings/personal-access-tokens/new?name=CoWorker+House&description=CoWorker+House+agent+GitHub+access&expires_in=30&administration=write&contents=write&pull_requests=write&issues=write&actions=write&workflows=write&statuses=read';
 
 type GoogleCredentialResponse = {
   credential?: string;

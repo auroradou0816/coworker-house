@@ -13,14 +13,14 @@ interface BottomNavProps {
 
 export const BottomNav: React.FC<BottomNavProps> = ({ view, setView, currentRoom }) => {
   const { t } = useTranslation();
-  const activeClass = "bg-[#30302e] text-[#faf9f5] shadow-[0_0_0_1px_#30302e] dark:bg-[#faf9f5] dark:text-[#141413] dark:shadow-[0_0_0_1px_#faf9f5]";
-  const inactiveClass = "text-[#5e5d59] data-[hover=true]:bg-[#e8e6dc] dark:text-[#b0aea5] dark:data-[hover=true]:bg-[#30302e]";
+  const activeClass = "bg-[#253247] text-[#f8fafc] shadow-[0_0_0_1px_#253247] dark:bg-[#f8fafc] dark:text-[#0b101b] dark:shadow-[0_0_0_1px_#f8fafc]";
+  const inactiveClass = "text-[#526176] data-[hover=true]:bg-[#e2e8f0] dark:text-[#a8b6cc] dark:data-[hover=true]:bg-[#253247]";
 
   return (
     <nav
       data-testid="bottom-nav"
       aria-label={t("menu")}
-      className="mobile-bottom-nav z-10 flex-shrink-0 border-t border-[#dedbd0] bg-[#faf9f5]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md dark:border-[#30302e] dark:bg-[#1d1d1b]/95 md:hidden"
+      className="mobile-bottom-nav z-10 flex-shrink-0 border-t border-[#dbe3ee] bg-[#f8fafc]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md dark:border-[#253247] dark:bg-[#101827]/95 md:hidden"
     >
       <div className="flex justify-center">
         <div className="flex h-10 w-full max-w-md items-center justify-around px-4">

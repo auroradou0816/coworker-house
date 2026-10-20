@@ -56,8 +56,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           className="cursor-pointer"
           onClick={() => setView('rooms')}
         >
-          <img src="/roomtalk-logo.svg" alt="RoomTalk Logo" className="w-8 h-8" />
-          <p className="ml-2 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">RoomTalk</p>
+          <img src="/coworker-logo.svg" alt="CoWorker House Logo" className="w-8 h-8" />
+          <p className="ml-2 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">CoWorker House</p>
         </NavbarBrand>
 
         {/* 桌面导航按钮 (仅图标) - 移动到 Brand 右侧 */}

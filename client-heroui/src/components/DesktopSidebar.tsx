@@ -248,8 +248,8 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       aria-label={label}
       className={`${isCollapsed ? 'h-10 w-10 min-w-10 justify-center px-0' : 'h-10 justify-start px-3'} rounded-lg text-sm font-medium ${
       isActive
-        ? '!bg-secondary !text-secondary-foreground shadow-[0_0_0_1px_#c96442]'
-        : 'text-[#5e5d59] data-[hover=true]:bg-[#e8e6dc] dark:text-[#b0aea5] dark:data-[hover=true]:bg-[#30302e]'
+        ? '!bg-secondary !text-secondary-foreground shadow-[0_0_0_1px_#0891b2]'
+        : 'text-[#526176] data-[hover=true]:bg-[#e2e8f0] dark:text-[#a8b6cc] dark:data-[hover=true]:bg-[#253247]'
       }`}
       startContent={!isCollapsed ? (emoji ? <span className="text-lg" aria-hidden="true">{emoji}</span> : <Icon icon={icon} className="h-4 w-4" />) : undefined}
     >
@@ -305,7 +305,7 @@ const SidebarRoomRow: React.FC<SidebarRoomRowProps> = ({
           className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
             isActive
               ? 'bg-secondary text-secondary-foreground'
-              : 'text-secondary hover:bg-[#e8e6dc] dark:hover:bg-[#30302e]'
+              : 'text-secondary hover:bg-[#e2e8f0] dark:hover:bg-[#253247]'
           }`}
         >
           <Icon icon={icon} className="h-4 w-4" />
@@ -318,8 +318,8 @@ const SidebarRoomRow: React.FC<SidebarRoomRowProps> = ({
     <div
       className={`group flex w-full min-w-0 items-start gap-1 rounded-lg pr-1 transition-colors ${
         isActive
-          ? 'bg-[#e8e6dc] text-[#141413] dark:bg-[#30302e] dark:text-[#faf9f5]'
-          : 'text-[#5e5d59] hover:bg-[#f0eee6] dark:text-[#b0aea5] dark:hover:bg-[#242422]'
+          ? 'bg-[#e2e8f0] text-[#0b101b] dark:bg-[#253247] dark:text-[#f8fafc]'
+          : 'text-[#526176] hover:bg-[#eaf0f7] dark:text-[#a8b6cc] dark:hover:bg-[#242422]'
       }`}
     >
       <button
@@ -331,25 +331,25 @@ const SidebarRoomRow: React.FC<SidebarRoomRowProps> = ({
           className={`mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg ${
             isActive
               ? 'bg-secondary text-secondary-foreground'
-              : 'bg-[#e8e6dc] text-secondary dark:bg-[#30302e]'
+              : 'bg-[#e2e8f0] text-secondary dark:bg-[#253247]'
           }`}
         >
           <Icon icon={icon} className="h-3.5 w-3.5" />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium leading-5">{room.name}</span>
-          <span className="mt-0.5 flex min-w-0 items-center gap-1 text-[11px] text-[#5e5d59] dark:text-[#8f8d86]">
+          <span className="mt-0.5 flex min-w-0 items-center gap-1 text-[11px] text-[#526176] dark:text-[#8f8d86]">
             <Icon icon="lucide:hash" className="h-3 w-3 flex-shrink-0" />
             <span className="truncate">{room.id.length > 10 ? `${room.id.slice(0, 8)}...` : room.id}</span>
             {activityAt && (
               <>
-                <span className="text-[#c2c0b6] dark:text-[#4d4c48]">·</span>
+                <span className="text-[#c2c0b6] dark:text-[#475569]">·</span>
                 <span className="truncate">{formatDate(activityAt, i18n.language)}</span>
               </>
             )}
           </span>
           {room.description && (
-            <span className="mt-1 block truncate text-xs text-[#5e5d59] dark:text-[#8f8d86]">
+            <span className="mt-1 block truncate text-xs text-[#526176] dark:text-[#8f8d86]">
               {room.description}
             </span>
           )}
@@ -365,7 +365,7 @@ const SidebarRoomRow: React.FC<SidebarRoomRowProps> = ({
               size="sm"
               variant="light"
               aria-label={`${t('moreActions')} ${room.name}`}
-              className="h-8 w-8 min-w-8 rounded-md text-[#5e5d59] hover:text-[#141413] dark:text-[#8f8d86] dark:hover:text-[#faf9f5]"
+              className="h-8 w-8 min-w-8 rounded-md text-[#526176] hover:text-[#0b101b] dark:text-[#8f8d86] dark:hover:text-[#f8fafc]"
             >
               <Icon icon="lucide:ellipsis" className="h-4 w-4" />
             </Button>
@@ -648,7 +648,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
     <>
       <aside
         ref={sidebarRef}
-        className="relative hidden h-full flex-shrink-0 flex-col border-r border-[#dedbd0] bg-[#faf9f5] transition-[width] duration-200 dark:border-[#30302e] dark:bg-[#1d1d1b] md:flex"
+        className="relative hidden h-full flex-shrink-0 flex-col border-r border-[#dbe3ee] bg-[#f8fafc] transition-[width] duration-200 dark:border-[#253247] dark:bg-[#101827] md:flex"
         style={{
           width: isCollapsed ? DESKTOP_SIDEBAR_COLLAPSED_WIDTH : `var(--desktop-sidebar-width, ${sidebarWidth}px)`,
           maxWidth: isCollapsed
@@ -666,11 +666,11 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           <span
             aria-hidden="true"
             data-code-agent-resize-highlight="desktop-sidebar"
-            className="pointer-events-none absolute inset-y-0 left-1/2 z-50 ml-px w-0.5 -translate-x-1/2 rounded-full bg-transparent transition-colors duration-150 group-hover:bg-[#c96442] group-active:bg-[#c96442] group-focus-visible:bg-[#c96442]"
+            className="pointer-events-none absolute inset-y-0 left-1/2 z-50 ml-px w-0.5 -translate-x-1/2 rounded-full bg-transparent transition-colors duration-150 group-hover:bg-[#0891b2] group-active:bg-[#0891b2] group-focus-visible:bg-[#0891b2]"
           />
         </button>
         <div
-          className={`flex h-16 flex-shrink-0 items-center border-b border-[#dedbd0] dark:border-[#30302e] ${
+          className={`flex h-16 flex-shrink-0 items-center border-b border-[#dbe3ee] dark:border-[#253247] ${
             isCollapsed ? 'justify-center gap-1 px-2' : 'justify-between px-4'
           }`}
         >
@@ -679,10 +679,10 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             onClick={() => currentRoom ? setView('chat') : setView('rooms')}
             className="flex min-w-0 items-center gap-2 rounded-lg text-left"
           >
-            <img src="/roomtalk-logo.svg" alt="RoomTalk Logo" className="h-8 w-8 flex-shrink-0" />
+            <img src="/coworker-logo.svg" alt="CoWorker House Logo" className="h-8 w-8 flex-shrink-0" />
             {!isCollapsed && (
-              <span className="truncate font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">
-                RoomTalk
+              <span className="truncate font-sans text-base font-medium text-[#0b101b] dark:text-[#f8fafc]">
+                CoWorker House
               </span>
             )}
           </button>
@@ -694,7 +694,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
               variant="light"
               aria-label={isCollapsed ? t('expandSidebar') : t('collapseSidebar')}
               onPress={() => setIsCollapsed((collapsed) => !collapsed)}
-              className="h-8 w-8 min-w-8 rounded-lg text-[#5e5d59] dark:text-[#b0aea5]"
+              className="h-8 w-8 min-w-8 rounded-lg text-[#526176] dark:text-[#a8b6cc]"
             >
               <Icon icon={isCollapsed ? 'lucide:panel-left-open' : 'lucide:panel-left-close'} className="h-4 w-4" />
             </Button>
@@ -702,7 +702,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </div>
 
         <div
-          className={`flex flex-shrink-0 flex-col gap-2 border-b border-[#dedbd0] dark:border-[#30302e] ${
+          className={`flex flex-shrink-0 flex-col gap-2 border-b border-[#dbe3ee] dark:border-[#253247] ${
             isCollapsed ? 'items-center p-2' : 'p-3'
           }`}
         >
@@ -735,7 +735,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   variant="flat"
                   aria-label={t('expandSidebarToJoinRoom')}
                   onPress={() => setIsCollapsed(false)}
-                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]"
+                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e2e8f0] text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]"
                 >
                   <Icon icon="lucide:log-in" className="h-4 w-4" />
                 </Button>
@@ -748,7 +748,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                 color="secondary"
                 aria-label={t('createRoomFromSidebar')}
                 onPress={openCreateModal}
-                className="h-10 justify-start rounded-lg bg-secondary px-3 text-sm text-secondary-foreground shadow-[0_0_0_1px_#c96442]"
+                className="h-10 justify-start rounded-lg bg-secondary px-3 text-sm text-secondary-foreground shadow-[0_0_0_1px_#0891b2]"
                 startContent={<Icon icon="lucide:plus" className="h-4 w-4" />}
               >
                 {t('create')}
@@ -762,7 +762,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   className="min-w-0 flex-1"
                   classNames={{
                     input: 'h-10',
-                    inputWrapper: 'h-10 rounded-r-none border border-[#dedbd0] bg-[#faf9f5] dark:border-[#30302e] dark:bg-[#1d1d1b]',
+                    inputWrapper: 'h-10 rounded-r-none border border-[#dbe3ee] bg-[#f8fafc] dark:border-[#253247] dark:bg-[#101827]',
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') handleJoinRoom();
@@ -773,7 +773,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   aria-label={t('joinRoomFromSidebar')}
                   onPress={handleJoinRoom}
                   isDisabled={!joinRoomId.trim()}
-                  className="h-10 min-w-[88px] rounded-l-none bg-[#30302e] px-3 text-sm text-[#faf9f5] dark:bg-[#faf9f5] dark:text-[#141413]"
+                  className="h-10 min-w-[88px] rounded-l-none bg-[#253247] px-3 text-sm text-[#f8fafc] dark:bg-[#f8fafc] dark:text-[#0b101b]"
                 >
                   {t('joinButton')}
                 </Button>
@@ -787,10 +787,10 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           <section className={isCollapsed ? 'mb-3' : 'mb-5'}>
             {!isCollapsed && (
               <div className="mb-2 flex items-center justify-between px-1">
-                <h2 className="text-xs font-semibold uppercase text-[#5e5d59] dark:text-[#8f8d86]">
+                <h2 className="text-xs font-semibold uppercase text-[#526176] dark:text-[#8f8d86]">
                   {t('chatRooms')}
                 </h2>
-                <span className="text-xs text-[#5e5d59] dark:text-[#8f8d86]">{isLoadingRooms ? '...' : rooms.length}</span>
+                <span className="text-xs text-[#526176] dark:text-[#8f8d86]">{isLoadingRooms ? '...' : rooms.length}</span>
               </div>
             )}
             <div className={isCollapsed ? 'flex flex-col items-center gap-1' : 'space-y-1'}>
@@ -811,11 +811,11 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   />
                 ))
               ) : isLoadingRooms && isCollapsed ? (
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg text-[#5e5d59] dark:text-[#8f8d86]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg text-[#526176] dark:text-[#8f8d86]">
                   <Icon icon="lucide:loader-circle" className="h-4 w-4 animate-spin" />
                 </div>
               ) : isLoadingRooms && !isCollapsed ? (
-                <div className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#5e5d59] dark:text-[#8f8d86]">
+                <div className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#526176] dark:text-[#8f8d86]">
                   <Icon icon="lucide:loader-circle" className="h-3.5 w-3.5 animate-spin" />
                   <span>...</span>
                 </div>
@@ -826,10 +826,10 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           <section>
             {!isCollapsed && (
               <div className="mb-2 flex items-center justify-between px-1">
-                <h2 className="text-xs font-semibold uppercase text-[#5e5d59] dark:text-[#8f8d86]">
+                <h2 className="text-xs font-semibold uppercase text-[#526176] dark:text-[#8f8d86]">
                   {t('savedRooms')}
                 </h2>
-                <span className="text-xs text-[#5e5d59] dark:text-[#8f8d86]">{isLoadingSavedRooms ? '...' : savedRooms.length}</span>
+                <span className="text-xs text-[#526176] dark:text-[#8f8d86]">{isLoadingSavedRooms ? '...' : savedRooms.length}</span>
               </div>
             )}
             <div className={isCollapsed ? 'flex flex-col items-center gap-1' : 'space-y-1'}>
@@ -849,11 +849,11 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   />
                 ))
               ) : isLoadingSavedRooms && isCollapsed ? (
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg text-[#5e5d59] dark:text-[#8f8d86]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg text-[#526176] dark:text-[#8f8d86]">
                   <Icon icon="lucide:loader-circle" className="h-4 w-4 animate-spin" />
                 </div>
               ) : isLoadingSavedRooms && !isCollapsed ? (
-                <div className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#5e5d59] dark:text-[#8f8d86]">
+                <div className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#526176] dark:text-[#8f8d86]">
                   <Icon icon="lucide:loader-circle" className="h-3.5 w-3.5 animate-spin" />
                   <span>...</span>
                 </div>
@@ -863,7 +863,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </div>
 
         <div
-          className={`flex flex-shrink-0 flex-col border-t border-[#dedbd0] dark:border-[#30302e] ${
+          className={`flex flex-shrink-0 flex-col border-t border-[#dbe3ee] dark:border-[#253247] ${
             isCollapsed ? 'items-center gap-2 p-2' : 'gap-3 p-3'
           }`}
         >
@@ -879,7 +879,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   variant="flat"
                   onPress={() => handleCopyToClipboard(clientId)}
                   aria-label={`${t('copyUserId')} ${clientId}`}
-                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]"
+                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e2e8f0] text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]"
                 >
                   <Icon icon="lucide:fingerprint" className="h-4 w-4" />
                 </Button>
@@ -898,7 +898,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   variant="flat"
                   onPress={toggleTheme}
                   aria-label={isDark ? t('switchToLightMode') : t('switchToDarkMode')}
-                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]"
+                  className="h-10 w-10 min-w-10 rounded-lg bg-[#e2e8f0] text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]"
                 >
                   <Icon icon={isDark ? 'lucide:sun' : 'lucide:moon'} className="h-4 w-4" />
                 </Button>
@@ -909,8 +909,8 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
               <div className="flex min-w-0 items-center gap-2">
                 <Avatar name={getAvatarText(username)} color={getAvatarColor(username) as any} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#141413] dark:text-[#faf9f5]">{username}</p>
-                  <p className="truncate text-xs text-[#5e5d59] dark:text-[#8f8d86]">{t('profile')}</p>
+                  <p className="truncate text-sm font-medium text-[#0b101b] dark:text-[#f8fafc]">{username}</p>
+                  <p className="truncate text-xs text-[#526176] dark:text-[#8f8d86]">{t('profile')}</p>
                 </div>
                 <HoverTooltip
                   content={
@@ -926,7 +926,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                     variant="flat"
                     onPress={() => handleCopyToClipboard(clientId)}
                     aria-label={`${t('copyUserId')} ${clientId}`}
-                    className="h-8 w-8 min-w-8 flex-shrink-0 rounded-lg bg-[#e8e6dc] text-[#5e5d59] dark:bg-[#30302e] dark:text-[#b0aea5]"
+                    className="h-8 w-8 min-w-8 flex-shrink-0 rounded-lg bg-[#e2e8f0] text-[#526176] dark:bg-[#253247] dark:text-[#a8b6cc]"
                   >
                     <Icon icon="lucide:fingerprint" className="h-3.5 w-3.5" />
                   </Button>
@@ -939,7 +939,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                     <Button
                       size="sm"
                       variant="flat"
-                      className="min-w-0 flex-1 justify-start rounded-lg bg-[#e8e6dc] px-2 text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]"
+                      className="min-w-0 flex-1 justify-start rounded-lg bg-[#e2e8f0] px-2 text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]"
                       startContent={<Icon icon="lucide:languages" className="h-4 w-4" />}
                       endContent={<Icon icon="lucide:chevron-down" className="h-3.5 w-3.5" />}
                     >
@@ -970,7 +970,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                     className={`h-8 w-8 min-w-8 rounded-lg ${
                       view === 'settings'
                         ? '!bg-secondary !text-secondary-foreground'
-                        : 'bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]'
+                        : 'bg-[#e2e8f0] text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]'
                     }`}
                   >
                     <Icon icon="lucide:settings" className="h-4 w-4" />
@@ -984,7 +984,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                     variant="flat"
                     onPress={toggleTheme}
                     aria-label={isDark ? t('switchToLightMode') : t('switchToDarkMode')}
-                    className="rounded-lg bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#30302e] dark:text-[#faf9f5]"
+                    className="rounded-lg bg-[#e2e8f0] text-[#475569] dark:bg-[#253247] dark:text-[#f8fafc]"
                   >
                     <Icon icon={isDark ? 'lucide:sun' : 'lucide:moon'} className="h-4 w-4" />
                   </Button>

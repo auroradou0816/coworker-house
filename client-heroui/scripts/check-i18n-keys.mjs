@@ -132,7 +132,7 @@ const extractUsedKeys = () => {
   return keys;
 };
 
-const HARD_CODED_UI_ALLOWLIST = new Set(["RoomTalk", "ID:"]);
+const HARD_CODED_UI_ALLOWLIST = new Set(["CoWorker House", "ID:"]);
 const LOCALIZED_LITERAL_ALLOWLIST = new Set([
   "src/pages/MessagePage.tsx",
   "src/utils/i18n.ts",

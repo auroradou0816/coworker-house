@@ -123,7 +123,7 @@ export const MessagePage: React.FC = () => {
   // 页面高度由 App shell 的 visual viewport 变量控制
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme(
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+    "dark",
   );
   const isDark = theme === "dark";
 

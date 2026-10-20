@@ -108,7 +108,7 @@ export const ChatRoomView: React.FC<ChatRoomViewProps> = ({
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-1 flex-col bg-[#f5f4ed] dark:bg-[#141413]">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col bg-[#f1f5f9] dark:bg-[#0b101b]">
       <ChatHeader
         currentRoom={currentRoom}
         memberCount={memberCount}
@@ -168,7 +168,7 @@ export const ChatRoomView: React.FC<ChatRoomViewProps> = ({
             variant="solid"
             size="sm"
             radius="full"
-            className="absolute left-1/2 z-40 -translate-x-1/2 bg-[#30302e] text-[#faf9f5] shadow-[0_0_0_1px_rgba(194,192,182,0.7),0_10px_24px_rgba(20,20,19,0.16)] dark:bg-[#faf9f5] dark:text-[#141413]"
+            className="absolute left-1/2 z-40 -translate-x-1/2 bg-[#253247] text-[#f8fafc] shadow-[0_0_0_1px_rgba(194,192,182,0.7),0_10px_24px_rgba(20,20,19,0.16)] dark:bg-[#f8fafc] dark:text-[#0b101b]"
             style={{ bottom: composerHeight + 16 }}
             aria-label={t('scrollToBottom')}
             onPress={() => messageListRef.current?.scrollToBottom('smooth')}
@@ -180,7 +180,7 @@ export const ChatRoomView: React.FC<ChatRoomViewProps> = ({
         <div
           ref={composerRef}
           data-testid="message-input-panel"
-          className="absolute inset-x-0 bottom-0 z-30 flex min-h-11 items-center border-t border-[#dedbd0] bg-[#faf9f5]/92 px-1 py-1 backdrop-blur-md dark:border-[#30302e] dark:bg-[#1d1d1b]/92 md:block md:min-h-0 md:p-3"
+          className="absolute inset-x-0 bottom-0 z-30 flex min-h-11 items-center border-t border-[#dbe3ee] bg-[#f8fafc]/92 px-1 py-1 backdrop-blur-md dark:border-[#253247] dark:bg-[#101827]/92 md:block md:min-h-0 md:p-3"
         >
           <MessageInput
             roomId={currentRoom.id}

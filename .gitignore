@@ -67,3 +67,6 @@ supabase/.env
 # Local sticker assets (dev acceptance, not committed)
 server/.local-stickers/
 .local-stickers/
+
+# Ignore dependency directories and local dependency symlinks.
+node_modules

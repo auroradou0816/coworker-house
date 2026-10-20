@@ -17,7 +17,7 @@ self.addEventListener('push', (event) => {
 
     const title = typeof payload.title === 'string' && payload.title
       ? payload.title
-      : 'RoomTalk';
+      : 'CoWorker House';
     const body = typeof payload.body === 'string'
       ? payload.body
       : 'New message';
@@ -27,8 +27,8 @@ self.addEventListener('push', (event) => {
 
     await self.registration.showNotification(title, {
       body,
-      icon: '/roomtalk-logo.svg',
-      badge: '/roomtalk-logo.svg',
+      icon: '/coworker-logo.svg',
+      badge: '/coworker-logo.svg',
       tag: roomId ? `room-message-${roomId}` : undefined,
       renotify: Boolean(roomId),
       data: { url, roomId, messageId },
