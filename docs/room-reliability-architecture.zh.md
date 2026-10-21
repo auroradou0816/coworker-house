@@ -4,9 +4,9 @@
 
 [English](room-reliability-architecture.md)
 
-状态：已实现并部署到 `coworker.example.com`
+状态：已在当前代码库实现
 
-更新：2026-07-21
+更新：2026-10-21
 
 ## 一个持久同步边界
 
@@ -148,4 +148,4 @@ Migration `0013_code_agent_workspace_revision_dag` 虽然只增加 table/column�
 
 健康证据会区分进程存活与可对外服务。`/api/health/live` 只回答 App 能否处理 HTTP；`/api/status` 与 `/api/health/ready` 执行真实表查询、realtime Redis `PING`、S3 bucket 与 Socket adapter 检查。Serving dependency 失败时返回 HTTP 503 与 `rooms: null`；只有 queue 失败时，App 仍 ready 但为 `degraded` 并报告 deferred dispatch，因为 PostgreSQL 仍可安全接受请求。Worker 另有 health endpoint 检查 PostgreSQL、queue Redis、transient Redis 与 worker loop。
 
-部署与迁移细节见 [房间事件同步与可迁移部署架构](room-event-sync-portable-deployment.zh.md)。
+部署与迁移细节见 [部署指南](../DeploymentGuide.md)。

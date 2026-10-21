@@ -7,7 +7,7 @@
 Status: Current
 Verified against `master`: 2026-07-30
 
-This document describes the current implementation. Earlier files under `docs/` may describe individual phases, spikes, or migration plans; use this file as the concise architecture entry point and use source/tests as the final authority.
+This document describes the Code Agent runtime in the current codebase. Source and tests remain the final authority.
 
 ## Product Model
 
@@ -336,7 +336,7 @@ Changes are tested at the contract boundary where they can fail:
 
 There are two independently deployed layers:
 
-1. The CoWorker House application image, currently deployed through Docker Compose on the production Mac and portable to ECS/EKS.
+1. The CoWorker House application image, deployed with Docker Compose on AWS Lightsail.
 2. The pinned E2B template containing the runner, daemon, tools, prompts, and agent engine source.
 
 Any runner/tool/prompt/Dockerfile/context or agent-engine change is incomplete until:
@@ -349,9 +349,3 @@ Any runner/tool/prompt/Dockerfile/context or agent-engine change is incomplete u
 6. the E2B pins are applied to the production application environment and real room behavior is verified.
 
 App-only UI, store, or socket changes do not require an E2B rebuild unless they change the sandbox contract. Their validation should follow the actual affected boundary: focused tests plus the affected build, expanding to both builds or external smoke only when the risk crosses those boundaries.
-
-## Interview Summary
-
-The strongest way to describe this subsystem is:
-
-> I built a shared cloud code-agent room, not a remote shell widget. CoWorker House acts as the control plane for identity, permissions, fenced room execution, durable turns, scoped model/context/publish access, and sandbox lifecycle. A turn starts and finishes through PostgreSQL transactions, and every intermediate write proves the same room-lease fence, so a crashed or superseded process cannot leave half a turn or overwrite its replacement. Each room gets an isolated E2B execution plane with a reusable daemon that runs Coco, our self-built CLI agent, or Codex app-server through the room owner's connected subscription for authorized members. The browser exposes files, Git diffs and review comments, a PTY terminal, dev-server previews, and durable artifacts, while periodic recovery returns abandoned queue claims and recovers only work whose lease has actually expired.

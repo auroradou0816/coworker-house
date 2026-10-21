@@ -15,7 +15,6 @@ redesign and branding. Existing third-party license and copyright notices
 remain applicable and are retained. No new repository-wide license is assigned
 by this migration.
 
-The inherited production URLs and operator runbooks describe upstream
-infrastructure, not a CoWorker House deployment. The former Fly deployment
-workflow is archived in `docs/upstream-fly-deploy.yml.disabled` and cannot run
-as a GitHub Actions workflow. Do not deploy to upstream infrastructure.
+Legacy Fly.io configuration and deployment workflow files were removed from the
+current source tree. The repository deploys to its own Lightsail instance using
+the current [Deployment Guide](DeploymentGuide.md).

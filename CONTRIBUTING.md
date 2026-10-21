@@ -72,6 +72,6 @@ New runtime durable operations must be represented in the shared store contract 
 
 ## Commits and Release
 
-Use short present-tense commit subjects. `master` is the release branch. A source push does not deploy the production Mac. Runtime releases use `node scripts/local-production.mjs --profile edge up -d --build` from the intended production checkout, followed by Compose and public-edge verification. The former Fly workflow is disabled and retained only for rollback history. E2B artifact changes still require their independent release contract.
+Use short present-tense commit subjects and run the checks relevant to your change. Production deployment is manual and follows the [Lightsail Deployment Guide](DeploymentGuide.md); pushing a commit does not deploy it. Changes to the E2B runner or artifact require a separately built and pinned sandbox artifact.
 
-Machine-agent instructions remain in `CLAUDE.md`/`AGENTS.md`; this file is the human contributor contract.
+This document is the contributor workflow for the repository.

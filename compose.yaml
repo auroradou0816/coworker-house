@@ -12,7 +12,7 @@ services:
     restart: "no"
     logging: *default-logging
     env_file:
-      - ${ROOMTALK_APP_ENV_FILE:-.env.compose}
+      - .env.compose
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://${POSTGRES_USER:-roomtalk}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.compose}@postgres:5432/${POSTGRES_DB:-message_system}
@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     logging: *default-logging
     env_file:
-      - ${ROOMTALK_APP_ENV_FILE:-.env.compose}
+      - .env.compose
     environment:
       NODE_ENV: production
       PORT: "3012"
@@ -127,7 +127,7 @@ services:
     restart: unless-stopped
     logging: *default-logging
     env_file:
-      - ${ROOMTALK_APP_ENV_FILE:-.env.compose}
+      - .env.compose
     environment:
       NODE_ENV: production
       PERSISTENCE_STORE: postgres
@@ -236,35 +236,6 @@ services:
       timeout: 5s
       retries: 30
       start_period: 15s
-    networks:
-      - roomtalk
-
-  cloudflared:
-    image: cloudflare/cloudflared:2026.7.2
-    profiles: ["edge"]
-    restart: unless-stopped
-    logging: *default-logging
-    command: ["tunnel", "--no-autoupdate", "--protocol", "http2", "--config", "/etc/cloudflared/config.yml", "run"]
-    volumes:
-      - ${CLOUDFLARE_TUNNEL_CONFIG_FILE:-./runtime/cloudflared/config.yml}:/etc/cloudflared/config.yml:ro
-      - ${CLOUDFLARE_TUNNEL_CREDENTIALS_FILE:-./runtime/cloudflared/credentials.json}:/etc/cloudflared/credentials.json:ro
-    depends_on:
-      app:
-        condition: service_healthy
-    networks:
-      - roomtalk
-
-  cloudflared-wenlin:
-    image: cloudflare/cloudflared:2026.7.2
-    profiles: ["edge"]
-    restart: unless-stopped
-    logging: *default-logging
-    command: ["tunnel", "--no-autoupdate", "--protocol", "http2", "run"]
-    environment:
-      TUNNEL_TOKEN: ${CLOUDFLARE_WENLIN_TUNNEL_TOKEN:-}
-    depends_on:
-      app:
-        condition: service_healthy
     networks:
       - roomtalk
 

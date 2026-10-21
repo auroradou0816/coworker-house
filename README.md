@@ -25,7 +25,7 @@ AI, Google login, and E2B require your own credentials and configuration. They a
 - **Object storage:** S3-compatible uploads; the bundled Compose stack uses SeaweedFS.
 - **Optional E2B sandbox:** room-scoped execution of untrusted coding tasks.
 
-Durable room events repair missed socket updates. AI dispatch intent is committed with the task in PostgreSQL and relayed to BullMQ. Historical architecture notes in `docs/` describe inherited capabilities and are not claims about the current deployment.
+Durable room events repair missed socket updates. AI dispatch intent is committed with the task in PostgreSQL and relayed to BullMQ. The `docs/` directory contains focused references for room synchronization and the Code Agent runtime.
 
 ## Run and deploy
 
@@ -48,6 +48,6 @@ The server has focused unit tests and integration tests requiring disposable Pos
 
 ## Ownership and provenance
 
-Maintainer: **Yijia Dou** · contact: **auroradou0816@gmail.com**.
+Maintainer: **Yijia Dou** · [GitHub](https://github.com/auroradou0816).
 
 This is an authorized derivative of an existing project. [PROJECT_ORIGIN.md](PROJECT_ORIGIN.md) documents the source and rewritten Git metadata. Third-party license notices remain in their respective directories. Public repository visibility does not itself grant a new blanket license to every included component.

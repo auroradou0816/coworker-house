@@ -28,7 +28,6 @@ import {randomUUID} from 'node:crypto';
 import {mkdtemp,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {execFileSync} from 'node:child_process';
 import {test} from 'node:test';
 import {Sandbox} from '@e2b/desktop';
 import {PDFDocument} from 'pdf-lib';
@@ -44,8 +43,7 @@ import {registerPersonalAgentRoutes} from '../../src/routes/personalAgentRoutes'
 import type {Config} from '../../src/services/personalComputer/config';
 // Explicit opt-in; never loaded by the ordinary test suite. Use unique E2B metadata
 // and an isolated test database. All sandboxes created by this smoke are killed.
-const keychain=process.env.ROOMTALK_COMPUTER_SMOKE_KEYCHAIN==='true'?JSON.parse(execFileSync('/usr/bin/security',['find-generic-password','-a','roomtalk','-s','roomtalk-production-env','-w'],{encoding:'utf8',stdio:['ignore','pipe','ignore']})):{};
-const apiKey=process.env.E2B_API_KEY || keychain.E2B_API_KEY || keychain.CODE_AGENT_E2B_API_KEY;
+const apiKey=process.env.E2B_API_KEY;
 const databaseUrl=process.env.ROOM_EVENT_TEST_DATABASE_URL;
 if(!databaseUrl || !/(^|[_-])(test|e2e)([_-]|$)/i.test(new URL(databaseUrl).pathname.slice(1)))throw Error('Set an isolated test database');
 test('real OpenMuse desktop source acceptance through RoomTalk HTTP APIs',{timeout:300000,skip:!apiKey},async()=>{

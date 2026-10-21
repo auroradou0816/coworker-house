@@ -4,9 +4,9 @@
 
 [中文](room-reliability-architecture.zh.md)
 
-Status: implemented and deployed at `coworker.example.com`
+Status: implemented in the current codebase
 
-Updated: 2026-07-21
+Updated: 2026-10-21
 
 ## One durable synchronization boundary
 
@@ -146,4 +146,4 @@ The implementation is guarded by:
 
 Health evidence distinguishes process liveness from serving readiness. `/api/health/live` has no downstream dependency and answers only whether the App can handle HTTP. `/api/status` and `/api/health/ready` execute a real CoWorker House table query, realtime Redis `PING`, S3-compatible bucket probe, and Socket adapter check. Failure of a serving dependency produces HTTP 503 and `rooms: null`; queue-only failure reports a ready but `degraded` App with deferred dispatch because PostgreSQL still accepts the request safely. The Worker exposes a separate health endpoint for PostgreSQL, queue Redis, transient Redis, and worker-loop state.
 
-Deployment and portability details live in [Room Event Sync and Portable Deployment](room-event-sync-portable-deployment.md).
+Deployment and portability details live in [Deployment Guide](../DeploymentGuide.md).

@@ -18,7 +18,7 @@ CoWorker House 是一个共享协作空间，将实时房间聊天、可选的 A
 
 React / TypeScript / Vite / HeroUI 前端通过 HTTP 和 Socket.IO 连接 Node.js 后端。PostgreSQL 保存业务数据与房间事件，Redis 提供在线状态、临时通知和缓存，BullMQ 安排任务。独立 AI Worker 执行模型请求，SeaweedFS 提供兼容 S3 的文件存储，E2B 是可选的代码执行环境。
 
-房间事件用于补齐漏掉的实时通知；AI 任务与派发意图同事务写入 PostgreSQL，再转交 BullMQ。`docs/` 中的历史工程记录说明继承的设计与能力，不代表当前部署已启用所有功能。
+房间事件用于补齐漏掉的实时通知；AI 任务与派发意图同事务写入 PostgreSQL，再转交 BullMQ。`docs/` 收录房间同步和 Code Agent 运行时的技术说明。
 
 ## 运行与部署
 
@@ -30,6 +30,6 @@ React / TypeScript / Vite / HeroUI 前端通过 HTTP 和 Socket.IO 连接 Node.j
 
 ## 维护与来源
 
-维护者：**Yijia Dou**；联系邮箱：**auroradou0816@gmail.com**。
+维护者：**Yijia Dou** · [GitHub](https://github.com/auroradou0816)。
 
 本项目经原作者授权进行二次开发。来源及 Git 元数据改写说明见 [PROJECT_ORIGIN.md](PROJECT_ORIGIN.md)。保留已有第三方许可证；仓库公开本身不等于为全部组件授予新的统一许可证。

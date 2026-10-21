@@ -70,3 +70,6 @@ server/.local-stickers/
 
 # Ignore dependency directories and local dependency symlinks.
 node_modules
+
+# Local UI review captures
+output/ui-ux-audit/

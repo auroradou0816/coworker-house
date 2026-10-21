@@ -72,6 +72,4 @@ npm run test:e2e:postgres
 
 ## Commit 与发布
 
-使用简短的现在时 commit subject。`master` 是 release branch。Source push 不会部署生产 Mac；runtime release 从目标生产 checkout 执行 `node scripts/local-production.mjs --profile edge up -d --build`，随后验证 Compose 与公网 edge。旧 Fly workflow 已禁用，只保留为回滚历史。E2B artifact 改动仍需完成独立 release contract。
-
-机器 Agent 指令继续以 `CLAUDE.md`/`AGENTS.md` 为准；本文是人类贡献者合约。
+使用简短的现在时 commit subject，并运行与改动相关的检查。生产部署采用手动流程，按 [Lightsail 部署指南](DeploymentGuide.md) 执行；推送代码不会自动部署。修改 E2B runner 或 artifact 时，必须单独构建并固定沙盒制品版本。
