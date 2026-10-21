@@ -31,9 +31,9 @@ Durable room events repair missed socket updates. AI dispatch intent is committe
 
 Use Node.js 24.18.0 or newer for development. The Dockerfile builds both packages and serves the frontend through the app.
 
-Follow [the deployment guide](DeploymentGuide.md) to run Compose locally or enable the optional Caddy public profile on AWS Lightsail. It supports two free DuckDNS names (app and signed media), automatic HTTPS, and publishes only ports 80/443. Never commit `.env.compose`, DuckDNS tokens, or private keys.
+Follow [the deployment guide](DeploymentGuide.md) to run Compose locally or enable the optional Caddy public profile on AWS Lightsail. It supports two free DuckDNS names (app and signed media), automatic HTTPS, and keeps application and data services private behind Caddy. Never commit `.env.compose`, DuckDNS tokens, or private keys.
 
-Current maintainer deployment: AWS Lightsail / Ubuntu with healthy App, Worker, PostgreSQL, Redis, and SeaweedFS services. Public HTTPS is not yet verified and no demo URL is announced. AI and E2B are not enabled on that instance.
+Public demo: [coworker-house-app.duckdns.org](https://coworker-house-app.duckdns.org/). Verified on 2026-10-21 for HTTPS, Socket.IO over WSS, two-client room messaging, history recovery after reconnect, and media upload/download over HTTPS. The Lightsail App, Worker, PostgreSQL, Redis, and SeaweedFS services were healthy during verification. AI and E2B are not enabled on the demo instance. See the deployment guide for the current firewall state and operational checks.
 
 ## Checks
 

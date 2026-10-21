@@ -1,16 +1,16 @@
 # Public deployment on AWS Lightsail
 
-CoWorker House runs as the existing Docker Compose stack. Caddy provides automatic HTTPS and proxies the app (including Socket.IO/WSS) and S3-compatible media service. PostgreSQL, Redis, SeaweedFS, and workers have no public host ports. The public hostnames are configurable; no public demo is active or verified yet. **Never run `docker compose down -v`.**
+CoWorker House runs as the existing Docker Compose stack. Caddy provides automatic HTTPS and proxies the app (including Socket.IO/WSS) and S3-compatible media service. PostgreSQL, Redis, SeaweedFS, and workers have no public host ports. The verified demo is [coworker-house-app.duckdns.org](https://coworker-house-app.duckdns.org/) with media on `coworker-house-douzi.duckdns.org`. **Never run `docker compose down -v`.**
 
 ## 1. Register two free DuckDNS names
 
 1. Open [DuckDNS](https://www.duckdns.org/), sign in using an available account provider, and note the account token shown on the dashboard. Keep the token private.
-2. In **Domains**, register two available labels, for example `coworker-house-app` and `coworker-house-media`. The resulting names are `coworker-house-app.duckdns.org` and `coworker-house-media.duckdns.org`. These are examples only; check availability and choose labels you control.
+2. In **Domains**, register two available labels. The current deployment uses `coworker-house-app` and `coworker-house-douzi`, resulting in `coworker-house-app.duckdns.org` and `coworker-house-douzi.duckdns.org`. If either label is unavailable, choose names you control and update the environment values below.
 3. Set both IPv4 addresses to the Lightsail static IP `16.144.4.15`. Do not add a paid domain or DNS provider. Check the records:
 
    ```bash
    dig +short coworker-house-app.duckdns.org A
-   dig +short coworker-house-media.duckdns.org A
+   dig +short coworker-house-douzi.duckdns.org A
    ```
 
    Both should return `16.144.4.15`. Replace the example labels in all commands below with the labels you actually registered. The repository includes `ops/duckdns/update.sh` to set both A records in one request; its token is read from `DUCKDNS_TOKEN`, not stored in the repository. A Lightsail static IP normally needs only this one update. If the instance's IP changes, rerun the update script with the new IPv4 address.
@@ -85,6 +85,8 @@ Caddy obtains certificates automatically when both DuckDNS names resolve to this
 
 ## 5. Public end-to-end checklist
 
+The current Lightsail deployment passed the browser-facing checks on 2026-10-21: HTTPS page load, two independent WSS clients joining a room, real-time message delivery, persisted history after reconnect, and signed media upload and download. A one-off test message arrived in about 71 ms; this is a single smoke-test observation, not a benchmark result. Temporary test rooms and media were removed.
+
 Use two independent browsers, preferably different browser profiles or devices:
 
 1. Open `https://YOUR_APP.duckdns.org/`; confirm the browser shows a valid certificate and the page loads.
@@ -94,7 +96,7 @@ Use two independent browsers, preferably different browser profiles or devices:
 5. Temporarily take one browser offline, restore the network, and confirm the socket reconnects and missed room events appear.
 6. Upload an image/file where supported. Confirm its URL is HTTPS under `YOUR_MEDIA.duckdns.org`, and open it from the second browser. This exercises S3 CORS, signature, and Caddy host/path preservation.
 7. On the instance, check `sudo docker compose --env-file .env.compose --profile public ps` and `curl -fsS http://127.0.0.1:3012/api/health/ready`. The latter reports database, Redis, media, Socket.IO adapter, assistant queue, and worker readiness.
-8. From a machine outside Lightsail, run `nmap -Pn -p 22,80,443,2019,3012,3013,5432,6379,8333 16.144.4.15`. Only 80/443 should be open to the public; 22 should only be reachable from your allowed SSH source. Verify `https://YOUR_APP.duckdns.org/api/health/ready` and `/api/internal/metrics` return 404.
+8. From a machine outside Lightsail, run `nmap -Pn -p 22,80,443,2019,3012,3013,5432,54329,6379,63799,8333 16.144.4.15`. For the current deployment, 80, 443, and 22 responded; the app, database, Redis, object-storage, and Caddy admin ports were closed externally. The Lightsail SSH rule currently allows any IPv4/IPv6 source; restrict TCP 22 to your current IP in the console when you have confirmed your SSH access path. Verify `https://YOUR_APP.duckdns.org/api/health/ready` and `/api/internal/metrics` return 404.
 
 Do not enable AI/E2B during this initial anonymous trial. Confirm authentication, room permissions, AI quotas, and sandbox limits separately before adding credentials or setting `CODE_AGENT_ENABLED=true`.
 
