@@ -31,29 +31,29 @@ const contrastRatio = (first: string, second: string) => {
 
 describe('semantic secondary action contrast', () => {
   it('keeps base and native-hover text pairs above WCAG AA in both themes', () => {
-    expect(tailwindConfig).toContain('DEFAULT: "#ad5237"');
-    expect(tailwindConfig).toContain('foreground: "#faf9f5"');
-    expect(tailwindConfig).toContain('DEFAULT: "#d97757"');
-    expect(tailwindConfig).toContain('foreground: "#141413"');
+    expect(tailwindConfig).toContain('DEFAULT: "#476526"');
+    expect(tailwindConfig).toContain('foreground: "#f8fafc"');
+    expect(tailwindConfig).toContain('DEFAULT: "#d6f58b"');
+    expect(tailwindConfig).toContain('foreground: "#0b101b"');
 
-    expect(contrastRatio('#ad5237', '#faf9f5')).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio('#94462f', '#faf9f5')).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio('#d97757', '#141413')).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio('#e08a6a', '#141413')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#476526', '#f8fafc')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#3d5720', '#f8fafc')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#d6f58b', '#0b101b')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#e1ff9c', '#0b101b')).toBeGreaterThanOrEqual(4.5);
     expect(secondaryActionSources).not.toContain('hover:bg-secondary/90');
   });
 
   it('overrides HeroUI opacity only for semantic secondary foreground actions', () => {
     expect(indexStyles).toContain('.bg-secondary.text-secondary-foreground[data-hover="true"]');
-    expect(indexStyles).toContain('background-color: #94462f !important');
-    expect(indexStyles).toContain('background-color: #e08a6a !important');
+    expect(indexStyles).toContain('background-color: #3d5720 !important');
+    expect(indexStyles).toContain('background-color: #e1ff9c !important');
     expect(indexStyles).toContain('opacity: 1 !important');
     expect(indexStyles).not.toMatch(/(?:^|\n)\s*\[data-hover="true"\]\s*\{/);
 
     // With opacity locked to 1, HeroUI's data-hover state uses the same solid
     // action colors verified above instead of compositing them over the page.
-    expect(contrastRatio('#94462f', '#faf9f5')).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio('#e08a6a', '#141413')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#3d5720', '#f8fafc')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#e1ff9c', '#0b101b')).toBeGreaterThanOrEqual(4.5);
   });
 
   it('keeps room-type labels and descriptions above WCAG AA in every visual state', () => {

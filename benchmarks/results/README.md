@@ -1,0 +1,1 @@
+This directory is reserved for raw benchmark results. There are no measured results yet. Commit only sanitized JSON without tokens, room contents, or personal data; label each result as local or public Lightsail and include commit, region, instance plan, concurrency, and run duration.

@@ -1,0 +1,32 @@
+{
+	admin 127.0.0.1:2019
+}
+
+{$PUBLIC_DOMAIN} {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	route {
+		@internal path /api/status /api/health/live /api/health/ready /api/internal/metrics
+		respond @internal 404
+		reverse_proxy app:3012
+	}
+}
+
+{$MEDIA_DOMAIN} {
+	encode gzip
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+	# S3 Signature V4 includes Host in its canonical request. Keep the public
+	# media hostname intact when forwarding signed PUT/GET requests.
+	reverse_proxy object-storage:8333 {
+		header_up Host {http.request.host}
+	}
+}

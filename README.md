@@ -31,9 +31,9 @@ Durable room events repair missed socket updates. AI dispatch intent is committe
 
 Use Node.js 24.18.0 or newer for development. The Dockerfile builds both packages and serves the frontend through the app.
 
-Follow [the deployment guide](DeploymentGuide.md) to generate private configuration, start Compose, and access the app. Never commit `.env.compose` or private keys.
+Follow [the deployment guide](DeploymentGuide.md) to run Compose locally or enable the optional Caddy public profile on AWS Lightsail. It supports two free DuckDNS names (app and signed media), automatic HTTPS, and publishes only ports 80/443. Never commit `.env.compose`, DuckDNS tokens, or private keys.
 
-Current maintainer deployment: an AWS Lightsail Ubuntu instance, with healthy App, Worker, PostgreSQL, Redis, and SeaweedFS services. Browser access is currently through an SSH tunnel; no public website/domain is announced. AI and E2B integration are not yet enabled there.
+Current maintainer deployment: AWS Lightsail / Ubuntu with healthy App, Worker, PostgreSQL, Redis, and SeaweedFS services. Public HTTPS is not yet verified and no demo URL is announced. AI and E2B are not enabled on that instance.
 
 ## Checks
 
@@ -44,7 +44,7 @@ npm run build
 npm test
 ```
 
-The server has focused unit tests and integration tests requiring disposable PostgreSQL/Redis. See package scripts and the historical architecture documentation before running service-dependent tests.
+The server has focused unit tests and integration tests requiring disposable PostgreSQL/Redis. See [benchmark and reliability instructions](benchmarks/README.md) for reproducible Socket.IO measurements; there are no published performance results yet.
 
 ## Ownership and provenance
 

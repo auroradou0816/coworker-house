@@ -264,6 +264,25 @@ export class Logger {
 // 创建默认日志记录器
 export const defaultLogger = new Logger('App');
 
+const HTTP_METRIC_SAMPLE_LIMIT = 5_000;
+const httpDurationsMs: number[] = [];
+let httpRequestCount = 0;
+let httpServerErrorCount = 0;
+
+export const getHttpMetrics = () => {
+  const sorted = [...httpDurationsMs].sort((a, b) => a - b);
+  const percentile = (value: number) => sorted.length
+    ? sorted[Math.max(0, Math.ceil(sorted.length * value) - 1)]
+    : 0;
+  return {
+    windowSamples: sorted.length,
+    totalRequestsSinceStart: httpRequestCount,
+    serverErrorsSinceStart: httpServerErrorCount,
+    serverErrorRate: httpRequestCount ? httpServerErrorCount / httpRequestCount : 0,
+    latencyMs: { p50: percentile(0.5), p95: percentile(0.95), p99: percentile(0.99) },
+  };
+};
+
 // 用于记录HTTP请求的中间件
 export const httpLogger = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const start = Date.now();
@@ -273,10 +292,15 @@ export const httpLogger = (req: express.Request, res: express.Response, next: ex
   // 请求完成时记录
   res.on('finish', () => {
     const duration = Date.now() - start;
-    const message = `${req.method} ${req.originalUrl}`;
+    httpRequestCount += 1;
+    if (res.statusCode >= 500) httpServerErrorCount += 1;
+    httpDurationsMs.push(duration);
+    if (httpDurationsMs.length > HTTP_METRIC_SAMPLE_LIMIT) httpDurationsMs.shift();
+    // Keep query-string tokens, signed parameters, and identifiers out of logs.
+    const message = `${req.method} ${req.path}`;
     const meta = {
       method: req.method,
-      url: req.originalUrl,
+      url: req.path,
       ip: req.ip,
       statusCode: res.statusCode,
       userAgent: req.get('user-agent'),

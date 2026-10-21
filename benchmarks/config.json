@@ -1,0 +1,11 @@
+{
+  "description": "Small reproducible Socket.IO connection and durable message fan-out benchmark.",
+  "defaultTarget": "http://127.0.0.1:3012",
+  "defaultClients": 5,
+  "defaultMessages": 20,
+  "maximumClients": 100,
+  "maximumMessages": 500,
+  "timeoutMs": 15000,
+  "latencyPercentiles": [50, 95, 99],
+  "publicMeasurements": "Run only after a public deployment is approved and stable. Record the instance size, region, commit, date, and target URL alongside raw JSON output."
+}

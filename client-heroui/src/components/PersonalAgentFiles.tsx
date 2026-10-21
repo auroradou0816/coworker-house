@@ -15,14 +15,14 @@ export const PersonalAgentFiles: React.FC<{ clientId: string; initialFileId?:str
   const [values,setValues] = React.useState<Record<string,string | boolean>>({});
   const [url,setUrl] = React.useState('');
   const picker = React.useRef<HTMLInputElement>(null),version = React.useRef(0);
-  React.useEffect(() => () => { version.current++; },[]);
   React.useEffect(() => () => { if (url) URL.revokeObjectURL(url); },[url]);
   React.useEffect(() => {
-    const current = ++version.current;
+    const versionRef = version;
+    const current = ++versionRef.current;
     void readPersonalAgentFiles(clientId).then(result => {
-      if (current === version.current) { setFiles(result.files); setTotal(result.total); }
-    }).catch(error => { if (current === version.current) showError(error.message); });
-    return () => { version.current++; };
+      if (current === versionRef.current) { setFiles(result.files); setTotal(result.total); }
+    }).catch(error => { if (current === versionRef.current) showError(error.message); });
+    return () => { versionRef.current++; };
   },[clientId,showError]);
   const open = React.useCallback(async (file: PersonalAgentFile) => {
     const current = version.current;

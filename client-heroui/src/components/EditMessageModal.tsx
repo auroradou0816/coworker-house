@@ -49,7 +49,7 @@ export const EditMessageModal: React.FC<EditMessageModalProps> = ({
         clearTimeout(focusTimer);
       }
     };
-  }, [isOpen, message?.content]);
+  }, [isOpen, message]);
 
   const handleSaveClick = () => {
     if (!message) return;

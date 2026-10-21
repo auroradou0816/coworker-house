@@ -24,9 +24,9 @@ React / TypeScript / Vite / HeroUI 前端通过 HTTP 和 Socket.IO 连接 Node.j
 
 开发环境需要 Node.js 24.18.0 或更高版本。Dockerfile 会构建前后端，由 App 提供网页。
 
-按[部署指南](部署指南.md)生成私有配置，再启动 Compose。不要提交 `.env.compose`、私钥或真实凭据。
+按[部署指南](部署指南.md)在本地启动 Compose，或在 AWS Lightsail 启用可选 Caddy 公网 profile。部署指南使用两个免费的 DuckDNS 子域名分别承载网页和签名媒体，Caddy 自动申请 HTTPS 证书，公网只需开放 80/443。不要提交 `.env.compose`、DuckDNS token、私钥或真实凭据。
 
-当前维护者环境是 AWS Lightsail 上的 Ubuntu，App、Worker、PostgreSQL、Redis、SeaweedFS 已通过健康检查。网页目前通过 SSH 通道访问，尚未发布公开域名；AI 和 E2B 尚未启用。
+当前维护者环境是 AWS Lightsail / Ubuntu，App、Worker、PostgreSQL、Redis、SeaweedFS 已通过健康检查。公网 HTTPS 尚未验证，也没有公布 Demo 地址；该实例未启用 AI 和 E2B。
 
 ## 维护与来源
 

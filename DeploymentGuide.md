@@ -1,73 +1,135 @@
-# CoWorker House deployment
+# Public deployment on AWS Lightsail
 
-[中文](部署指南.md)
+CoWorker House runs as the existing Docker Compose stack. Caddy provides automatic HTTPS and proxies the app (including Socket.IO/WSS) and S3-compatible media service. PostgreSQL, Redis, SeaweedFS, and workers have no public host ports. The public hostnames are configurable; no public demo is active or verified yet. **Never run `docker compose down -v`.**
 
-Maintainer: Yijia Dou. This guide targets **your own** Linux host and repository. It does not use the upstream author's infrastructure.
+## 1. Register two free DuckDNS names
 
-## Current stage
+1. Open [DuckDNS](https://www.duckdns.org/), sign in using an available account provider, and note the account token shown on the dashboard. Keep the token private.
+2. In **Domains**, register two available labels, for example `coworker-house-app` and `coworker-house-media`. The resulting names are `coworker-house-app.duckdns.org` and `coworker-house-media.duckdns.org`. These are examples only; check availability and choose labels you control.
+3. Set both IPv4 addresses to the Lightsail static IP `16.144.4.15`. Do not add a paid domain or DNS provider. Check the records:
 
-The maintainer's AWS Lightsail instance runs Ubuntu 24.04, Docker Engine and Docker Compose. The base chat stack has passed container and `/api/status` health checks. Access is through SSH forwarding; public DNS, TLS, provider credentials and E2B are separate follow-up steps. Do not assume the latest source commit is already running on the server.
+   ```bash
+   dig +short coworker-house-app.duckdns.org A
+   dig +short coworker-house-media.duckdns.org A
+   ```
 
-## Prepare configuration
+   Both should return `16.144.4.15`. Replace the example labels in all commands below with the labels you actually registered. The repository includes `ops/duckdns/update.sh` to set both A records in one request; its token is read from `DUCKDNS_TOKEN`, not stored in the repository. A Lightsail static IP normally needs only this one update. If the instance's IP changes, rerun the update script with the new IPv4 address.
 
-Clone `https://github.com/auroradou0816/coworker-house.git` and enter its directory. Generate configuration once; do not overwrite existing database passwords on an initialized stack:
+## 2. Set the Lightsail firewall
 
-```bash
-python3 - <<'PY'
-from pathlib import Path
-import os
-import secrets
-p = Path('.env.compose')
-values = {
-    'POSTGRES_PASSWORD': secrets.token_hex(32),
-    'LOCAL_S3_ACCESS_KEY_ID': secrets.token_hex(16),
-    'LOCAL_S3_SECRET_ACCESS_KEY': secrets.token_hex(32),
-    'CLIENT_URL': 'http://localhost:3012',
-    'CLIENT_URLS': 'http://localhost:3012',
-    'MEDIA_STORAGE_PUBLIC_ENDPOINT': 'http://localhost:8333',
-}
-lines = []
-for line in Path('.env.compose.example').read_text().splitlines():
-    key = line.split('=', 1)[0]
-    lines.append(f'{key}={values[key]}' if key in values else line)
-fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-with os.fdopen(fd, 'w') as f:
-    f.write('\n'.join(lines) + '\n')
-print('Private configuration created.')
-PY
+In the instance's **Networking** tab, allow inbound TCP ports **80** and **443** from all IPv4 addresses; allow UDP **443** optionally for HTTP/3. Keep SSH (TCP 22) restricted to your current IP. Do not create public rules for 3012, 3013, 5432, 6379, 8333, or Caddy's admin port 2019. The app host port mappings are loopback-only; internal containers share the private Compose network.
+
+## 3. Configure the existing server safely
+
+Connect over SSH and preserve the existing `.env.compose`, database password, SeaweedFS credentials, object-storage directory, and Docker volumes. Back up the env file before editing; do not create a replacement over it. Update only the domain/origin settings:
+
+```dotenv
+PUBLIC_DOMAIN=YOUR_APP.duckdns.org
+MEDIA_DOMAIN=YOUR_MEDIA.duckdns.org
+CLIENT_URL=https://YOUR_APP.duckdns.org
+CLIENT_URLS=https://YOUR_APP.duckdns.org
+MEDIA_CORS_ALLOWED_ORIGINS=https://YOUR_APP.duckdns.org
+MEDIA_STORAGE_PUBLIC_ENDPOINT=https://YOUR_MEDIA.duckdns.org
+TRUST_PROXY_HOPS=1
+METRICS_TOKEN=<existing-or-new-long-random-secret>
+CODE_AGENT_ENABLED=false
+CODEX_CONNECTIONS_ENABLED=false
+GITHUB_CONNECTIONS_ENABLED=false
 ```
 
-Google login is disabled by default. Set your own frontend Google client ID before building if needed. Provider keys belong in `.env.compose`. Keep Code Agent disabled until your own E2B template, credentials and required connection encryption keys are ready.
+Set `YOUR_APP` and `YOUR_MEDIA` to the labels actually registered. `CLIENT_URL(S)` controls the frontend origin and backend/Socket.IO CORS; `MEDIA_CORS_ALLOWED_ORIGINS` permits that app origin to make browser PUT/GET requests to SeaweedFS through the media hostname. Caddy preserves the media `Host` and request URI because S3 Signature V4 signs the host/path/query. Keep AI provider keys absent and code-agent/E2B options disabled until their credentials, quotas, and access controls have been reviewed.
 
-## Start and verify
+Store DuckDNS credentials in the SSH session environment only. Do not paste the token into a command, shell history, `.env.compose`, or a GitHub issue:
 
 ```bash
+read -rsp 'DuckDNS token: ' DUCKDNS_TOKEN; echo
+export DUCKDNS_TOKEN
+export DUCKDNS_APP_SUBDOMAIN=YOUR_APP
+export DUCKDNS_MEDIA_SUBDOMAIN=YOUR_MEDIA
+export DUCKDNS_IPV4=16.144.4.15
+bash ops/duckdns/update.sh
+unset DUCKDNS_TOKEN
+```
+
+Run that from the repository root after the script has been pulled. The response must say both subdomains were updated. Verify both with `dig` again before starting Caddy. Protect the env file:
+
+```bash
+sudo chmod 600 .env.compose
+sudo install -m 600 .env.compose ".env.compose.pre-public-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+The existing Lightsail account has a running stack and persistent data. Do not use the first-install env generator on it. Verify `CODE_AGENT_ENABLED=false`, and leave provider keys and E2B configuration unset for the initial public trial.
+
+## 4. Back up, deploy, and verify HTTPS
+
+Only deploy a reviewed and pushed commit. First capture the existing database and object storage, then save the running application image for rollback. The Compose backup profile uses the existing deployment configuration and does not remove volumes.
+
+```bash
+cd ~/coworker-house
 sudo docker compose --env-file .env.compose config --quiet
-sudo docker compose --env-file .env.compose up -d --build app ai-worker
-sudo docker compose --env-file .env.compose ps -a
-curl -fsS http://127.0.0.1:3012/api/status
+sudo docker compose --env-file .env.compose --profile public config --quiet
+sudo docker compose --env-file .env.compose --profile ops run --rm postgres-backup
+sudo docker image tag roomtalk-local:dev roomtalk-local:pre-public
+
+git fetch origin
+git checkout master
+git pull --ff-only origin master
+sudo docker compose --env-file .env.compose --profile public up -d --build app ai-worker caddy
+sudo docker compose --env-file .env.compose --profile public ps -a
+curl -fsS http://127.0.0.1:3012/api/health/ready
+curl -fsSI https://YOUR_APP.duckdns.org/
+curl -sS -o /dev/null -w 'media HTTP %{http_code}; TLS verify %{ssl_verify_result}\n' https://YOUR_MEDIA.duckdns.org/
 ```
 
-App, Worker, PostgreSQL, Redis and object storage should be healthy. `migrate` should exit with status 0. Check `ready: true` and dependency statuses, then test room creation, messages after refresh and image upload. AI Worker health alone does not prove a provider key has been configured.
+Caddy obtains certificates automatically when both DuckDNS names resolve to this instance and inbound TCP 80/443 reach it. It renews them and persists certificate state in the named `caddy_data` volume. No manual certificate or DNS challenge setup is required. The media root may return an S3 error HTTP status; `TLS verify 0` confirms its certificate, but verify media by uploading and opening an actual file from the app.
 
-## Access through SSH
+## 5. Public end-to-end checklist
 
-On your own computer, substitute your actual key path and server address:
+Use two independent browsers, preferably different browser profiles or devices:
+
+1. Open `https://YOUR_APP.duckdns.org/`; confirm the browser shows a valid certificate and the page loads.
+2. Create a room in browser A, then join it from browser B using its invitation/link and password if enabled.
+3. Send messages in both directions and confirm each arrives without refreshing. Browser developer tools should show a Socket.IO websocket connection using `wss://` (polling fallback may appear before upgrade).
+4. Refresh both pages; confirm room membership and persisted message history return.
+5. Temporarily take one browser offline, restore the network, and confirm the socket reconnects and missed room events appear.
+6. Upload an image/file where supported. Confirm its URL is HTTPS under `YOUR_MEDIA.duckdns.org`, and open it from the second browser. This exercises S3 CORS, signature, and Caddy host/path preservation.
+7. On the instance, check `sudo docker compose --env-file .env.compose --profile public ps` and `curl -fsS http://127.0.0.1:3012/api/health/ready`. The latter reports database, Redis, media, Socket.IO adapter, assistant queue, and worker readiness.
+8. From a machine outside Lightsail, run `nmap -Pn -p 22,80,443,2019,3012,3013,5432,6379,8333 16.144.4.15`. Only 80/443 should be open to the public; 22 should only be reachable from your allowed SSH source. Verify `https://YOUR_APP.duckdns.org/api/health/ready` and `/api/internal/metrics` return 404.
+
+Do not enable AI/E2B during this initial anonymous trial. Confirm authentication, room permissions, AI quotas, and sandbox limits separately before adding credentials or setting `CODE_AGENT_ENABLED=true`.
+
+## 6. Operations
+
+The app writes structured logs to Docker stdout. Internal metrics (HTTP p50/p95/p99 and 5xx rate, active sockets, BullMQ counts, worker heartbeat) are available only on the instance at `/api/internal/metrics` with a bearer token; Caddy blocks that route publicly. Metrics are process-local and reset on restart.
 
 ```bash
-ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
-  -i /path/to/your-key.pem \
-  -L 127.0.0.1:3012:127.0.0.1:3012 \
-  -L 127.0.0.1:8333:127.0.0.1:8333 \
-  ubuntu@YOUR_SERVER_IP
+sudo docker compose --env-file .env.compose --profile public ps
+sudo docker compose --env-file .env.compose logs --since=15m app ai-worker caddy
+curl -fsS http://127.0.0.1:3012/api/health/ready
+sudo docker compose --env-file .env.compose exec -T app node -e 'fetch("http://127.0.0.1:3012/api/internal/metrics", {headers: {authorization: `Bearer ${process.env.METRICS_TOKEN}`}}).then(r => r.text()).then(console.log)'
+sudo docker stats --no-stream
 ```
 
-Open `http://localhost:3012`. Both forwards are required for the configured image upload/download flow. These loopback services are not public website endpoints.
+For a later reviewed update, repeat the backup, image tag, fast-forward pull, and `compose up` steps. Persistent volumes are reused; never use `down -v`.
 
-## Source updates and public access
+## 7. Roll back
 
-Keep `.env.compose` and persistent volumes. Fetch reviewed updates, rebuild the app image and repeat health checks. Source pushes do not deploy the server. Do not use `docker compose down -v` to update: it deletes database and Redis volumes.
+If the new app fails its health check, restore the prior app image and stop Caddy to return to the previous loopback-only state. Keep the backup files and all named volumes:
 
-For public access, configure your domain, TLS reverse proxy, allowed client origins and an externally reachable object-storage endpoint. Keep database/Redis private. Configure backups outside the instance and test recovery before relying on it for important data.
+```bash
+sudo docker image tag roomtalk-local:pre-public roomtalk-local:dev
+sudo docker compose --env-file .env.compose up -d app ai-worker
+sudo docker compose --env-file .env.compose --profile public stop caddy
+sudo docker compose --env-file .env.compose ps -a
+curl -fsS http://127.0.0.1:3012/api/health/ready
+```
 
-The optional `edge` profile and macOS Keychain scripts are inherited tooling, not required for Lightsail. The former Fly workflow is archived and cannot run automatically. Internal `roomtalk` package, database and volume identifiers remain for compatibility; renaming them is a separate data migration.
+This restores the old application image, not database contents. Retain and verify the database/object-store backup before rollout; never run destructive migrations or delete production data as part of rollback.
+
+## Troubleshooting
+
+- **Caddy has no certificate:** check both `dig ... A` results, Lightsail TCP 80/443 rules, `docker compose ... logs caddy`, and that the domain labels are real DuckDNS registrations.
+- **502 from app:** inspect app/migrate health and `docker compose ... logs app migrate`; test local `/api/health/ready`.
+- **Socket.IO does not connect:** ensure `CLIENT_URL` and `CLIENT_URLS` exactly use the app's `https://` origin, `TRUST_PROXY_HOPS=1`, and browser WebSocket traffic is not blocked.
+- **Media PUT/GET fails with CORS:** set `MEDIA_CORS_ALLOWED_ORIGINS` to the exact app origin (no trailing slash), and verify `MEDIA_STORAGE_PUBLIC_ENDPOINT` and `MEDIA_DOMAIN` are the same media host. Check that Caddy is preserving the request host/path and inspect object-storage logs.
+- **Public scan shows an internal port open:** remove its Lightsail firewall rule and confirm the Compose binding is loopback-only; do not rely on obscurity.

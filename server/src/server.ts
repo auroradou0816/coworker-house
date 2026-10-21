@@ -28,9 +28,9 @@ import { registerPersonalAgentBrowserContextRoutes } from './routes/personalAgen
 import { PERSONAL_RESULT_API_PATH, PersonalAgentResultService } from './services/personalAgentResults';
 import { registerPersonalAgentResultContextRoutes } from './routes/personalAgentResultContextRoutes';
 // 导入日志类
-import { Logger, httpLogger } from './logger';
+import { Logger, getHttpMetrics, httpLogger } from './logger';
 
-import { randomUUID } from 'node:crypto';
+import { randomUUID, timingSafeEqual } from 'node:crypto';
 import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -192,6 +192,10 @@ const corsOrigin = resolveCorsOrigin();
 
 // 初始化 Express 应用
 const app = express();
+const trustedProxyHops = Number.parseInt(process.env.TRUST_PROXY_HOPS || '0', 10);
+if (Number.isInteger(trustedProxyHops) && trustedProxyHops >= 0 && trustedProxyHops <= 5) {
+  app.set('trust proxy', trustedProxyHops);
+}
 app.use(cors({
   origin: corsOrigin,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -861,6 +865,38 @@ const audioTranscriptionRunner = createAssemblyAIAudioTranscriptionRunner({
 const assistantRunQueue = createAssistantRunQueue();
 assistantRunQueue.on('error', error => {
   assistantRunLogger.error('Assistant run BullMQ producer error', { error });
+});
+app.get('/api/internal/metrics', async (req, res) => {
+  const expected = process.env.METRICS_TOKEN || '';
+  const supplied = req.get('authorization')?.replace(/^Bearer\s+/i, '') || '';
+  const expectedBytes = Buffer.from(expected);
+  const suppliedBytes = Buffer.from(supplied);
+  const authorized = expectedBytes.length > 0
+    && expectedBytes.length === suppliedBytes.length
+    && timingSafeEqual(expectedBytes, suppliedBytes);
+  if (!authorized) return res.status(404).json({ error: 'Not found' });
+
+  try {
+    const [queue, worker] = await Promise.all([
+      assistantRunQueue.getJobCounts('waiting', 'active', 'delayed', 'failed'),
+      readAssistantRunQueueHealth(assistantRunQueue),
+    ]);
+    return res.json({
+      uptimeSeconds: Math.floor(process.uptime()),
+      http: getHttpMetrics(),
+      sockets: { active: io.engine.clientsCount },
+      assistantQueue: queue,
+      worker: {
+        available: worker.workerAvailable,
+        heartbeatAt: worker.workerHeartbeatAt || null,
+        heartbeatExpiresInMs: worker.workerHeartbeatExpiresInMs || null,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    assistantRunLogger.warn('Unable to collect internal metrics', { error });
+    return res.status(503).json({ error: 'Metrics temporarily unavailable' });
+  }
 });
 const assistantRunDispatchRelay = new TaskDispatchRelay({
   store,

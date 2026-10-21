@@ -550,7 +550,7 @@ describe('E2BCodeAgentSandboxService', () => {
     const syntaxCheck = spawnSync('bash', ['-n'], { input: command, encoding: 'utf8' });
     assert.equal(syntaxCheck.status, 0, syntaxCheck.stderr);
     const pythonBody = command.split("python - <<'PY'\n")[1]?.split('\nPY')[0] || '';
-    const pythonSyntaxCheck = spawnSync('python', ['-c', 'import sys; compile(sys.stdin.read(), "checkpoint_restore.py", "exec")'], {
+    const pythonSyntaxCheck = spawnSync('python3', ['-c', 'import sys; compile(sys.stdin.read(), "checkpoint_restore.py", "exec")'], {
       input: pythonBody,
       encoding: 'utf8',
     });
