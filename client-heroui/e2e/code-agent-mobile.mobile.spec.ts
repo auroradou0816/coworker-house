@@ -18,7 +18,7 @@ test('keeps code agent workspace and composer usable on mobile', async ({ page, 
   const roomName = shortName('codeAgent-mobile');
 
   await openRoomsPage(page);
-  await page.getByRole('button', { name: 'Create Room' }).click();
+  await page.getByRole('button', { name: 'Create Room' }).first().click();
   await page.getByRole('radio', { name: /code agent/i }).click();
   await page.getByLabel('Room Name').fill(roomName);
   await page.locator('[role="dialog"]').getByRole('button', { name: 'Create Room' }).click();

@@ -28,7 +28,7 @@ test('creates a room through the UI and enters chat', async ({ page, context }) 
   const roomName = shortName('created');
 
   await openRoomsPage(page);
-  await page.getByRole('button', { name: 'Create Room' }).click();
+  await page.getByRole('button', { name: 'Create Room' }).first().click();
   await expect(page.getByText('Create New Room')).toBeVisible();
   await page.getByLabel('Room Name').fill(roomName);
   await page.locator('[role="dialog"]').getByRole('button', { name: 'Create Room' }).click();

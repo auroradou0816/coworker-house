@@ -92,7 +92,8 @@ export async function postMessageViaApi(
 
 export async function openRoomsPage(page: Page) {
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Create Room' })).toBeVisible();
+  // The studio intentionally shows a hero CTA and a compact toolbar CTA.
+  await expect(page.getByRole('button', { name: 'Create Room' }).first()).toBeVisible();
 }
 
 export async function openRoomFromCard(page: Page, room: Pick<TestRoom, 'id' | 'name'>) {

@@ -76,7 +76,7 @@ test('shows account sign-in guidance to guests', async ({ page, context }) => {
   await seedClient(context, uniqueName('personal-guest'));
   await openRoomsPage(page);
   await page.getByRole('button', { name: 'Personal Agent', exact: true }).first().click();
-  await expect(page.getByText('Sign in to your RoomTalk account in Settings to create a private personal agent.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Sign in to your CoWorker House account in Settings to create a private personal agent.', { exact: true })).toBeVisible();
 });
 
 test('tracks a real page, deduplicates updates, pauses and preserves read/preferences across reload', async ({ page, context, request }) => {

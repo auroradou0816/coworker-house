@@ -2,7 +2,7 @@
 
 **让好点子，在这里发生。** 由 [Yijia Dou](https://github.com/auroradou0816) 维护。
 
-[English](README.md) · [部署指南](部署指南.md) · [项目来源](PROJECT_ORIGIN.md) · [安全说明](SECURITY.zh.md)
+[English](README.md) · [Deployment guide](DeploymentGuide.md) · [项目来源](PROJECT_ORIGIN.md) · [安全说明](SECURITY.zh.md)
 
 CoWorker House 是一个共享协作空间，将实时房间聊天、可选的 AI 对话和沙盒编程工作区结合起来。新版创意工作室首页提供创建房间、邀请加入和项目卡片，支持桌面与手机。
 
@@ -24,7 +24,7 @@ React / TypeScript / Vite / HeroUI 前端通过 HTTP 和 Socket.IO 连接 Node.j
 
 开发环境需要 Node.js 24.18.0 或更高版本。Dockerfile 会构建前后端，由 App 提供网页。
 
-按[部署指南](部署指南.md)在本地启动 Compose，或在 AWS Lightsail 启用可选 Caddy 公网 profile。部署指南使用两个免费的 DuckDNS 子域名分别承载网页和签名媒体，Caddy 自动申请 HTTPS 证书，公网只需开放 80/443。不要提交 `.env.compose`、DuckDNS token、私钥或真实凭据。
+按英文版 [DeploymentGuide.md](DeploymentGuide.md) 在本地启动 Compose，或在 AWS Lightsail 启用可选 Caddy 公网 profile。部署指南使用两个免费的 DuckDNS 子域名分别承载网页和签名媒体，Caddy 自动申请 HTTPS 证书，公网只需开放 80/443。不要提交 `.env.compose`、DuckDNS token、私钥或真实凭据。
 
 当前维护者环境是 AWS Lightsail / Ubuntu，App、Worker、PostgreSQL、Redis、SeaweedFS 已通过健康检查。公网 HTTPS 尚未验证，也没有公布 Demo 地址；该实例未启用 AI 和 E2B。
 
