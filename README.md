@@ -50,4 +50,4 @@ The server has focused unit tests and integration tests requiring disposable Pos
 
 Maintainer: **Yijia Dou** · [GitHub](https://github.com/auroradou0816).
 
-This is an authorized derivative of an existing project. [PROJECT_ORIGIN.md](PROJECT_ORIGIN.md) documents the source and rewritten Git metadata. Third-party license notices remain in their respective directories. Public repository visibility does not itself grant a new blanket license to every included component.
+
