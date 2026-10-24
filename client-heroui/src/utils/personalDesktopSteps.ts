@@ -5,7 +5,7 @@ export interface PersonalDesktopStep {id:string;turnId?:string;receiptId?:string
 // inside the normal tool output; image bytes are saved locally, never in history.
 export function readPersonalDesktopSteps(messages:Message[]):PersonalDesktopStep[]{
   const results=new Map(messages.filter(message=>message.messageType==='tool_result' && message.toolCallId).map(message=>[message.toolCallId!,message]));
-  return messages.filter(message=>message.messageType==='tool_call' && typeof (message.toolArgs?.command ?? message.toolArgs?.cmd)==='string' && /\broomtalk\s+computer\s+desktop\b/.test(String(message.toolArgs?.command ?? message.toolArgs?.cmd))).map(call=>{
+  return messages.filter(message=>message.messageType==='tool_call' && typeof (message.toolArgs?.command ?? message.toolArgs?.cmd)==='string' && /\b(?:coworkerhouse|roomtalk)\s+computer\s+desktop\b/.test(String(message.toolArgs?.command ?? message.toolArgs?.cmd))).map(call=>{
     const result=call.toolCallId?results.get(call.toolCallId):undefined;
     const step:PersonalDesktopStep={id:call.id,turnId:call.turnId,loading:!result};
     if(!result)return step;

@@ -2,6 +2,26 @@
 
 CoWorker House runs as the existing Docker Compose stack. Caddy provides automatic HTTPS and proxies the app (including Socket.IO/WSS) and S3-compatible media service. PostgreSQL, Redis, SeaweedFS, and workers have no public host ports. The verified demo is [coworker-house-app.duckdns.org](https://coworker-house-app.duckdns.org/) with media on `coworker-house-douzi.duckdns.org`. **Never run `docker compose down -v`.**
 
+## Branding updates and existing installations
+
+Application assets, sandbox packages, commands, and image names use
+`coworkerhouse`. Keep the existing Compose project identity, database user,
+bucket name, volumes, and `.env.compose` when updating an existing installation.
+The default Compose project and network names deliberately remain unchanged so
+an update reconnects to the existing data. Browser storage keys, queue names,
+schema migration IDs, signing domains, and `ROOMTALK_*` runtime variables remain
+compatibility identifiers; do not rename or clear them as part of a branding update.
+The `roomtalk` CLI alias allows commands saved in old conversations to continue
+working; new instructions use `coworkerhouse`.
+
+The renamed sandbox package is `coworkerhouse-code-agent-runner` version `0.1.70`, imported as
+`coworkerhouse_code_agent_runner`. Before enabling E2B, build and validate the
+new template using the existing sandbox build tooling, then configure its actual
+template ID and matching artifact version. A source-code rename does not rename
+an existing E2B template. Keep code-agent execution disabled until the matching
+template is available; do not point the new runner commands at an older template.
+This update does not change live Lightsail or E2B resources automatically.
+
 ## 1. Register two free DuckDNS names
 
 1. Open [DuckDNS](https://www.duckdns.org/), sign in using an available account provider, and note the account token shown on the dashboard. Keep the token private.
@@ -69,7 +89,7 @@ cd ~/coworker-house
 sudo docker compose --env-file .env.compose config --quiet
 sudo docker compose --env-file .env.compose --profile public config --quiet
 sudo docker compose --env-file .env.compose --profile ops run --rm postgres-backup
-sudo docker image tag roomtalk-local:dev roomtalk-local:pre-public
+sudo docker image tag coworkerhouse-local:dev coworkerhouse-local:pre-public
 
 git fetch origin
 git checkout master
@@ -119,7 +139,7 @@ For a later reviewed update, repeat the backup, image tag, fast-forward pull, an
 If the new app fails its health check, restore the prior app image and stop Caddy to return to the previous loopback-only state. Keep the backup files and all named volumes:
 
 ```bash
-sudo docker image tag roomtalk-local:pre-public roomtalk-local:dev
+sudo docker image tag coworkerhouse-local:pre-public coworkerhouse-local:dev
 sudo docker compose --env-file .env.compose up -d app ai-worker
 sudo docker compose --env-file .env.compose --profile public stop caddy
 sudo docker compose --env-file .env.compose ps -a

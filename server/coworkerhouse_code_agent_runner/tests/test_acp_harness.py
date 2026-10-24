@@ -12,7 +12,7 @@ from typing import Any
 
 from acp.schema import LoadSessionResponse
 
-from roomtalk_code_agent_runner.acp_harness import (
+from coworkerhouse_code_agent_runner.acp_harness import (
     ACPHarnessSpec,
     ACPEventBridge,
     ACP_MISSING_TERMINAL_TOOL_RESULT_OUTPUT,
@@ -32,7 +32,7 @@ from roomtalk_code_agent_runner.acp_harness import (
     opencode_config,
     _launch_command,
 )
-from roomtalk_code_agent_runner.runner import EventEmitter, RunnerError, RunnerRequest
+from coworkerhouse_code_agent_runner.runner import EventEmitter, RunnerError, RunnerRequest
 
 
 def runner_request(**overrides: Any) -> RunnerRequest:
@@ -119,8 +119,8 @@ def test_opencode_config_routes_models_through_roomtalk_gateway_and_enforces_pla
         "turn-token",
     )
 
-    assert config["model"] == "roomtalk/deepseek/deepseek-v4-pro"
-    assert config["provider"]["roomtalk"]["options"] == {
+    assert config["model"] == "coworkerhouse/deepseek/deepseek-v4-pro"
+    assert config["provider"]["coworkerhouse"]["options"] == {
         "baseURL": "https://room.example/api/code-agent/model-gateway/v1",
         "apiKey": "turn-token",
     }
@@ -140,12 +140,12 @@ def test_opencode_config_uses_anthropic_transport_for_anthropic_models():
         "turn-token",
     )
 
-    assert config["provider"]["roomtalk"]["npm"] == "@ai-sdk/anthropic"
+    assert config["provider"]["coworkerhouse"]["npm"] == "@ai-sdk/anthropic"
 
 
 def test_plan_wrapper_mounts_a_writable_dev_namespace_for_runner_processes(monkeypatch: Any):
     monkeypatch.setattr(
-        "roomtalk_code_agent_runner.acp_harness.shutil.which",
+        "coworkerhouse_code_agent_runner.acp_harness.shutil.which",
         lambda _name, path=None: "/usr/bin/bwrap",
     )
     command, args = _launch_command(
@@ -175,14 +175,14 @@ def test_hermes_config_uses_an_isolated_custom_openai_compatible_provider():
 
     assert config["model"] == {
         "default": "deepseek/deepseek-v4-pro",
-        "provider": "custom:roomtalk",
+        "provider": "custom:coworkerhouse",
         "base_url": "https://room.example/api/code-agent/model-gateway/v1",
         "api_key": "turn-token",
         "api_mode": "chat_completions",
     }
     assert config["providers"] == {
-        "roomtalk": {
-            "name": "RoomTalk",
+        "coworkerhouse": {
+            "name": "CoworkerHouse",
             "base_url": "https://room.example/api/code-agent/model-gateway/v1",
             "api_key": "turn-token",
             "default_model": "deepseek/deepseek-v4-pro",
@@ -213,11 +213,11 @@ def test_build_harness_env_isolates_hermes_state_and_uses_turn_token(tmp_path: P
 
     assert env["OPENAI_API_KEY"] == "turn-token"
     assert env["OPENAI_BASE_URL"].endswith("/v1")
-    assert env["HERMES_SESSION_SOURCE"] == "roomtalk"
+    assert env["HERMES_SESSION_SOURCE"] == "coworkerhouse"
     config_path = Path(env["HERMES_HOME"]) / "config.yaml"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     model = config["model"]
-    assert model["provider"] == "custom:roomtalk"
+    assert model["provider"] == "custom:coworkerhouse"
     assert model["api_key"] == "turn-token"
     assert model["api_mode"] == "chat_completions"
     assert config["auxiliary"]["title_generation"]["enabled"] is False
@@ -247,7 +247,7 @@ def test_acp_session_ids_are_backend_scoped():
     assert _unwrap_session_id(wrapped, "hermes-agent") is None
 
 
-def test_hermes_session_model_stays_on_the_roomtalk_custom_provider():
+def test_hermes_session_model_stays_on_the_coworkerhouse_custom_provider():
     calls: list[tuple[str, dict[str, str]]] = []
 
     class Connection:
@@ -275,7 +275,7 @@ def test_hermes_session_model_stays_on_the_roomtalk_custom_provider():
     assert calls == [
         ("model", {
             "session_id": "session-1",
-            "model_id": "custom:roomtalk:deepseek/deepseek-v4-pro",
+            "model_id": "custom:coworkerhouse:deepseek/deepseek-v4-pro",
         }),
         ("mode", {"session_id": "session-1", "mode_id": "dont_ask"}),
     ]
@@ -662,7 +662,7 @@ def test_opencode_fails_closed_when_config_option_update_fails():
         raise AssertionError("OpenCode must reject a failed session mode update")
 
 
-def test_event_bridge_maps_text_and_tool_lifecycle_to_roomtalk_jsonl():
+def test_event_bridge_maps_text_and_tool_lifecycle_to_coworkerhouse_jsonl():
     output = io.StringIO()
     bridge = ACPEventBridge(
         backend="opencode",
@@ -1088,7 +1088,7 @@ def test_hermes_event_bridge_recovers_exact_parallel_tool_results_before_answer_
                 "INSERT INTO messages (session_id, role, content, tool_name) VALUES (?, 'tool', ?, ?)",
                 [
                     ("session-1", '{"output":"","exit_code":0,"error":null}', "terminal"),
-                    ("session-1", '{"content":"# RoomTalk"}', "read_file"),
+                    ("session-1", '{"content":"# CoworkerHouse"}', "read_file"),
                 ],
             )
         await bridge.session_update(
@@ -1111,7 +1111,7 @@ def test_hermes_event_bridge_recovers_exact_parallel_tool_results_before_answer_
         "text_delta",
     ]
     assert emitted[2]["id"] == "tool-read"
-    assert emitted[2]["output"] == '{"content":"# RoomTalk"}'
+    assert emitted[2]["output"] == '{"content":"# CoworkerHouse"}'
     assert emitted[3]["id"] == "tool-shell"
     assert emitted[3]["output"] == '{"output":"","exit_code":0,"error":null}'
     assert emitted[3]["exitCode"] == 0

@@ -11,7 +11,7 @@ vi.mock('@heroui/react',()=>({Button:({children,onPress,isDisabled,isLoading,...
 afterEach(cleanup);
 const panel:JevPanel={id:'panel',threadId:'thread',turnId:'turn',candidateSetVersion:1,type:'comparison',title:'Choose a place',mode:'live',options:[{id:'a',label:'Place A',details:['Real evidence'],sources:[{title:'Actual source',url:'https://example.org/place'}]},{id:'b',label:'Place B',details:['Other evidence'],sources:[{title:'Other source',url:'https://example.org/other'}]}]};
 const message=(id:string,data:Partial<Message>):Message=>({id,clientId:'owner',roomId:'thread',content:'',timestamp:'2026-10-06T12:00:00Z',username:'Owner',messageType:'text',...data});
-const calls=[message('user',{content:'Compare places'}),message('call',{messageType:'tool_call',toolCallId:'call',toolName:'exec_command',toolArgs:{cmd:'roomtalk choices present --file choices.json --json'}})];
+const calls=[message('user',{content:'Compare places'}),message('call',{messageType:'tool_call',toolCallId:'call',toolName:'exec_command',toolArgs:{cmd:'coworkerhouse choices present --file choices.json --json'}})];
 const receipt=message('result',{messageType:'tool_result',toolCallId:'call',content:'Process exited with code 0\n'+JSON.stringify({success:true,tool:'PersonalChoices',panel})});
 const history=[...calls,receipt];
 it('renders source comparison cards and sends a single validated structured choice',async()=>{

@@ -157,7 +157,7 @@ export class CodexCliEventMapper {
 
     if (item.type === 'command_execution' && event.type === 'item.started') {
       const command = item.command || '';
-      const toolName = roomtalkToolName(command) || 'shell';
+      const toolName = coworkerhouseToolName(command) || 'shell';
       this.commandToolNames[item.id] = toolName;
       return [{
         schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION,
@@ -172,7 +172,7 @@ export class CodexCliEventMapper {
     if (item.type === 'command_execution' && event.type === 'item.completed') {
       const exitCode = typeof item.exit_code === 'number' ? item.exit_code : undefined;
       const command = item.command || '';
-      const toolName = roomtalkToolName(command) || this.commandToolNames[item.id] || 'shell';
+      const toolName = coworkerhouseToolName(command) || this.commandToolNames[item.id] || 'shell';
       return [{
         schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION,
         type: 'tool_result',
@@ -290,9 +290,9 @@ const summarizeFileChanges = (changes: Array<{ path: string; kind: string }> = [
   return changes.map(change => `${change.kind} ${change.path}`).join('\n');
 };
 
-const roomtalkToolName = (command: string) => {
+const coworkerhouseToolName = (command: string) => {
   const normalized = command.trim().replace(/\s+/g, ' ').toLowerCase();
-  if (normalized.includes('roomtalk publish-static-site') || normalized.includes('platform_tools publish-static-site')) {
+  if (/\b(?:coworkerhouse|roomtalk) publish-static-site\b/.test(normalized) || normalized.includes('platform_tools publish-static-site')) {
     return 'PublishStaticSite';
   }
   return undefined;

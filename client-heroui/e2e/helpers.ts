@@ -47,7 +47,7 @@ export async function seedClient(context: BrowserContext, clientId = uniqueName(
     if (existingClientId !== seededClientId) {
       window.localStorage.setItem('roomtalk_current_view', 'rooms');
       window.localStorage.removeItem('roomtalk_current_room');
-      window.localStorage.removeItem('roomtalk:selected-ai-model');
+      window.localStorage.removeItem('coworkerhouse:selected-ai-model');
     }
   }, { seededClientId: clientId });
 

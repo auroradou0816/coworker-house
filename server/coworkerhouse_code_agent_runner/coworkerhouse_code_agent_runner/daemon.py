@@ -43,7 +43,7 @@ class SandboxDaemon:
     def run(self) -> int:
         self.emitter.emit({
             "type": "daemon_ready",
-            "daemonId": self.env.get("ROOMTALK_SANDBOX_DAEMON_ID") or "roomtalk-sandbox-daemon",
+            "daemonId": self.env.get("ROOMTALK_SANDBOX_DAEMON_ID") or "coworkerhouse-sandbox-daemon",
             "pid": os.getpid(),
             "backends": list(SUPPORTED_BACKENDS),
         })

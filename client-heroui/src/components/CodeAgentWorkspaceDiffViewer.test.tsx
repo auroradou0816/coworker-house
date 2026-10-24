@@ -737,7 +737,7 @@ describe('CodeAgentWorkspaceDiffViewer', () => {
     fireEvent.click(screen.getByLabelText('codeAgentEnableDiffLineWrapping'));
 
     expect(screen.getByTestId('code-view').dataset.overflow).toBe('wrap');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.diffWordWrap')).toBe('true');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.diffWordWrap')).toBe('true');
     expect(screen.getByLabelText('codeAgentDisableDiffLineWrapping')).toBeTruthy();
   });
 
@@ -773,7 +773,7 @@ describe('CodeAgentWorkspaceDiffViewer', () => {
       'room-1',
       expect.objectContaining({ ignoreWhitespace: true, scope: 'branch' }),
     );
-    expect(localStorage.getItem('roomtalk.codeWorkspace.diffIgnoreWhitespace')).toBe('true');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.diffIgnoreWhitespace')).toBe('true');
     expect(screen.getByLabelText('codeAgentShowWhitespaceChanges').getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -2454,13 +2454,13 @@ describe('CodeAgentWorkspaceDiffViewer', () => {
     fireEvent.click(within(renderModeGroup).getByLabelText('codeAgentSplitDiffView'));
 
     expect(screen.getByTestId('code-view').dataset.diffStyle).toBe('split');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.diffRenderMode')).toBe('split');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.diffRenderMode')).toBe('split');
     expect(screen.getByLabelText('codeAgentSplitDiffView').getAttribute('aria-pressed')).toBe('true');
 
     fireEvent.click(within(renderModeGroup).getByLabelText('codeAgentStackedDiffView'));
 
     expect(screen.getByTestId('code-view').dataset.diffStyle).toBe('unified');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.diffRenderMode')).toBe('stacked');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.diffRenderMode')).toBe('stacked');
   });
 
   it('uses compact controls for embedded workspace diff previews without changing the default toolbar size', async () => {

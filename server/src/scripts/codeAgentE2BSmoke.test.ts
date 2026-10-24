@@ -5,7 +5,7 @@ import { buildCodeAgentE2BSmokePlan } from './codeAgentE2BSmoke';
 const baseEnv = {
   RUN_CODE_AGENT_E2B_SMOKE: 'true',
   E2B_API_KEY: 'e2b-test-key',
-  CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dev',
+  CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dev',
   CODE_AGENT_ARTIFACT_MODE: 'development',
   // Development artifact mode requires a source path, but this unit test only
   // validates configuration shaping and never reads the local filesystem.
@@ -39,7 +39,7 @@ describe('buildCodeAgentE2BSmokePlan', () => {
     assertSkipped({ RUN_CODE_AGENT_E2B_SMOKE: 'true' }, /CODE_AGENT_E2B_TEMPLATE_ID/);
     assertSkipped({
       RUN_CODE_AGENT_E2B_SMOKE: 'true',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dev',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dev',
     }, /E2B_API_KEY/);
   });
 
@@ -57,7 +57,7 @@ describe('buildCodeAgentE2BSmokePlan', () => {
     const plan = assertRunnable(baseEnv);
 
     assert.equal(plan.selectedModel.provider, 'deepseek');
-    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner');
+    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner');
     assert.equal(plan.runnerEnv.DEEPSEEK_API_KEY, 'deepseek-test-key');
     assert.equal(plan.runnerEnv.E2B_API_KEY, undefined);
     assert.equal(plan.runnerEnv.E2B_ACCESS_TOKEN, undefined);
@@ -77,7 +77,7 @@ describe('buildCodeAgentE2BSmokePlan', () => {
 
     assert.equal(plan.runnerEnv.CODE_AGENT_MODEL_PROXY_URL, 'https://model-proxy.internal');
     assert.equal(plan.runnerEnv.CODE_AGENT_MODEL_PROXY_TOKEN, 'proxy-token');
-    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner');
+    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner');
     assert.equal(plan.runnerEnv.DEEPSEEK_API_KEY, undefined);
   });
 

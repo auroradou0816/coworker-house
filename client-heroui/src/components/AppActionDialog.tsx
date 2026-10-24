@@ -42,7 +42,7 @@ export const AppConfirmDialog: React.FC<AppConfirmDialogProps> = ({
       size="sm"
       placement="center"
       classNames={{
-        wrapper: 'roomtalk-modal-viewport px-3 sm:px-6',
+        wrapper: 'coworkerhouse-modal-viewport px-3 sm:px-6',
         backdrop: 'bg-[#141413]/55 backdrop-blur-[2px]',
       }}
     >
@@ -115,7 +115,7 @@ export const AppTextInputDialog: React.FC<AppTextInputDialogProps> = ({
       size="sm"
       placement="center"
       classNames={{
-        wrapper: 'roomtalk-modal-viewport px-3 sm:px-6',
+        wrapper: 'coworkerhouse-modal-viewport px-3 sm:px-6',
         backdrop: 'bg-[#141413]/55 backdrop-blur-[2px]',
       }}
     >

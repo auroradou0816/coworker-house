@@ -1,14 +1,14 @@
 'use strict';
-// One real Chromium context per RoomTalk sandbox. The control plane owns
+// One real Chromium context per CoworkerHouse sandbox. The control plane owns
 // authorization, durable observations and saved login state; this process owns
-// the live page. Remote page code never executes in the RoomTalk client.
+// the live page. Remote page code never executes in the CoworkerHouse client.
 const net = require('node:net');
 const fs = require('node:fs');
 const { randomUUID } = require('node:crypto');
 const path = require('node:path');
 const os = require('node:os');
 const { spawn } = require('node:child_process');
-const socketPath = process.env.ROOMTALK_BROWSER_SOCKET || '/tmp/roomtalk-personal-browser.sock';
+const socketPath = process.env.ROOMTALK_BROWSER_SOCKET || '/tmp/coworkerhouse-personal-browser.sock';
 const viewport = { width: 1280, height: 800 };
 
 async function serve() {
@@ -18,7 +18,7 @@ async function serve() {
   const statuses = new WeakMap();
   const downloads = new Map();
   const pendingDownloads = new Set();
-  const downloadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'roomtalk-personal-pdf-'));
+  const downloadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coworkerhouse-personal-pdf-'));
   function watch(opened) {
     opened.setDefaultTimeout(10_000);
     opened.on('dialog', dialog => void dialog.dismiss());

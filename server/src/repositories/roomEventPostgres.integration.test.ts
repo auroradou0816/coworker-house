@@ -3459,14 +3459,14 @@ describe('PostgreSQL room event integration', { skip: !databaseUrl }, () => {
       releaseFirst = resolve;
     });
 
-    const first = store.withMaintenanceLock('roomtalk-integration-maintenance', async () => {
+    const first = store.withMaintenanceLock('coworkerhouse-integration-maintenance', async () => {
       markFirstStarted();
       await firstGate;
       return 'first';
     });
     await firstStarted;
 
-    const second = await store.withMaintenanceLock('roomtalk-integration-maintenance', async () => 'second');
+    const second = await store.withMaintenanceLock('coworkerhouse-integration-maintenance', async () => 'second');
     assert.deepEqual(second, { acquired: false });
 
     releaseFirst();

@@ -89,12 +89,12 @@ export function registerPersonalAgentRoutes(app: Express, options: PersonalAgent
 
   app.get('/api/personal-agent/google/callback', async (req,res) => {
     res.setHeader('Cache-Control','no-store');
-    if (req.query.error) return res.status(400).type('html').send('<h1>Google connection cancelled</h1><p>Return to RoomTalk.</p>');
+    if (req.query.error) return res.status(400).type('html').send('<h1>Google connection cancelled</h1><p>Return to CoworkerHouse.</p>');
     try {
       if (!options.google) throw new PersonalGoogleError('Google is unavailable',503);
       if (typeof req.query.state !== 'string' || typeof req.query.code !== 'string') throw new PersonalGoogleError('Google callback is incomplete',400);
       await options.google.auth.callback(req.query.state,req.query.code);
-      return res.type('html').send('<h1>Google is connected</h1><p>Return to RoomTalk and refresh your personal assistant.</p>');
+      return res.type('html').send('<h1>Google is connected</h1><p>Return to CoworkerHouse and refresh your personal assistant.</p>');
     } catch (error) {
       return res.status(error instanceof PersonalGoogleError ? error.status : 502).type('text').send(error instanceof PersonalGoogleError ? error.message : 'Google could not complete sign-in. Connect again.');
     }

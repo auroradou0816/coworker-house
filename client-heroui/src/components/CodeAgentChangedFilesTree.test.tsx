@@ -8,7 +8,7 @@ import { CodeAgentChangedFilesTree } from './CodeAgentChangedFilesTree';
 describe('CodeAgentChangedFilesTree', () => {
   afterEach(() => {
     cleanup();
-    document.getElementById('roomtalk-pierre-file-icon-sprite')?.remove();
+    document.getElementById('coworkerhouse-pierre-file-icon-sprite')?.remove();
   });
 
   it('renders compacted directories collapsed by default', () => {
@@ -273,6 +273,6 @@ describe('CodeAgentChangedFilesTree', () => {
 
     expect(screen.getByText('package.json')).toBeTruthy();
     expect(document.querySelector('[data-pierre-icon="t3-file-icon-package-json"]')).toBeTruthy();
-    expect(document.getElementById('roomtalk-pierre-file-icon-sprite')).toBeTruthy();
+    expect(document.getElementById('coworkerhouse-pierre-file-icon-sprite')).toBeTruthy();
   });
 });

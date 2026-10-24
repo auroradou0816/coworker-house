@@ -84,9 +84,9 @@ function useResolvedTheme() {
   return resolvedTheme;
 }
 
-const DIFF_WORD_WRAP_STORAGE_KEY = 'roomtalk.codeWorkspace.diffWordWrap';
-const DIFF_RENDER_MODE_STORAGE_KEY = 'roomtalk.codeWorkspace.diffRenderMode';
-const DIFF_IGNORE_WHITESPACE_STORAGE_KEY = 'roomtalk.codeWorkspace.diffIgnoreWhitespace';
+const DIFF_WORD_WRAP_STORAGE_KEY = 'coworkerhouse.codeWorkspace.diffWordWrap';
+const DIFF_RENDER_MODE_STORAGE_KEY = 'coworkerhouse.codeWorkspace.diffRenderMode';
+const DIFF_IGNORE_WHITESPACE_STORAGE_KEY = 'coworkerhouse.codeWorkspace.diffIgnoreWhitespace';
 const AUTOMATIC_BASE_REF = '__automatic_base_ref__';
 const WORKSPACE_REF_LIMIT = 200;
 const MOBILE_DIFF_WORD_ALT_MAX_LINE_LENGTH = 1_000;

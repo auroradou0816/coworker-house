@@ -13,12 +13,12 @@ export class E2EPersonalBrowserSandbox extends FakeCodeAgentSandboxService {
     process.once('exit', () => { for (const browser of this.browsers.values()) browser.daemon.kill('SIGTERM'); });
   }
   async startWorkspaceCommand(input: StartCodeAgentWorkspaceCommandInput): Promise<CodeAgentRunnerProcess> {
-    const match = input.command.match(/^node \/opt\/roomtalk_code_agent_runner\/roomtalk_code_agent_runner\/personal_browser\.cjs request-file (\/tmp\/roomtalk-codex\/browser-[a-f0-9-]+\.json)$/);
+    const match = input.command.match(/^node \/opt\/coworkerhouse_code_agent_runner\/coworkerhouse_code_agent_runner\/personal_browser\.cjs request-file (\/tmp\/roomtalk-codex\/browser-[a-f0-9-]+\.json)$/);
     if (!match) return super.startWorkspaceCommand(input);
-    const modulePath = path.resolve('roomtalk_code_agent_runner/roomtalk_code_agent_runner/personal_browser.cjs');
+    const modulePath = path.resolve('coworkerhouse_code_agent_runner/coworkerhouse_code_agent_runner/personal_browser.cjs');
     let instance = this.browsers.get(input.handle.id);
     if (!instance) {
-      const directory = fs.mkdtempSync('/tmp/roomtalk-e2e-browser-');
+      const directory = fs.mkdtempSync('/tmp/coworkerhouse-e2e-browser-');
       const daemon = spawn(process.execPath, [modulePath, 'serve'], { stdio: 'ignore', env: {
         PATH: process.env.PATH, HOME: process.env.HOME, NODE_PATH: path.resolve('../client-heroui/node_modules'),
         ROOMTALK_BROWSER_SOCKET: path.join(directory, 'browser.sock'), E2E_CHROMIUM_EXECUTABLE_PATH: process.env.E2E_CHROMIUM_EXECUTABLE_PATH,

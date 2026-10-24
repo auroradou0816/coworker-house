@@ -2059,7 +2059,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
                         <audio
                           controls
                           src={recordedVoiceUrl}
-                          className="roomtalk-audio-player block h-9 min-w-[180px] max-w-full flex-1"
+                          className="coworkerhouse-audio-player block h-9 min-w-[180px] max-w-full flex-1"
                         />
                       )}
                       <span className="flex-shrink-0 text-xs tabular-nums text-[#5e5d59] dark:text-[#b0aea5]">

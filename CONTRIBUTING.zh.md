@@ -50,7 +50,7 @@ npm run test:e2e:postgres
 
 生产 Code Agent 房间不会直接运行 CoWorker House 应用镜像里的 runner 源码。以下改动需要新的固定 E2B artifact：
 
-- `server/roomtalk_code_agent_runner/`
+- `server/coworkerhouse_code_agent_runner/`
 - runner 工具或 system prompt
 - `ops/code-agent-sandbox/Dockerfile`
 - `ops/code-agent-sandbox/artifact.lock.json`

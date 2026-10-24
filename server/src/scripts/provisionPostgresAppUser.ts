@@ -87,7 +87,7 @@ const createOrUpdateRole = async (client: PgClient, roleName: string, password: 
 
 async function main() {
   const databaseUrl = process.env.DATABASE_URL;
-  const appUser = process.env.APP_DATABASE_USER || 'roomtalk_app';
+  const appUser = process.env.APP_DATABASE_USER || 'coworkerhouse_app';
   const appPassword = process.env.APP_DATABASE_PASSWORD;
   const schemaName = process.env.APP_DATABASE_SCHEMA || 'public';
 

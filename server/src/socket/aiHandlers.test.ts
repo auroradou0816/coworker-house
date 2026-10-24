@@ -59,7 +59,7 @@ const logger = {
   warn() {},
 };
 
-const roomtalkOriginHeaders = {
+const coworkerhouseOriginHeaders = {
   origin: 'https://coworker.example.com',
   'x-forwarded-proto': 'https',
   'x-forwarded-host': 'coworker.example.com',
@@ -613,7 +613,7 @@ describe('AI socket handlers', () => {
     const { socket, store } = createHarness({
       currentRoom: room({ type: 'codeAgent' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
     });
 
     let response: unknown;
@@ -655,7 +655,7 @@ describe('AI socket handlers', () => {
     const { socket } = createHarness({
       currentRoom: room({ type: 'codeAgent', codeAgentStatus: 'running' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
       messages: [imageMessage],
     });
 
@@ -716,7 +716,7 @@ describe('AI socket handlers', () => {
     const { socket } = createHarness({
       currentRoom: room({ type: 'codeAgent', codeAgentStatus: 'running' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
       messages: [foreignImage],
     });
 
@@ -747,7 +747,7 @@ describe('AI socket handlers', () => {
     const { socket } = createHarness({
       currentRoom: room({ type: 'codeAgent', codeAgentBackend: 'codex' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
     });
 
     await socket.invoke('ask_ai', {
@@ -1424,7 +1424,7 @@ describe('AI socket handlers', () => {
     const { io, socket, store } = createHarness({
       currentRoom: room({ type: 'codeAgent' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
     });
     const editedUser = message({ id: 'message-edited', content: 'original prompt' });
     const staleTool = message({
@@ -1588,7 +1588,7 @@ describe('AI socket handlers', () => {
     const { io, socket, store } = createHarness({
       currentRoom: room({ type: 'codeAgent' }),
       codeAgentSessionService,
-      headers: roomtalkOriginHeaders,
+      headers: coworkerhouseOriginHeaders,
       messages: [imageMessage],
     });
 

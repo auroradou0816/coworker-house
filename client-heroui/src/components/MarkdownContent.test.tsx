@@ -22,7 +22,7 @@ vi.mock('react-i18next', () => ({
 describe('MarkdownContent math rendering', () => {
   afterEach(() => {
     cleanup();
-    document.getElementById('roomtalk-pierre-file-icon-sprite')?.remove();
+    document.getElementById('coworkerhouse-pierre-file-icon-sprite')?.remove();
     katexRenderMock.mockReset();
   });
 

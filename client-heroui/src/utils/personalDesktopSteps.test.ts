@@ -4,17 +4,17 @@ import type {Message} from './types';
 const message=(id:string,partial:Partial<Message>):Message=>({id,roomId:'task',clientId:'agent',timestamp:'2026-10-06T12:00:00Z',content:'',messageType:'tool_call',...partial});
 describe('personal desktop receipts from Codex exec_command',()=>{
   it('pairs receipts by tool call and leaves an unfinished desktop operation loading',()=>{
-    const calls=[message('first',{messageType:'tool_call',toolCallId:'call-1',turnId:'turn',toolArgs:{command:'roomtalk computer desktop --file /workspace/action.json --json'}}),message('second',{messageType:'tool_call',toolCallId:'call-2',toolArgs:{command:'roomtalk computer desktop --file /workspace/next.json --json'}}),message('terminal',{messageType:'tool_call',toolArgs:{command:'roomtalk computer run --command pwd --json'}})];
+    const calls=[message('first',{messageType:'tool_call',toolCallId:'call-1',turnId:'turn',toolArgs:{command:'coworkerhouse computer desktop --file /workspace/action.json --json'}}),message('second',{messageType:'tool_call',toolCallId:'call-2',toolArgs:{command:'coworkerhouse computer desktop --file /workspace/next.json --json'}}),message('terminal',{messageType:'tool_call',toolArgs:{command:'coworkerhouse computer run --command pwd --json'}})];
     const output=message('result',{messageType:'tool_result',toolCallId:'call-1',content:'Process exited with code 0\n{"success":true,"tool":"PersonalComputer","receipt":{"id":"receipt-1","command":"desktop: screenshot"},"screenshot":"/workspace/desktop.jpg"}\n'});
     expect(readPersonalDesktopSteps([...calls,output])).toEqual([{id:'first',turnId:'turn',loading:false,receiptId:'receipt-1',action:'desktop: screenshot'},{id:'second',turnId:undefined,loading:true}]);
   });
   it('shows the actual CLI error and does not interpret unrelated JSON as a desktop receipt',()=>{
-    const call=message('call',{messageType:'tool_call',toolCallId:'tool',toolArgs:{command:'roomtalk computer desktop --file action.json --json'}});
+    const call=message('call',{messageType:'tool_call',toolCallId:'tool',toolArgs:{command:'coworkerhouse computer desktop --file action.json --json'}});
     expect(readPersonalDesktopSteps([call,message('error',{messageType:'tool_result',toolCallId:'tool',content:'{"success":false,"error":"Computer is stopped","code":"room_context_request_failed"}'})])[0]).toMatchObject({loading:false,error:'Computer is stopped'});
     expect(readPersonalDesktopSteps([call,message('other',{messageType:'tool_result',toolCallId:'tool',content:'noise\n{"tool":"Other","receipt":{"id":"wrong"}}'})])[0].receiptId).toBeUndefined();
   });
   it('reads the persisted desktop receipt after a truncated workspace preview',()=>{
-    const call=message('call',{toolCallId:'tool',toolArgs:{cmd:'roomtalk computer desktop --file action.json --json'}});
+    const call=message('call',{toolCallId:'tool',toolArgs:{cmd:'coworkerhouse computer desktop --file action.json --json'}});
     const output=message('output',{messageType:'tool_result',toolCallId:'tool',toolOutputPreview:'Process output truncated',content:'x'.repeat(5000)+'\n'+JSON.stringify({tool:'PersonalComputer',receipt:{id:'saved-desktop',command:'desktop: click'}})});
     expect(readPersonalDesktopSteps([call,output])[0]).toMatchObject({loading:false,receiptId:'saved-desktop',action:'desktop: click'});
   });

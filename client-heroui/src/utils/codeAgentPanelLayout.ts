@@ -3,7 +3,7 @@ export const CODE_AGENT_FILE_PANEL_PREFERRED_MIN_WIDTH = 420;
 export const CODE_AGENT_FILE_PANEL_COLLAPSED_WIDTH = 48;
 export const CODE_AGENT_CHAT_ABSOLUTE_MIN_WIDTH = 360;
 export const CODE_AGENT_CHAT_SIDEBAR_MIN_WIDTH = 480;
-export const CODE_AGENT_FILE_PANEL_WIDTH_CHANGE_EVENT = 'roomtalk:code-agent-file-panel-width-change';
+export const CODE_AGENT_FILE_PANEL_WIDTH_CHANGE_EVENT = 'coworkerhouse:code-agent-file-panel-width-change';
 
 export interface CodeAgentPanelResizeBounds {
   min: number;

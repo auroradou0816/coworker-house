@@ -43,8 +43,8 @@ ALLOWED_CODEX_MODELS = {
 ALLOWED_CODEX_REASONING_EFFORTS = {"low", "medium", "high", "xhigh"}
 ALLOWED_CODEX_PERMISSION_MODES = {"plan", "edit", "approveForMe", "fullAccess"}
 MAX_STDERR_TAIL_CHARS = 4_000
-ROOM_CONTEXT_PERMISSION_PROFILE = "roomtalk-room-context-read"
-ROOM_CONTEXT_WORKSPACE_PERMISSION_PROFILE = "roomtalk-room-context-workspace"
+ROOM_CONTEXT_PERMISSION_PROFILE = "coworkerhouse-room-context-read"
+ROOM_CONTEXT_WORKSPACE_PERMISSION_PROFILE = "coworkerhouse-room-context-workspace"
 
 
 @dataclass
@@ -114,7 +114,7 @@ class CodexCliEventMapper:
 
         if item_type == "command_execution" and event_type == "item.started":
             command = str(item.get("command") or "")
-            tool_name = _roomtalk_tool_name(command) or "shell"
+            tool_name = _coworkerhouse_tool_name(command) or "shell"
             self.command_tool_names[item_id] = tool_name
             return [{
                 "schemaVersion": SCHEMA_VERSION,
@@ -129,7 +129,7 @@ class CodexCliEventMapper:
             exit_code = item.get("exit_code")
             normalized_exit_code = exit_code if isinstance(exit_code, int) else None
             command = str(item.get("command") or "")
-            tool_name = _roomtalk_tool_name(command) or self.command_tool_names.get(item_id) or "shell"
+            tool_name = _coworkerhouse_tool_name(command) or self.command_tool_names.get(item_id) or "shell"
             event_payload: dict[str, Any] = {
                 "schemaVersion": SCHEMA_VERSION,
                 "type": "tool_result",
@@ -326,7 +326,7 @@ def _build_codex_exec_args(
         str(workspace),
         "--output-last-message",
         str(last_message_path),
-        _prompt_with_roomtalk_tools(request, env),
+        _prompt_with_coworkerhouse_tools(request, env),
     ])
     return args
 
@@ -448,7 +448,7 @@ def _write_codex_config(codex_home: Path, request: RunnerRequest, env: dict[str,
         'exclude = ["CODEX_HOME", "CODEX_ACCESS_TOKEN", "CODEX_API_KEY", "OPENAI_API_KEY", "*_TOKEN", "*_SECRET", "*_KEY"]',
         "",
     ])
-    tool_env = _roomtalk_tool_env(request, env, workspace)
+    tool_env = _coworkerhouse_tool_env(request, env, workspace)
     if tool_env:
         lines.append("[shell_environment_policy.set]")
         for key in sorted(tool_env):
@@ -458,7 +458,7 @@ def _write_codex_config(codex_home: Path, request: RunnerRequest, env: dict[str,
         extends = ":read-only" if room_context_profile == ROOM_CONTEXT_PERMISSION_PROFILE else ":workspace"
         lines.extend([
             f"[permissions.{room_context_profile}]",
-            'description = "RoomTalk shell permissions with a turn-scoped local context broker."',
+            'description = "CoworkerHouse shell permissions with a turn-scoped local context broker."',
             f'extends = "{extends}"',
             "",
             f"[permissions.{room_context_profile}.network]",
@@ -521,7 +521,7 @@ def _trusted_project_paths(workspace: Path, env: dict[str, str]) -> list[str]:
     return list(dict.fromkeys(paths))
 
 
-def _roomtalk_tool_env(request: RunnerRequest, env: dict[str, str], workspace: Path) -> dict[str, str]:
+def _coworkerhouse_tool_env(request: RunnerRequest, env: dict[str, str], workspace: Path) -> dict[str, str]:
     read_only = _codex_exec_permissions(request).mode == "plan"
     values: dict[str, str] = {
         "ROOMTALK_CODE_AGENT_ROOM_ID": request.room_id,
@@ -562,38 +562,38 @@ def _roomtalk_tool_env(request: RunnerRequest, env: dict[str, str], workspace: P
     return values
 
 
-def _prompt_with_roomtalk_tools(request: RunnerRequest, env: dict[str, str]) -> str:
+def _prompt_with_coworkerhouse_tools(request: RunnerRequest, env: dict[str, str]) -> str:
     permission = _codex_exec_permissions(request)
     if permission.mode == "plan":
-        mode_guidance = "This RoomTalk turn is in Plan mode. Inspect and explain, but do not edit files, run mutating commands, start background services, or publish sites."
+        mode_guidance = "This CoworkerHouse turn is in Plan mode. Inspect and explain, but do not edit files, run mutating commands, start background services, or publish sites."
     elif permission.mode == "edit":
-        mode_guidance = "This RoomTalk turn is in Edit mode. You may edit files and run commands inside the workspace. If an approval prompt blocks progress, stop and explain what approval is needed."
+        mode_guidance = "This CoworkerHouse turn is in Edit mode. You may edit files and run commands inside the workspace. If an approval prompt blocks progress, stop and explain what approval is needed."
     elif permission.mode == "fullAccess":
-        mode_guidance = "This RoomTalk turn is in Full access mode. You may use the isolated sandbox without Codex filesystem restrictions, but keep work relevant to the requested workspace."
+        mode_guidance = "This CoworkerHouse turn is in Full access mode. You may use the isolated sandbox without Codex filesystem restrictions, but keep work relevant to the requested workspace."
     else:
-        mode_guidance = "This RoomTalk turn is in Approve for me mode. You may edit files and run commands inside the workspace without approval prompts."
+        mode_guidance = "This CoworkerHouse turn is in Approve for me mode. You may edit files and run commands inside the workspace without approval prompts."
 
     tool_lines = [
-        "RoomTalk sandbox context:",
+        "CoworkerHouse sandbox context:",
         f"- {mode_guidance}",
-        f"- Current RoomTalk room: {request.room_id}.",
+        f"- Current CoworkerHouse room: {request.room_id}.",
         "- Keep generated files, downloaded references, and publish roots inside the current workspace.",
         "- This is a non-interactive cloud sandbox. Work within the configured sandbox permissions for this turn.",
     ]
     if _codex_room_context_enabled(env):
         tool_lines.extend([
-            "- RoomTalk is the source of truth for room conversation history; the Codex thread may not include messages from before this thread or from other participants.",
-            "- When prior discussion is needed, run `roomtalk room history --limit 20 --json`. Do not read the full room history by default.",
-            "- To find older discussion, run `roomtalk room search --query <text> --limit 20 --json`; use `roomtalk room delta --since <message-id> --json` for messages after a known point.",
-            "- To inspect sites published by this room, run `roomtalk site list --json`.",
-            "- To inspect one site's retained versions, run `roomtalk site versions --slug <slug> --json`.",
+            "- CoworkerHouse is the source of truth for room conversation history; the Codex thread may not include messages from before this thread or from other participants.",
+            "- When prior discussion is needed, run `coworkerhouse room history --limit 20 --json`. Do not read the full room history by default.",
+            "- To find older discussion, run `coworkerhouse room search --query <text> --limit 20 --json`; use `coworkerhouse room delta --since <message-id> --json` for messages after a known point.",
+            "- To inspect sites published by this room, run `coworkerhouse site list --json`.",
+            "- To inspect one site's retained versions, run `coworkerhouse site versions --slug <slug> --json`.",
         ])
     if _codex_static_publish_enabled(env):
         tool_lines.extend([
-            "- To publish a plain static site or frontend build output, run `roomtalk site publish --root <dir> --entry index.html --slug <slug>` after creating the site directory.",
+            "- To publish a plain static site or frontend build output, run `coworkerhouse site publish --root <dir> --entry index.html --slug <slug>` after creating the site directory.",
             "- `--slug` is required. Choose a short stable URL slug and reuse exactly the same slug for later updates; reusing it creates a new version, while changing it creates a separate site.",
-            "- To list retained versions, run `roomtalk site versions --slug <slug> --json`. To point the stable URL at an older or newer retained version, run `roomtalk site activate --slug <slug> --version <version-id>`.",
-            "- To take a site offline, run `roomtalk site unpublish --slug <slug>`. This removes every published version; it does not delete workspace files.",
+            "- To list retained versions, run `coworkerhouse site versions --slug <slug> --json`. To point the stable URL at an older or newer retained version, run `coworkerhouse site activate --slug <slug> --version <version-id>`.",
+            "- To take a site offline, run `coworkerhouse site unpublish --slug <slug>`. This removes every published version; it does not delete workspace files.",
             "- Use static publishing for HTML/CSS/JS sites and frontend apps that produce static build output.",
             "- Do not use static publishing for apps that require a long-running server process, database, backend API, WebSocket server, or runtime-only framework behavior.",
         ])
@@ -638,20 +638,20 @@ def _codex_room_context_permission_profile(request: RunnerRequest, env: dict[str
     return None
 
 
-def _roomtalk_tool_name(command: str) -> str | None:
+def _coworkerhouse_tool_name(command: str) -> str | None:
     normalized = " ".join(command.split()).lower()
-    if "roomtalk site list" in normalized or "platform_tools site list" in normalized:
+    if "coworkerhouse site list" in normalized or "platform_tools site list" in normalized:
         return "ListStaticSites"
-    if "roomtalk site unpublish" in normalized or "platform_tools site unpublish" in normalized:
+    if "coworkerhouse site unpublish" in normalized or "platform_tools site unpublish" in normalized:
         return "UnpublishStaticSite"
     if (
-        "roomtalk site publish" in normalized
+        "coworkerhouse site publish" in normalized
         or "platform_tools site publish" in normalized
-        or "roomtalk publish-static-site" in normalized
+        or "coworkerhouse publish-static-site" in normalized
         or "platform_tools publish-static-site" in normalized
     ):
         return PUBLISH_STATIC_SITE_TOOL
-    if "roomtalk room " in normalized or "platform_tools room " in normalized:
+    if "coworkerhouse room " in normalized or "platform_tools room " in normalized:
         return "RoomContext"
     return None
 

@@ -18,7 +18,7 @@ import {
 describe('CodeAgentFileTagChip', () => {
   afterEach(() => {
     cleanup();
-    document.getElementById('roomtalk-pierre-file-icon-sprite')?.remove();
+    document.getElementById('coworkerhouse-pierre-file-icon-sprite')?.remove();
   });
 
   it('reuses T3-style inline chip classes for file chips', () => {

@@ -7,8 +7,8 @@ from typing import Any
 
 import pytest
 
-from roomtalk_code_agent_runner import codex_cli
-from roomtalk_code_agent_runner.runner import EventEmitter, RunnerError, parse_request
+from coworkerhouse_code_agent_runner import codex_cli
+from coworkerhouse_code_agent_runner.runner import EventEmitter, RunnerError, parse_request
 from test_runner import event_lines, request
 
 
@@ -111,7 +111,7 @@ def test_codex_cli_maps_exec_jsonl_and_saves_refreshed_auth(tmp_path: Path, monk
         popen_factory=popen,
         env={
             "PATH": "/usr/bin",
-            "HOME": "/home/roomtalk",
+            "HOME": "/home/coworkerhouse",
             "CODE_AGENT_WORKSPACE_ROOT": str(tmp_path),
             "OPENAI_API_KEY": "sk-should-not-leak",
             "GITHUB_TOKEN": "gh-should-not-leak",
@@ -181,7 +181,7 @@ def test_codex_cli_rejects_image_inputs_on_deprecated_backend(tmp_path: Path):
     assert error.value.code == "codex_cli_image_unsupported"
 
 
-def test_codex_cli_injects_roomtalk_tool_prompt_and_scoped_shell_env(tmp_path: Path):
+def test_codex_cli_injects_coworkerhouse_tool_prompt_and_scoped_shell_env(tmp_path: Path):
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     auth_json = tmp_path / "auth.json"
@@ -209,7 +209,7 @@ def test_codex_cli_injects_roomtalk_tool_prompt_and_scoped_shell_env(tmp_path: P
         popen_factory=popen,
         env={
             "CODE_AGENT_WORKSPACE_ROOT": str(tmp_path),
-            "PYTHONPATH": "/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner",
+            "PYTHONPATH": "/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner",
             "ROOMTALK_CODE_AGENT_ENABLE_STATIC_PUBLISH": "true",
             "ROOMTALK_STATIC_PUBLISH_URL": "https://room.example/api/code-agent/publish-static-site",
             "ROOMTALK_STATIC_PUBLISH_PUBLIC_BASE_URL": "https://room.example",
@@ -231,17 +231,17 @@ def test_codex_cli_injects_roomtalk_tool_prompt_and_scoped_shell_env(tmp_path: P
     assert "--ask-for-approval" not in call_args
     assert 'approval_policy="never"' in call_args
     assert "sandbox_workspace_write.network_access=true" not in call_args
-    assert 'default_permissions="roomtalk-room-context-workspace"' in call_args
-    assert "roomtalk site publish" in call_args[-1]
-    assert "roomtalk site unpublish" in call_args[-1]
-    assert "roomtalk site list --json" in call_args[-1]
-    assert "roomtalk site versions --slug <slug> --json" in call_args[-1]
-    assert "roomtalk site activate --slug <slug> --version <version-id>" in call_args[-1]
+    assert 'default_permissions="coworkerhouse-room-context-workspace"' in call_args
+    assert "coworkerhouse site publish" in call_args[-1]
+    assert "coworkerhouse site unpublish" in call_args[-1]
+    assert "coworkerhouse site list --json" in call_args[-1]
+    assert "coworkerhouse site versions --slug <slug> --json" in call_args[-1]
+    assert "coworkerhouse site activate --slug <slug> --version <version-id>" in call_args[-1]
     assert "reuse exactly the same slug" in call_args[-1]
-    assert "roomtalk room history --limit 20 --json" in call_args[-1]
-    assert "RoomTalk is the source of truth for room conversation history" in call_args[-1]
+    assert "coworkerhouse room history --limit 20 --json" in call_args[-1]
+    assert "CoworkerHouse is the source of truth for room conversation history" in call_args[-1]
     assert "frontend build output" in call_args[-1]
-    assert "roomtalk background-shell" not in call_args[-1]
+    assert "coworkerhouse background-shell" not in call_args[-1]
     assert "native background terminal" not in call_args[-1]
 
     child_env = call["env"]
@@ -249,7 +249,7 @@ def test_codex_cli_injects_roomtalk_tool_prompt_and_scoped_shell_env(tmp_path: P
     assert "ROOMTALK_STATIC_PUBLISH_REFRESH_TOKEN" not in child_env
     assert "ROOMTALK_ROOM_CONTEXT_TOKEN" not in child_env
     config_toml = (Path(child_env["CODEX_HOME"]) / "config.toml").read_text(encoding="utf-8")
-    assert 'default_permissions = "roomtalk-room-context-workspace"' in config_toml
+    assert 'default_permissions = "coworkerhouse-room-context-workspace"' in config_toml
     assert 'extends = ":workspace"' in config_toml
     assert '"*" = "allow"' in config_toml
     assert 'ROOMTALK_CODE_AGENT_ROOM_ID = "room-codex"' in config_toml
@@ -270,9 +270,9 @@ def test_codex_cli_injects_roomtalk_tool_prompt_and_scoped_shell_env(tmp_path: P
     assert 'trust_level = "trusted"' in config_toml
 
 
-def test_codex_plan_shell_env_only_exposes_read_only_roomtalk_capabilities(tmp_path: Path):
+def test_codex_plan_shell_env_only_exposes_read_only_coworkerhouse_capabilities(tmp_path: Path):
     request = codex_request(tmp_path)
-    values = codex_cli._roomtalk_tool_env(request, {
+    values = codex_cli._coworkerhouse_tool_env(request, {
         "CODE_AGENT_WORKSPACE_ROOT": str(tmp_path),
         "ROOMTALK_ROOM_CONTEXT_SOCKET": str(tmp_path / "context.sock"),
         "ROOMTALK_ROOM_CONTEXT_URL": "https://room.example/api/code-agent/room-context",
@@ -296,7 +296,7 @@ def test_codex_plan_shell_env_only_exposes_read_only_roomtalk_capabilities(tmp_p
     assert "ROOMTALK_E2B_PORT_HOST_TEMPLATE" not in values
 
 
-def test_codex_config_trusts_roomtalk_workspace_root(tmp_path: Path):
+def test_codex_config_trusts_coworkerhouse_workspace_root(tmp_path: Path):
     codex_home = tmp_path / "codex-home"
     run_request = parse_request(json.dumps(request(
         turnId="turn-codex",
@@ -394,7 +394,7 @@ def test_codex_cli_maps_permission_modes_to_exec_flags(
     assert ("sandbox_workspace_write.network_access=true" in call_args) is network_enabled
 
 
-def test_codex_cli_maps_roomtalk_commands_to_platform_tool_events(tmp_path: Path):
+def test_codex_cli_maps_coworkerhouse_commands_to_platform_tool_events(tmp_path: Path):
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     mapper = codex_cli.CodexCliEventMapper(
@@ -409,7 +409,7 @@ def test_codex_cli_maps_roomtalk_commands_to_platform_tool_events(tmp_path: Path
             "item": {
                 "id": "cmd-publish",
                 "type": "command_execution",
-                "command": "roomtalk site publish --root site",
+                "command": "coworkerhouse site publish --root site",
             },
         }),
         *mapper.map_event({
@@ -427,7 +427,7 @@ def test_codex_cli_maps_roomtalk_commands_to_platform_tool_events(tmp_path: Path
             "item": {
                 "id": "cmd-unpublish",
                 "type": "command_execution",
-                "command": "roomtalk site unpublish --slug demo",
+                "command": "coworkerhouse site unpublish --slug demo",
             },
         }),
         *mapper.map_event({

@@ -84,7 +84,7 @@ describe('summarizeCodeAgentMessages', () => {
     });
   });
 
-  it('loads and validates a RoomTalk-mediated workspace snapshot over socket', async () => {
+  it('loads and validates a CoworkerHouse-mediated workspace snapshot over socket', async () => {
     const snapshot = {
       roomId: 'room-1',
       backend: 'code-agent',
@@ -94,9 +94,9 @@ describe('summarizeCodeAgentMessages', () => {
       status: { sandboxStatus: 'ready', agentStatus: 'idle', hasSession: false },
       summary: { toolCalls: 1, toolResults: 0, toolErrors: 0 },
       artifacts: [{
-        slug: 'roomtalk-demo',
-        title: 'RoomTalk Demo',
-        url: 'https://coworker.example.com/p/roomtalk-demo/',
+        slug: 'coworkerhouse-demo',
+        title: 'CoworkerHouse Demo',
+        url: 'https://coworker.example.com/p/coworkerhouse-demo/',
         entry: 'index.html',
         versionId: '20260630T120000Z_aaaaaaaa',
         fileCount: 1,
@@ -105,7 +105,7 @@ describe('summarizeCodeAgentMessages', () => {
         updatedAt: '2026-06-30T12:00:00.000Z',
         versions: [{
           versionId: '20260630T120000Z_aaaaaaaa',
-          url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+          url: 'https://coworker.example.com/p/coworkerhouse-demo/__versions/20260630T120000Z_aaaaaaaa/',
           entry: 'index.html',
           fileCount: 1,
           totalBytes: 128,

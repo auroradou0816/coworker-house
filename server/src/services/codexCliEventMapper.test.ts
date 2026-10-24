@@ -157,7 +157,7 @@ describe('CodexCliEventMapper', () => {
     assert.equal(result.type === 'tool_result' ? result.exitCode : undefined, 2);
   });
 
-  test('maps RoomTalk platform commands to named tool events', () => {
+  test('maps CoworkerHouse platform commands to named tool events', () => {
     const mapper = new CodexCliEventMapper({ turnId: 'turn-1', messageId: 'ai-1', workspace });
     const events = [
       ...mapper.mapEvent({
@@ -165,7 +165,7 @@ describe('CodexCliEventMapper', () => {
         item: {
           id: 'cmd-publish',
           type: 'command_execution',
-          command: 'roomtalk publish-static-site --root site',
+          command: 'coworkerhouse publish-static-site --root site',
         },
       }),
       ...mapper.mapEvent({
@@ -186,14 +186,14 @@ describe('CodexCliEventMapper', () => {
     ]);
   });
 
-  test('does not present removed RoomTalk background helper as a platform tool', () => {
+  test('does not present removed CoworkerHouse background helper as a platform tool', () => {
     const mapper = new CodexCliEventMapper({ turnId: 'turn-1', messageId: 'ai-1', workspace });
     const events = mapper.mapEvent({
       type: 'item.started',
       item: {
         id: 'cmd-background',
         type: 'command_execution',
-        command: 'roomtalk background-shell list',
+        command: 'coworkerhouse background-shell list',
       },
     });
 

@@ -10,7 +10,7 @@ import { MediaObjectStorage } from './mediaObjectStorage';
 
 export const PERSONAL_BROWSER_API_PATH = '/api/code-agent/room-context/personal-browser';
 const CONTROL_TTL_MS = 90_000;
-const WORKER = '/opt/roomtalk_code_agent_runner/roomtalk_code_agent_runner/personal_browser.cjs';
+const WORKER = '/opt/coworkerhouse_code_agent_runner/coworkerhouse_code_agent_runner/personal_browser.cjs';
 export class PersonalAgentBrowserError extends Error {
   constructor(message: string, readonly statusCode: number) { super(message); }
 }

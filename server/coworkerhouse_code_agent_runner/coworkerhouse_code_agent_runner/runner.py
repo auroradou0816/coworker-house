@@ -356,7 +356,7 @@ def system_prompt_for_tools(
     normalized_mode = "edit" if mode == "acceptEdits" else mode
     if normalized_mode == "plan":
         mode_guidance = (
-            "This run is read-only. Shell commands run in an OS sandbox with a read-only filesystem, no background processes, and no direct IP network access. RoomTalk context, when available, is reached through a turn-scoped local read-only broker. "
+            "This run is read-only. Shell commands run in an OS sandbox with a read-only filesystem, no background processes, and no direct IP network access. CoworkerHouse context, when available, is reached through a turn-scoped local read-only broker. "
             "Use Shell for inspection and validation, but do not attempt to modify files. If the user asks you to make changes, explain the proposed changes without applying them."
         )
     elif normalized_mode == "edit":
@@ -375,12 +375,12 @@ def system_prompt_for_tools(
             "Keep all work relevant to the user's request."
         )
     room_context_guidance = (
-        "\nRoomTalk is the source of truth for the room conversation. When earlier discussion is needed, use Shell to run `roomtalk room history --limit 20 --json`; use `roomtalk room search --query <text> --limit 20 --json` for older discussion. Use `roomtalk site list --json` to inspect sites published by this room, and `roomtalk site versions --slug <slug> --json` to inspect one site's retained versions. Do not load the full room history by default."
+        "\nCoworkerHouse is the source of truth for the room conversation. When earlier discussion is needed, use Shell to run `coworkerhouse room history --limit 20 --json`; use `coworkerhouse room search --query <text> --limit 20 --json` for older discussion. Use `coworkerhouse site list --json` to inspect sites published by this room, and `coworkerhouse site versions --slug <slug> --json` to inspect one site's retained versions. Do not load the full room history by default."
         if room_context_enabled and SHELL_TOOL in available
         else ""
     )
     static_site_guidance = (
-        "\nUse Shell to run `roomtalk site publish --root <dir> --entry index.html --slug <slug>` for plain HTML/CSS/JS output. `--slug` is required: choose a short stable URL slug, then reuse exactly the same slug when publishing updates so RoomTalk creates a new version of that site; a different slug creates a separate site. Use `roomtalk site versions --slug <slug> --json` to list versions, `roomtalk site activate --slug <slug> --version <version-id>` to point the stable URL at a retained version, and `roomtalk site unpublish --slug <slug>` to take every version offline without deleting workspace files. Do not use static publishing for Flask, Node, Python, databases, or any server-side app."
+        "\nUse Shell to run `coworkerhouse site publish --root <dir> --entry index.html --slug <slug>` for plain HTML/CSS/JS output. `--slug` is required: choose a short stable URL slug, then reuse exactly the same slug when publishing updates so CoworkerHouse creates a new version of that site; a different slug creates a separate site. Use `coworkerhouse site versions --slug <slug> --json` to list versions, `coworkerhouse site activate --slug <slug> --version <version-id>` to point the stable URL at a retained version, and `coworkerhouse site unpublish --slug <slug>` to take every version offline without deleting workspace files. Do not use static publishing for Flask, Node, Python, databases, or any server-side app."
         if static_site_write_enabled and SHELL_TOOL in available
         else ""
     )
@@ -395,7 +395,7 @@ Unavailable tools for this run: {unavailable_line}.
 {static_site_guidance}
 
 Use Read / Glob / Grep to verify the workspace before editing. Edit requires old_string to match exactly once.
-Keep all downloaded repositories, fetched reference files, generated files, and publish roots inside the current workspace. In RoomTalk sandboxes this is normally /workspace. Do not work in /tmp or /var/tmp unless a tool explicitly needs an ephemeral cache; workspace-scoped tools cannot read, edit, or publish files outside the workspace.
+Keep all downloaded repositories, fetched reference files, generated files, and publish roots inside the current workspace. In CoworkerHouse sandboxes this is normally /workspace. Do not work in /tmp or /var/tmp unless a tool explicitly needs an ephemeral cache; workspace-scoped tools cannot read, edit, or publish files outside the workspace.
 Use Shell only for foreground commands that finish. Use BackgroundShell for servers, watchers, dev servers, slow async tasks, or anything that should keep running after the tool returns. Pass a foreground command to BackgroundShell; do not include nohup, disown, setsid, or '&'. Include expected ports when starting web apps so URLs can be returned.
 When exploring a project structure, use Glob with pattern "**/*" to find files recursively.
 After tools return, answer clearly. Avoid redundant calls and endless loops."""
@@ -714,7 +714,7 @@ def _create_read_only_shell_tool(
                 description=(
                     "Execute a foreground shell command in an OS-enforced read-only sandbox. "
                     "The workspace and system filesystem cannot be modified and direct IP network "
-                    "access is disabled. Scoped RoomTalk reads use a local Unix socket broker."
+                    "access is disabled. Scoped CoworkerHouse reads use a local Unix socket broker."
                 ),
                 input_schema={
                     "type": "object",

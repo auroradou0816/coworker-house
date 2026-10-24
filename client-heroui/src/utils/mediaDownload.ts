@@ -37,7 +37,7 @@ export const buildMediaFilename = (message: Message) => {
     ? 'download'
     : new Date(message.timestamp).toISOString().replace(/[:.]/g, '-');
   const extension = getExtension(asset?.mimeType || message.mimeType);
-  return sanitizeFilenamePart(`roomtalk-${kind}-${timestamp}${extension ? `.${extension}` : ''}`);
+  return sanitizeFilenamePart(`coworkerhouse-${kind}-${timestamp}${extension ? `.${extension}` : ''}`);
 };
 
 const triggerDownload = (url: string, filename: string) => {

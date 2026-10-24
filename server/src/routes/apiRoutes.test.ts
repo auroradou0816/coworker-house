@@ -2469,7 +2469,7 @@ describe('API routes', () => {
 
   it('supports local development media upload and download routes', async () => {
     await server.close();
-    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'roomtalk-route-media-'));
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'coworkerhouse-route-media-'));
     server = await createTestServer({
       mediaObjectStorage: new LocalMediaObjectStorage(rootDir, new Logger('LocalMediaRouteTest')),
     });
@@ -2535,7 +2535,7 @@ describe('API routes', () => {
 
   it('requires expiring signed local media URLs in production mode', async () => {
     await server.close();
-    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'roomtalk-route-signed-media-'));
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'coworkerhouse-route-signed-media-'));
     const storage = new LocalMediaObjectStorage(rootDir, new Logger('SignedLocalMediaRouteTest'), 'route-signing-secret');
     const previousNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
@@ -2658,7 +2658,7 @@ describe('API routes', () => {
 
   it('forces attachment disposition for local file object downloads', async () => {
     await server.close();
-    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'roomtalk-route-file-media-'));
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'coworkerhouse-route-file-media-'));
     server = await createTestServer({
       mediaObjectStorage: new LocalMediaObjectStorage(rootDir, new Logger('LocalFileMediaRouteTest')),
     });

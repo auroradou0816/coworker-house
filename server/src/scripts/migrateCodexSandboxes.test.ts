@@ -8,8 +8,8 @@ import { Room } from '../types';
 const baseEnv = {
   RUN_CODEX_SANDBOX_MIGRATION: 'true',
   E2B_API_KEY: 'e2b-test-key',
-  CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dual-cli',
-  CODE_AGENT_ARTIFACT_VERSION: 'roomtalk-code-agent-2026-07-04-dual-cli-candidate',
+  CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dual-cli',
+  CODE_AGENT_ARTIFACT_VERSION: 'coworkerhouse-code-agent-2026-07-04-dual-cli-candidate',
   CODE_AGENT_SOURCE_REF: 'a4e70e674e46d59a63874371276f5fec0fcd3f41',
   CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
   CODE_AGENT_RUNNER_CLIENT: 'jsonl',
@@ -40,8 +40,8 @@ describe('buildCodexSandboxMigrationPlan', () => {
     if (!plan.run) return;
     assert.equal(plan.dryRun, true);
     assert.equal(plan.persistenceStore, 'postgres');
-    assert.equal(plan.e2bTemplateId, 'roomtalk-code-agent-dual-cli');
-    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner');
+    assert.equal(plan.e2bTemplateId, 'coworkerhouse-code-agent-dual-cli');
+    assert.equal(plan.runnerEnv.PYTHONPATH, '/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner');
     assert.equal(plan.runnerEnv.PLAYWRIGHT_BROWSERS_PATH, '/ms-playwright');
     assert.equal(plan.runnerEnv.NODE_PATH, '/usr/lib/node_modules');
   });
@@ -98,8 +98,8 @@ describe('probeCodexCapability', () => {
     const result = await probeCodexCapability(service, handle, { PYTHONPATH: '/runner' });
 
     assert.equal(result.ok, true);
-    assert.match(service.commands[0], /roomtalk_code_agent_runner\.codex_cli/);
-    assert.match(service.commands[0], /roomtalk_code_agent_runner\.codex_app_server/);
+    assert.match(service.commands[0], /coworkerhouse_code_agent_runner\.codex_cli/);
+    assert.match(service.commands[0], /coworkerhouse_code_agent_runner\.codex_app_server/);
     assert.match(service.commands[0], /openai_codex/);
   });
 
@@ -110,16 +110,16 @@ describe('probeCodexCapability', () => {
       service,
       handle,
       { PYTHONPATH: '/runner' },
-      'roomtalk-code-agent-2026-07-04-codex-app-server-v2'
+      'coworkerhouse-code-agent-2026-07-04-codex-app-server-v2'
     );
 
     assert.equal(result.ok, true);
-    assert.match(service.commands[0], /expected_artifact_version = "roomtalk-code-agent-2026-07-04-codex-app-server-v2"/);
-    assert.match(service.commands[0], /roomtalk-code-agent-artifact\.lock\.json/);
+    assert.match(service.commands[0], /expected_artifact_version = "coworkerhouse-code-agent-2026-07-04-codex-app-server-v2"/);
+    assert.match(service.commands[0], /coworkerhouse-code-agent-artifact\.lock\.json/);
   });
 
   it('rejects sandboxes missing the codex runner module', async () => {
-    const service = createProbeService('', '/usr/local/bin/python: No module named roomtalk_code_agent_runner.codex_app_server\n', 1);
+    const service = createProbeService('', '/usr/local/bin/python: No module named coworkerhouse_code_agent_runner.codex_app_server\n', 1);
 
     const result = await probeCodexCapability(service, handle, { PYTHONPATH: '/runner' });
 
@@ -130,7 +130,7 @@ describe('probeCodexCapability', () => {
   it('rejects sandboxes with an older artifact version', async () => {
     const service = createProbeService(
       '',
-      'artifact version mismatch: expected roomtalk-code-agent-2026-07-04-codex-app-server-v2, got roomtalk-code-agent-2026-07-04-dual-cli-candidate\n',
+      'artifact version mismatch: expected coworkerhouse-code-agent-2026-07-04-codex-app-server-v2, got coworkerhouse-code-agent-2026-07-04-dual-cli-candidate\n',
       44
     );
 
@@ -138,7 +138,7 @@ describe('probeCodexCapability', () => {
       service,
       handle,
       { PYTHONPATH: '/runner' },
-      'roomtalk-code-agent-2026-07-04-codex-app-server-v2'
+      'coworkerhouse-code-agent-2026-07-04-codex-app-server-v2'
     );
 
     assert.equal(result.ok, false);

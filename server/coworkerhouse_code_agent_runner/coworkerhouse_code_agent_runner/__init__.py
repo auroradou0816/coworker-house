@@ -1,4 +1,4 @@
-"""RoomTalk JSONL adapter for running code-agent backends inside a sandbox."""
+"""CoworkerHouse JSONL adapter for running code-agent backends inside a sandbox."""
 
 from .runner import SCHEMA_VERSION, main, run_request
 

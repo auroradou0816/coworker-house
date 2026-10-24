@@ -1,11 +1,11 @@
-# RoomTalk Client
+# CoworkerHouse Client
 
 [中文](README.zh.md)
 
 Status: Current package guide
 Updated: 2026-07-12
 
-React + TypeScript + Vite frontend for RoomTalk. The app handles room discovery, realtime chat, AI streaming, media uploads, stickers, saved rooms, settings, and mobile/desktop layouts.
+React + TypeScript + Vite frontend for CoworkerHouse. The app handles room discovery, realtime chat, AI streaming, media uploads, stickers, saved rooms, settings, and mobile/desktop layouts.
 
 ## Structure
 

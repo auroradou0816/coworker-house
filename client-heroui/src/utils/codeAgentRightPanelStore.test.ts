@@ -219,8 +219,8 @@ describe('codeAgentRightPanelStore', () => {
   });
 
   it.each([
-    'https://coworker.example.com/api/code-agent/workspace-assets/token/index.html?roomtalkTheme=dark',
-    'https://coworker.example.com/api/code-agent/workspace-assets/token/index.html?roomtalkTheme=dark',
+    'https://coworker.example.com/api/code-agent/workspace-assets/token/index.html?coworkerhouseTheme=dark',
+    'https://coworker.example.com/api/code-agent/workspace-assets/token/index.html?coworkerhouseTheme=dark',
   ])('keeps a workspace browser target when its session reports signed asset URL %s', (url) => {
     openCodeAgentRightPanelPreview('room-1', 'index.html');
 

@@ -8,7 +8,7 @@ const serverPort = Number(process.env.E2E_SERVER_PORT || 3322);
 const clientURL = `http://127.0.0.1:${clientPort}`;
 const serverURL = `http://127.0.0.1:${serverPort}`;
 const workerPort = serverPort + 1;
-const localMediaDir = path.join(tmpdir(), `roomtalk-postgres-e2e-media-${serverPort}`);
+const localMediaDir = path.join(tmpdir(), `coworkerhouse-postgres-e2e-media-${serverPort}`);
 
 const databaseUrl = requireSafeE2EDatabaseUrl();
 const redisUrl = requireSafeE2ERedisUrl();
@@ -47,7 +47,7 @@ export default defineConfig({
         'PERSISTENCE_STORE=postgres',
         `DATABASE_URL=${shellQuote(databaseUrl)}`,
         'MEDIA_STORAGE_MODE=local',
-        'LOCAL_MEDIA_SIGNING_SECRET=roomtalk-postgres-e2e-local-media-signing-secret',
+        'LOCAL_MEDIA_SIGNING_SECRET=coworkerhouse-postgres-e2e-local-media-signing-secret',
         `LOCAL_MEDIA_DIR=${shellQuote(localMediaDir)}`,
         'DISABLE_LOCAL_MEDIA_STORAGE=false',
         'E2E_TEST_MODE=true',

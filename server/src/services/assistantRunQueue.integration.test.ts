@@ -28,7 +28,7 @@ const waitFor = async (condition: () => Promise<boolean>, timeoutMs = 5_000) => 
 };
 
 describe('BullMQ assistant run integration', { skip: !redisUrl }, () => {
-  const queueName = `roomtalk-assistant-run-test-${process.pid}-${Date.now()}`;
+  const queueName = `coworkerhouse-assistant-run-test-${process.pid}-${Date.now()}`;
   let producerConnection: IORedis;
   let workerConnection: IORedis;
   let queue: Queue;

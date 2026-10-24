@@ -26,6 +26,7 @@ tmp/
 runtime/
 
 # Python caches (code-agent runner)
+.venv/
 __pycache__/
 .pytest_cache/
 *.pyc

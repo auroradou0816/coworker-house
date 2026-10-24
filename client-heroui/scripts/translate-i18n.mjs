@@ -14,7 +14,7 @@ const LOCALE_NAMES = {
   ja: "Japanese",
   ko: "Korean",
 };
-const PRESERVED_TERMS = ["RoomTalk", "AI", "ID", "Enter", "Ctrl", "Command", "Shift", "Mermaid"];
+const PRESERVED_TERMS = ["CoworkerHouse", "AI", "ID", "Enter", "Ctrl", "Command", "Shift", "Mermaid"];
 
 const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
@@ -201,10 +201,10 @@ const extractPlaceholders = (value) => {
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const escapeTsString = (value) => JSON.stringify(String(value));
 
-const buildPrompt = (targetLocales, sourceStrings) => `You are translating UI strings for RoomTalk.
+const buildPrompt = (targetLocales, sourceStrings) => `You are translating UI strings for CoworkerHouse.
 
 Context:
-- RoomTalk is a real-time chat room app with optional AI assistant responses.
+- CoworkerHouse is a real-time chat room app with optional AI assistant responses.
 - Strings are short UI labels, buttons, tooltips, status messages, and validation errors.
 
 Translate the English source strings to these locales: ${targetLocales

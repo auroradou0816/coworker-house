@@ -30,7 +30,7 @@ describe('availableCodeAgentBackends', () => {
       availableCodeAgentBackends({
         codexEnabled: true,
         acpEnabled: true,
-        artifactVersion: 'roomtalk-code-agent-2026-07-31-multi-harness-v2',
+        artifactVersion: 'coworkerhouse-code-agent-2026-07-31-multi-harness-v2',
       }),
       ['code-agent', 'codex-app-server', 'codex'],
     );

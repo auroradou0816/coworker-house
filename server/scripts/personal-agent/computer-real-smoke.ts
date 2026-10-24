@@ -46,8 +46,8 @@ import type {Config} from '../../src/services/personalComputer/config';
 const apiKey=process.env.E2B_API_KEY;
 const databaseUrl=process.env.ROOM_EVENT_TEST_DATABASE_URL;
 if(!databaseUrl || !/(^|[_-])(test|e2e)([_-]|$)/i.test(new URL(databaseUrl).pathname.slice(1)))throw Error('Set an isolated test database');
-test('real OpenMuse desktop source acceptance through RoomTalk HTTP APIs',{timeout:300000,skip:!apiKey},async()=>{
-  const directory=await mkdtemp(join(tmpdir(),'roomtalk-desktop-real-'));
+test('real OpenMuse desktop source acceptance through CoworkerHouse HTTP APIs',{timeout:300000,skip:!apiKey},async()=>{
+  const directory=await mkdtemp(join(tmpdir(),'coworkerhouse-desktop-real-'));
   const logger={info(){},warn(){},error(){},debug(){}};
   const pool=createPostgresPool(databaseUrl,logger as any),records=new PostgresStore(pool,logger as any);await records.initializeSchema();
   const owner=`desktop-smoke-${randomUUID()}`,token=randomUUID();
@@ -85,7 +85,7 @@ test('real OpenMuse desktop source acceptance through RoomTalk HTTP APIs',{timeo
       const latest=await fetch(`${baseURL}/api/personal-agent/computer?operation=screenshot&receiptId=${result.receipt.id}`,{headers});
       assert.ok(latest.ok);const shot=await latest.json();assert.equal(shot.mimeType,'image/jpeg');const bytes=Buffer.from(shot.data,'base64');
       assert.deepEqual([...bytes.subarray(0,3)],[255,216,255]);assert.ok(bytes.length>5000 && bytes.length<1024*1024,String(bytes.length));
-      await writeFile('/tmp/roomtalk-openmuse-desktop-real.jpg',bytes);return bytes;
+      await writeFile('/tmp/coworkerhouse-openmuse-desktop-real.jpg',bytes);return bytes;
     };
     const started = await post("/start");
     assert.equal(started.status, "running");

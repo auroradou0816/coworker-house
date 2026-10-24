@@ -9,7 +9,7 @@ const lock = JSON.parse(readFileSync(lockPath, 'utf8'));
 
 const args = process.argv.slice(2);
 const options = {
-  contextDir: process.env.CODE_AGENT_E2B_BUILD_CONTEXT || '/tmp/roomtalk-code-agent-e2b-template-context',
+  contextDir: process.env.CODE_AGENT_E2B_BUILD_CONTEXT || '/tmp/coworkerhouse-code-agent-e2b-template-context',
   template: process.env.CODE_AGENT_E2B_TEMPLATE_ID || lock.artifactVersion,
   dryRun: false,
   noCache: false,
@@ -26,7 +26,7 @@ const options = {
     'hermes acp --check >/dev/null',
     '/opt/hermes-agent/.venv/bin/python -c "import anthropic"',
     'bwrap --version >/dev/null',
-    `{ probe="/workspace/.roomtalk-bwrap-ready-$$"; marker="/tmp/.roomtalk-bwrap-ready-$$"; rm -f "$probe" "$marker"; bwrap --die-with-parent --bind / / --dev /dev --ro-bind /workspace /workspace --chdir /workspace -- sh -c 'printf ready >/dev/null; python -c "open(\\"/dev/null\\", \\"w\\").close()"; printf ready > "$1"; if touch "$2"; then exit 41; fi' sh "$marker" "$probe"; test "$(cat "$marker")" = ready; test ! -e "$probe"; rm -f "$marker"; }`,
+    `{ probe="/workspace/.coworkerhouse-bwrap-ready-$$"; marker="/tmp/.coworkerhouse-bwrap-ready-$$"; rm -f "$probe" "$marker"; bwrap --die-with-parent --bind / / --dev /dev --ro-bind /workspace /workspace --chdir /workspace -- sh -c 'printf ready >/dev/null; python -c "open(\\"/dev/null\\", \\"w\\").close()"; printf ready > "$1"; if touch "$2"; then exit 41; fi' sh "$marker" "$probe"; test "$(cat "$marker")" = ready; test ! -e "$probe"; rm -f "$marker"; }`,
     'playwright --version >/dev/null',
     'node -e "const { chromium } = require(\\"playwright\\"); const fs = require(\\"fs\\"); const executable = chromium.executablePath(); if (!fs.existsSync(executable)) { console.error(`missing Chromium executable: ${executable}`); process.exit(1); }"',
     'curl --version >/dev/null',
@@ -65,8 +65,8 @@ const options = {
     'zsh --version >/dev/null',
     'test -f "$HOME/.oh-my-zsh/oh-my-zsh.sh"',
     'test -f "$HOME/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme"',
-    'roomtalk --help >/dev/null',
-    'python -c "import importlib; importlib.import_module(\\"acp\\"); importlib.import_module(\\"roomtalk_code_agent_runner.runner\\"); importlib.import_module(\\"roomtalk_code_agent_runner.codex_cli\\"); importlib.import_module(\\"roomtalk_code_agent_runner.codex_app_server\\"); importlib.import_module(\\"roomtalk_code_agent_runner.acp_harness\\"); importlib.import_module(\\"roomtalk_code_agent_runner.daemon\\"); importlib.import_module(\\"openai_codex\\")"',
+    'coworkerhouse --help >/dev/null',
+    'python -c "import importlib; importlib.import_module(\\"acp\\"); importlib.import_module(\\"coworkerhouse_code_agent_runner.runner\\"); importlib.import_module(\\"coworkerhouse_code_agent_runner.codex_cli\\"); importlib.import_module(\\"coworkerhouse_code_agent_runner.codex_app_server\\"); importlib.import_module(\\"coworkerhouse_code_agent_runner.acp_harness\\"); importlib.import_module(\\"coworkerhouse_code_agent_runner.daemon\\"); importlib.import_module(\\"openai_codex\\")"',
   ].join(' && '),
 };
 
@@ -220,7 +220,7 @@ function usage(exitCode) {
 
 Options:
   --template <name>    E2B template name. Defaults to CODE_AGENT_E2B_TEMPLATE_ID or artifactVersion.
-  --context <dir>      Build context directory. Defaults to /tmp/roomtalk-code-agent-e2b-template-context.
+  --context <dir>      Build context directory. Defaults to /tmp/coworkerhouse-code-agent-e2b-template-context.
   --clean              Remove the context directory before preparing it.
   --no-cache           Pass --no-cache to e2b template create.
   --publish            Publish the template after create/rebuild.

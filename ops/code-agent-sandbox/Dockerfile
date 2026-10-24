@@ -16,7 +16,7 @@ ARG POWERLEVEL10K_REF=9253fb1c5034410c43a0c681ff8294181c54016c
 
 ENV PYTHONUNBUFFERED=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-ENV ROOMTALK_CODE_AGENT_ARTIFACT_VERSION=roomtalk-code-agent-2026-10-06-openmuse-parity-v7
+ENV ROOMTALK_CODE_AGENT_ARTIFACT_VERSION=coworkerhouse-code-agent-2026-10-23-runner-rebrand-v1
 ENV ROOMTALK_CODE_AGENT_SOURCE_REF=0b5e44eb29ad1bec89b2143737f6917aafa79359
 ENV ROOMTALK_CODEX_CLI_VERSION=${CODEX_CLI_NPM_VERSION}
 ENV ROOMTALK_OPENCODE_VERSION=${OPENCODE_NPM_VERSION}
@@ -24,16 +24,16 @@ ENV ROOMTALK_HERMES_AGENT_VERSION=0.21.5
 ENV ROOMTALK_PLAYWRIGHT_VERSION=${PLAYWRIGHT_NPM_VERSION}
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 ENV NODE_PATH=/usr/lib/node_modules
-ENV PYTHONPATH=/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner
+ENV PYTHONPATH=/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner
 
 WORKDIR /workspace
 
 COPY code-agent-engine /opt/code-agent-engine
 COPY hermes-agent /opt/hermes-agent
-COPY roomtalk_code_agent_runner /opt/roomtalk_code_agent_runner
-COPY artifact.lock.json /opt/roomtalk-code-agent-artifact.lock.json
-COPY requirements.lock /opt/roomtalk-code-agent-requirements.lock
-COPY codex-sdk.requirements.lock /opt/roomtalk-codex-sdk-requirements.lock
+COPY coworkerhouse_code_agent_runner /opt/coworkerhouse_code_agent_runner
+COPY artifact.lock.json /opt/coworkerhouse-code-agent-artifact.lock.json
+COPY requirements.lock /opt/coworkerhouse-code-agent-requirements.lock
+COPY codex-sdk.requirements.lock /opt/coworkerhouse-codex-sdk-requirements.lock
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -93,7 +93,7 @@ RUN apt-get update \
   && curl -fsSLo /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_linux_${GH_ARCH}.tar.gz" \
   && echo "${GH_SHA256}  /tmp/gh.tar.gz" | sha256sum -c - \
   && tar -xzf /tmp/gh.tar.gz -C /tmp \
-  && install -D -m 755 "/tmp/gh_${GH_CLI_VERSION}_linux_${GH_ARCH}/bin/gh" /usr/local/lib/roomtalk/gh-real \
+  && install -D -m 755 "/tmp/gh_${GH_CLI_VERSION}_linux_${GH_ARCH}/bin/gh" /usr/local/lib/coworkerhouse/gh-real \
   && rm -rf /tmp/gh.tar.gz "/tmp/gh_${GH_CLI_VERSION}_linux_${GH_ARCH}" \
   && { \
     echo '#!/bin/sh'; \
@@ -102,7 +102,7 @@ RUN apt-get update \
     echo '  GH_TOKEN="$(cat "$token_path")"'; \
     echo '  export GH_TOKEN'; \
     echo 'fi'; \
-    echo 'exec /usr/local/lib/roomtalk/gh-real "$@"'; \
+    echo 'exec /usr/local/lib/coworkerhouse/gh-real "$@"'; \
   } > /usr/local/bin/gh \
   && chmod 755 /usr/local/bin/gh \
   && npm install -g \
@@ -118,8 +118,9 @@ RUN apt-get update \
   && playwright install --with-deps chromium \
   && ln -sf /usr/bin/fdfind /usr/local/bin/fd \
   && git lfs install --system \
-  && { echo '#!/bin/sh'; echo 'exec python -m roomtalk_code_agent_runner.platform_tools "$@"'; } > /usr/local/bin/roomtalk \
-  && chmod 755 /usr/local/bin/roomtalk \
+  && { echo '#!/bin/sh'; echo 'exec python -m coworkerhouse_code_agent_runner.platform_tools "$@"'; } > /usr/local/bin/coworkerhouse \
+  && chmod 755 /usr/local/bin/coworkerhouse \
+  && ln -sf /usr/local/bin/coworkerhouse /usr/local/bin/roomtalk \
   && CODEX_NATIVE_BIN="$(find "$(npm root -g)/@openai/codex" -path '*/vendor/x86_64-unknown-linux-musl/bin/codex' -type f -perm /111 | head -n 1)" \
   && test -n "${CODEX_NATIVE_BIN}" \
   && ln -sf "${CODEX_NATIVE_BIN}" /usr/local/bin/codex-linux-sandbox \
@@ -163,36 +164,36 @@ RUN apt-get update \
   && redis-cli --version >/dev/null \
   && shellcheck --version >/dev/null \
   && zsh --version >/dev/null \
-  && roomtalk --help >/dev/null \
+  && coworkerhouse --help >/dev/null \
   && python -m pip install --no-cache-dir "uv==${UV_VERSION}" \
   && uv sync --frozen --no-dev --extra acp --extra anthropic --project /opt/hermes-agent \
   && ln -sf /opt/hermes-agent/.venv/bin/hermes /usr/local/bin/hermes \
   && ln -sf /opt/hermes-agent/.venv/bin/hermes-acp /usr/local/bin/hermes-acp \
   && hermes acp --check >/dev/null \
   && /opt/hermes-agent/.venv/bin/python -c 'import anthropic' \
-  && python -m pip install --no-cache-dir --require-hashes -r /opt/roomtalk-code-agent-requirements.lock \
-  && python -m pip install --no-cache-dir --no-deps --require-hashes -r /opt/roomtalk-codex-sdk-requirements.lock \
-  && python -c 'import importlib; importlib.import_module("acp"); importlib.import_module("core.engine"); importlib.import_module("roomtalk_code_agent_runner.runner"); importlib.import_module("roomtalk_code_agent_runner.codex_cli"); importlib.import_module("roomtalk_code_agent_runner.codex_app_server"); importlib.import_module("roomtalk_code_agent_runner.acp_harness"); importlib.import_module("openai_codex")' \
+  && python -m pip install --no-cache-dir --require-hashes -r /opt/coworkerhouse-code-agent-requirements.lock \
+  && python -m pip install --no-cache-dir --no-deps --require-hashes -r /opt/coworkerhouse-codex-sdk-requirements.lock \
+  && python -c 'import importlib; importlib.import_module("acp"); importlib.import_module("core.engine"); importlib.import_module("coworkerhouse_code_agent_runner.runner"); importlib.import_module("coworkerhouse_code_agent_runner.codex_cli"); importlib.import_module("coworkerhouse_code_agent_runner.codex_app_server"); importlib.import_module("coworkerhouse_code_agent_runner.acp_harness"); importlib.import_module("openai_codex")' \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 10001 roomtalk \
+RUN useradd --create-home --uid 10001 coworkerhouse \
   && mkdir -p /tmp/roomtalk-codex \
-  && git init -q /home/roomtalk/.oh-my-zsh \
-  && git -C /home/roomtalk/.oh-my-zsh remote add origin https://github.com/ohmyzsh/ohmyzsh.git \
-  && git -C /home/roomtalk/.oh-my-zsh fetch --depth=1 origin "${OH_MY_ZSH_REF}" \
-  && git -C /home/roomtalk/.oh-my-zsh checkout --detach FETCH_HEAD \
-  && mkdir -p /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k \
-  && git init -q /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k \
-  && git -C /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k remote add origin https://github.com/romkatv/powerlevel10k.git \
-  && git -C /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k fetch --depth=1 origin "${POWERLEVEL10K_REF}" \
-  && git -C /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k checkout --detach FETCH_HEAD \
+  && git init -q /home/coworkerhouse/.oh-my-zsh \
+  && git -C /home/coworkerhouse/.oh-my-zsh remote add origin https://github.com/ohmyzsh/ohmyzsh.git \
+  && git -C /home/coworkerhouse/.oh-my-zsh fetch --depth=1 origin "${OH_MY_ZSH_REF}" \
+  && git -C /home/coworkerhouse/.oh-my-zsh checkout --detach FETCH_HEAD \
+  && mkdir -p /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k \
+  && git init -q /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k \
+  && git -C /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k remote add origin https://github.com/romkatv/powerlevel10k.git \
+  && git -C /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k fetch --depth=1 origin "${POWERLEVEL10K_REF}" \
+  && git -C /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k checkout --detach FETCH_HEAD \
   && { \
     echo 'if [ -t 0 ] && [ -z "${ROOMTALK_TERMINAL_STAY_IN_BASH:-}" ] && command -v zsh >/dev/null 2>&1; then'; \
     echo '  export SHELL="$(command -v zsh)"'; \
     echo '  exec "$SHELL" -l'; \
     echo 'fi'; \
-  } > /home/roomtalk/.bash_profile \
+  } > /home/coworkerhouse/.bash_profile \
   && { \
     echo 'export ZSH="$HOME/.oh-my-zsh"'; \
     echo 'ZSH_THEME="powerlevel10k/powerlevel10k"'; \
@@ -200,7 +201,7 @@ RUN useradd --create-home --uid 10001 roomtalk \
     echo 'plugins=(git)'; \
     echo 'source "$ZSH/oh-my-zsh.sh"'; \
     echo '[[ ! -f "$HOME/.p10k.zsh" ]] || source "$HOME/.p10k.zsh"'; \
-  } > /home/roomtalk/.zshrc \
+  } > /home/coworkerhouse/.zshrc \
   && { \
     echo 'typeset -g POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true'; \
     echo 'typeset -g POWERLEVEL9K_INSTANT_PROMPT=off'; \
@@ -213,12 +214,12 @@ RUN useradd --create-home --uid 10001 roomtalk \
     echo 'typeset -g POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"'; \
     echo 'typeset -g POWERLEVEL9K_DIR_MAX_LENGTH=48'; \
     echo 'typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique'; \
-  } > /home/roomtalk/.p10k.zsh \
-  && chown -R roomtalk:roomtalk /workspace /tmp/roomtalk-codex "${PLAYWRIGHT_BROWSERS_PATH}" \
-  && chown -R roomtalk:roomtalk /home/roomtalk/.oh-my-zsh /home/roomtalk/.bash_profile /home/roomtalk/.zshrc /home/roomtalk/.p10k.zsh \
-  && test -f /home/roomtalk/.oh-my-zsh/oh-my-zsh.sh \
-  && test -f /home/roomtalk/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme \
+  } > /home/coworkerhouse/.p10k.zsh \
+  && chown -R coworkerhouse:coworkerhouse /workspace /tmp/roomtalk-codex "${PLAYWRIGHT_BROWSERS_PATH}" \
+  && chown -R coworkerhouse:coworkerhouse /home/coworkerhouse/.oh-my-zsh /home/coworkerhouse/.bash_profile /home/coworkerhouse/.zshrc /home/coworkerhouse/.p10k.zsh \
+  && test -f /home/coworkerhouse/.oh-my-zsh/oh-my-zsh.sh \
+  && test -f /home/coworkerhouse/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme \
   && chmod 700 /tmp/roomtalk-codex
 
-USER roomtalk
-CMD ["python", "-m", "roomtalk_code_agent_runner"]
+USER coworkerhouse
+CMD ["python", "-m", "coworkerhouse_code_agent_runner"]

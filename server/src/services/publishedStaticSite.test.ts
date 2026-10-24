@@ -41,7 +41,7 @@ const textFile = (path: string, text: string) => ({
 
 describe('PublishedStaticSiteService', () => {
   it('normalizes slugs and safe relative paths', () => {
-    assert.equal(normalizePublishedSiteSlug('RoomTalk Demo!!', 'fallback'), 'roomtalk-demo');
+    assert.equal(normalizePublishedSiteSlug('CoworkerHouse Demo!!', 'fallback'), 'coworkerhouse-demo');
     assert.equal(normalizePublishedSitePath('assets/app.js'), 'assets/app.js');
     assert.equal(normalizePublishedSitePath('../secret.txt'), null);
     assert.equal(normalizePublishedSitePath('/absolute/index.html'), null);
@@ -81,8 +81,8 @@ describe('PublishedStaticSiteService', () => {
     const result = await service.publish({
       roomId: 'room-1',
       turnId: 'turn-1',
-      slug: 'roomtalk-demo',
-      title: 'RoomTalk Demo',
+      slug: 'coworkerhouse-demo',
+      title: 'CoworkerHouse Demo',
       entry: 'index.html',
       files: [
         textFile('index.html', '<!doctype html><script src="/assets/app.js"></script>'),
@@ -90,23 +90,23 @@ describe('PublishedStaticSiteService', () => {
       ],
     }, claims);
 
-    assert.equal(result.url, 'https://room.example/p/roomtalk-demo/');
-    assert.equal(result.slug, 'roomtalk-demo');
+    assert.equal(result.url, 'https://room.example/p/coworkerhouse-demo/');
+    assert.equal(result.slug, 'coworkerhouse-demo');
     assert.equal(result.fileCount, 2);
-    assert.equal(storage.objects.has('published-sites/roomtalk-demo/manifest.json'), true);
-    assert.equal(storage.objects.has('published-sites/roomtalk-demo/versions.json'), true);
-    assert.equal(storage.objects.has(`published-sites/roomtalk-demo/version-manifests/${result.versionId}.json`), true);
+    assert.equal(storage.objects.has('published-sites/coworkerhouse-demo/manifest.json'), true);
+    assert.equal(storage.objects.has('published-sites/coworkerhouse-demo/versions.json'), true);
+    assert.equal(storage.objects.has(`published-sites/coworkerhouse-demo/version-manifests/${result.versionId}.json`), true);
     assert.equal(storage.objects.has('published-sites/by-room/cm9vbS0x/index.json'), true);
 
-    const index = await service.readFile('roomtalk-demo', '');
+    const index = await service.readFile('coworkerhouse-demo', '');
     assert.equal(index?.file.path, 'index.html');
     assert.match(index!.body.toString('utf8'), /doctype/);
 
-    const asset = await service.readFile('roomtalk-demo', 'assets/app.js');
+    const asset = await service.readFile('coworkerhouse-demo', 'assets/app.js');
     assert.equal(asset?.file.mimeType, 'text/javascript; charset=utf-8');
     assert.equal(asset?.body.toString('utf8'), 'console.log("published")');
 
-    const spaFallback = await service.readFile('roomtalk-demo', 'unknown/route');
+    const spaFallback = await service.readFile('coworkerhouse-demo', 'unknown/route');
     assert.equal(spaFallback?.file.path, 'index.html');
   });
 
@@ -475,8 +475,8 @@ describe('PublishedStaticSiteService', () => {
       'http://127.0.0.1:3012/api/code-agent/publish-static-site'
     );
     assert.equal(
-      service.publicUrlForSlug('roomtalk-demo', 'http://127.0.0.1:3012'),
-      'http://127.0.0.1:3012/p/roomtalk-demo/'
+      service.publicUrlForSlug('coworkerhouse-demo', 'http://127.0.0.1:3012'),
+      'http://127.0.0.1:3012/p/coworkerhouse-demo/'
     );
   });
 
@@ -520,7 +520,7 @@ describe('PublishedStaticSiteService', () => {
     await service.publish({
       roomId: 'room-1',
       turnId: 'turn-1',
-      slug: 'roomtalk-demo',
+      slug: 'coworkerhouse-demo',
       entry: 'index.html',
       files: [
         textFile('index.html', '<!doctype html>v1'),
@@ -530,7 +530,7 @@ describe('PublishedStaticSiteService', () => {
     await service.publish({
       roomId: 'room-1',
       turnId: 'turn-1',
-      slug: 'roomtalk-demo',
+      slug: 'coworkerhouse-demo',
       entry: 'index.html',
       files: [
         textFile('index.html', '<!doctype html>v2'),
@@ -538,7 +538,7 @@ describe('PublishedStaticSiteService', () => {
       ],
     }, claims);
 
-    assert.equal([...storage.objects.keys()].filter(key => key.startsWith('published-sites/roomtalk-demo/versions/')).length, 4);
+    assert.equal([...storage.objects.keys()].filter(key => key.startsWith('published-sites/coworkerhouse-demo/versions/')).length, 4);
 
     const result = await service.deleteSitesForRoom('room-1');
 
@@ -567,7 +567,7 @@ describe('PublishedStaticSiteService', () => {
       const published = await service.publish({
         roomId: 'room-1',
         turnId: 'turn-1',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [textFile('index.html', `<!doctype html>${version}`)],
       }, claims);
@@ -581,14 +581,14 @@ describe('PublishedStaticSiteService', () => {
       files: [textFile('index.html', '<!doctype html>keep')],
     }, claims);
 
-    const result = await service.unpublish({ slug: 'roomtalk-demo' }, claims);
+    const result = await service.unpublish({ slug: 'coworkerhouse-demo' }, claims);
 
-    assert.equal(result.url, 'https://room.example/p/roomtalk-demo/');
-    assert.equal(result.slug, 'roomtalk-demo');
+    assert.equal(result.url, 'https://room.example/p/coworkerhouse-demo/');
+    assert.equal(result.slug, 'coworkerhouse-demo');
     assert.equal(result.objectCount, 6);
-    assert.equal(await service.readManifest('roomtalk-demo'), null);
-    assert.equal(await service.readFile('roomtalk-demo', '', firstVersionId), null);
-    assert.equal([...storage.objects.keys()].some(key => key.startsWith('published-sites/roomtalk-demo/')), false);
+    assert.equal(await service.readManifest('coworkerhouse-demo'), null);
+    assert.equal(await service.readFile('coworkerhouse-demo', '', firstVersionId), null);
+    assert.equal([...storage.objects.keys()].some(key => key.startsWith('published-sites/coworkerhouse-demo/')), false);
     assert.deepEqual((await service.listSitesForRoom('room-1')).map(site => site.slug), ['keep-demo']);
 
     const finalResult = await service.unpublish({ slug: 'keep-demo' }, claims);
@@ -609,7 +609,7 @@ describe('PublishedStaticSiteService', () => {
       service.publish({
         roomId: 'room-1',
         turnId: 'turn-1',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [textFile('../index.html', '<!doctype html>')],
       }, firstClaims),
@@ -620,7 +620,7 @@ describe('PublishedStaticSiteService', () => {
       service.publish({
         roomId: 'room-1',
         turnId: 'turn-1',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [textFile('app.js', 'console.log("missing entry")')],
       }, firstClaims),
@@ -630,7 +630,7 @@ describe('PublishedStaticSiteService', () => {
     await service.publish({
       roomId: 'room-1',
       turnId: 'turn-1',
-      slug: 'roomtalk-demo',
+      slug: 'coworkerhouse-demo',
       entry: 'index.html',
       files: [textFile('index.html', '<!doctype html>')],
     }, firstClaims);
@@ -646,7 +646,7 @@ describe('PublishedStaticSiteService', () => {
       service.publish({
         roomId: 'room-2',
         turnId: 'turn-2',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [textFile('index.html', '<!doctype html>')],
       }, secondClaims),
@@ -654,7 +654,7 @@ describe('PublishedStaticSiteService', () => {
     );
 
     await assert.rejects(
-      service.unpublish({ slug: 'roomtalk-demo' }, secondClaims),
+      service.unpublish({ slug: 'coworkerhouse-demo' }, secondClaims),
       /belongs to another room/
     );
   });
@@ -677,7 +677,7 @@ describe('PublishedStaticSiteService', () => {
       /requires a writable agent mode/
     );
     await assert.rejects(
-      service.unpublish({ slug: 'roomtalk-demo' }, claims),
+      service.unpublish({ slug: 'coworkerhouse-demo' }, claims),
       /requires a writable agent mode/
     );
   });

@@ -84,7 +84,7 @@ body {
   padding-top: max(env(safe-area-inset-top), 0rem);
 }
 
-.roomtalk-keyboard-open .mobile-bottom-nav {
+.coworkerhouse-keyboard-open .mobile-bottom-nav {
   display: none;
   padding-bottom: 0;
 }
@@ -92,14 +92,14 @@ body {
 /* Pin the modal/bottom-sheet wrapper to the visible viewport so the on-screen
    keyboard shrinks the sheet (engaging its internal scroll) instead of pushing
    it off the top of the page. Tracks visualViewport via JS-managed CSS vars. */
-.roomtalk-modal-viewport {
+.coworkerhouse-modal-viewport {
   top: var(--app-viewport-top, 0px) !important;
   bottom: auto !important;
   height: var(--app-height, 100dvh) !important;
   max-height: var(--app-height, 100dvh) !important;
 }
 
-.roomtalk-ring {
+.coworkerhouse-ring {
   box-shadow: 0 0 0 1px rgba(194, 192, 182, 0.82), 0 10px 24px rgba(20, 20, 19, 0.05);
 }
 
@@ -148,34 +148,34 @@ body {
   color: #a8b6cc;
 }
 
-.roomtalk-audio-player {
+.coworkerhouse-audio-player {
   background-color: #dbe3ee;
   border-radius: 9999px;
   box-shadow: 0 0 0 1px rgba(194, 192, 182, 1);
   color-scheme: light;
 }
 
-.roomtalk-audio-player::-webkit-media-controls-panel {
+.coworkerhouse-audio-player::-webkit-media-controls-panel {
   background-color: #dbe3ee;
 }
 
-.dark .roomtalk-audio-player {
+.dark .coworkerhouse-audio-player {
   background-color: #253247;
   box-shadow: 0 0 0 1px rgba(77, 76, 72, 0.9);
   color-scheme: dark;
 }
 
-.dark .roomtalk-audio-player::-webkit-media-controls-panel {
+.dark .coworkerhouse-audio-player::-webkit-media-controls-panel {
   background-color: #253247;
 }
 
-.roomtalk-sender-outline {
-  outline: 1px solid var(--roomtalk-sender-outline-light, rgba(194, 192, 182, 0.85));
+.coworkerhouse-sender-outline {
+  outline: 1px solid var(--coworkerhouse-sender-outline-light, rgba(194, 192, 182, 0.85));
   outline-offset: 0;
 }
 
-.dark .roomtalk-sender-outline {
-  outline-color: var(--roomtalk-sender-outline-dark, rgba(77, 76, 72, 0.8));
+.dark .coworkerhouse-sender-outline {
+  outline-color: var(--coworkerhouse-sender-outline-dark, rgba(77, 76, 72, 0.8));
 }
 
 [contenteditable]:focus {
@@ -195,7 +195,7 @@ body {
   color: #0b101b !important;
 }
 
-/* Custom RoomTalk motion must follow the same reduced-motion contract as
+/* Custom CoworkerHouse motion must follow the same reduced-motion contract as
    HeroUI controls. Keep state changes visible, but remove continuous spinners,
    pulses, transforms and smooth scrolling when the OS requests less motion. */
 @media (prefers-reduced-motion: reduce) {
@@ -210,7 +210,7 @@ body {
   }
 }
 
-/* Keep OpenMuse field geometry while inheriting the main RoomTalk theme. */
+/* Keep OpenMuse field geometry while inheriting the main CoworkerHouse theme. */
 .personal-agent-theme [data-slot="input-wrapper"] {
   background-color: hsl(var(--heroui-content1));
   border: 1px solid hsl(var(--heroui-divider));

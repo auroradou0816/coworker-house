@@ -265,17 +265,17 @@ const runGit = (workspace: string, args: string[]) => spawnSync('git', args, {
   encoding: 'utf8',
   env: {
     ...process.env,
-    GIT_AUTHOR_NAME: 'RoomTalk Test',
-    GIT_AUTHOR_EMAIL: 'roomtalk-test@example.invalid',
-    GIT_COMMITTER_NAME: 'RoomTalk Test',
-    GIT_COMMITTER_EMAIL: 'roomtalk-test@example.invalid',
+    GIT_AUTHOR_NAME: 'CoworkerHouse Test',
+    GIT_AUTHOR_EMAIL: 'coworkerhouse-test@example.invalid',
+    GIT_COMMITTER_NAME: 'CoworkerHouse Test',
+    GIT_COMMITTER_EMAIL: 'coworkerhouse-test@example.invalid',
   },
 });
 
 const captureWorkspaceVersionControlCommand = async (workspace: string): Promise<string> => {
   const driver = new FakeE2BDriver();
   const service = new E2BCodeAgentSandboxService(driver, {
-    templateId: 'roomtalk-code-agent',
+    templateId: 'coworkerhouse-code-agent',
     workspace,
   });
   const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
@@ -289,8 +289,8 @@ describe('E2BCodeAgentSandboxService', () => {
   it('creates, starts commands, and destroys E2B sandboxes through the driver', async () => {
     const driver = new FakeE2BDriver();
     const service = new E2BCodeAgentSandboxService(driver, {
-      templateId: 'roomtalk-code-agent',
-      artifactVersion: 'roomtalk-code-agent-2026-06-28-a4e70e6',
+      templateId: 'coworkerhouse-code-agent',
+      artifactVersion: 'coworkerhouse-code-agent-2026-06-28-a4e70e6',
       codeAgentSourceRef: 'a4e70e674e46d59a63874371276f5fec0fcd3f41',
       lifecycle: { onTimeout: 'pause', autoResume: true, keepMemory: true },
     }, () => new Date('2026-05-03T00:00:00.000Z'));
@@ -302,12 +302,12 @@ describe('E2BCodeAgentSandboxService', () => {
     assert.equal(handle.createdAt, '2026-05-03T00:00:00.000Z');
     assert.equal(handle.expiresAt, '2026-05-03T00:01:00.000Z');
     assert.deepEqual(driver.createInputs[0], {
-      templateId: 'roomtalk-code-agent',
+      templateId: 'coworkerhouse-code-agent',
       timeoutMs: 60_000,
       metadata: {
         roomId: 'room-1',
         creatorId: 'client-1',
-        artifactVersion: 'roomtalk-code-agent-2026-06-28-a4e70e6',
+        artifactVersion: 'coworkerhouse-code-agent-2026-06-28-a4e70e6',
         codeAgentSourceRef: 'a4e70e674e46d59a63874371276f5fec0fcd3f41',
       },
       lifecycle: { onTimeout: 'pause', autoResume: true, keepMemory: true },
@@ -340,7 +340,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
     const runner = await service.startRunner({
       handle,
-      command: 'python -m roomtalk_code_agent_runner',
+      command: 'python -m coworkerhouse_code_agent_runner',
       env: { PYTHONUNBUFFERED: '1' },
       timeoutMs: 300_000,
     });
@@ -349,7 +349,7 @@ describe('E2BCodeAgentSandboxService', () => {
     assert.ok(runner.stdout);
     assert.ok(runner.stderr);
     assert.deepEqual(await runner.completed, { exitCode: 0, signal: null });
-    assert.deepEqual(driver.commands, ['python -m roomtalk_code_agent_runner']);
+    assert.deepEqual(driver.commands, ['python -m coworkerhouse_code_agent_runner']);
     assert.deepEqual(driver.commandOptions, [{
       env: {
         PYTHONUNBUFFERED: '1',
@@ -420,7 +420,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
     const warnings: unknown[] = [];
     const serviceWithLogger = new E2BCodeAgentSandboxService(driver, {
-      templateId: 'roomtalk-code-agent',
+      templateId: 'coworkerhouse-code-agent',
       logger: { warn: (_message, meta) => warnings.push(meta) },
     });
     driver.failList = true;
@@ -434,7 +434,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('does not send a timeout mutation when cleanup is aborted during connect', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
     const originalConnect = driver.connect.bind(driver);
     let markConnectStarted!: () => void;
@@ -466,9 +466,9 @@ describe('E2BCodeAgentSandboxService', () => {
     assert.deepEqual(driver.timeoutUpdates, []);
   });
 
-  it('preserves an exact Vite preview host for RoomTalk-started workspace commands', async () => {
+  it('preserves an exact Vite preview host for CoworkerHouse-started workspace commands', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.startWorkspaceCommand({
@@ -490,7 +490,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('exports and imports workspace archives for sandbox migration', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const source = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
     const target = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
     driver.fileReadBodies.set('/tmp/roomtalk-codex/workspace-export-1.tar.gz', Buffer.from('workspace-archive', 'utf8'));
@@ -520,7 +520,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('builds checkpoint restore commands with an in-sandbox batch rollback journal', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
     const checkpointId = 'turn-checkpoint';
     const operationId = `${checkpointId}-42`;
@@ -562,7 +562,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('writes, reads, and deletes secret files under the Codex secret root only', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.writeSecretFile(handle, {
@@ -590,7 +590,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('lists workspace preview servers from sandbox listening ports', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     assert.deepEqual(await service.listWorkspacePreviewServers(handle), [
@@ -619,7 +619,7 @@ describe('E2BCodeAgentSandboxService', () => {
   it('marks NUL-containing workspace file reads as binary like T3', async () => {
     const driver = new FakeE2BDriver();
     driver.fileReadBodies.set('/workspace/data.bin', Buffer.from([0x61, 0x00, 0x62]));
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     assert.deepEqual(await service.readWorkspaceFile(handle, 'data.bin'), {
@@ -642,7 +642,7 @@ describe('E2BCodeAgentSandboxService', () => {
       { path: '/workspace/convex/UOoS-l/convex_local_storage/modules/data.json', type: 'file' },
     ];
     driver.ignoredWorkspacePaths = ['convex/UOoS-l/convex_local_storage/modules/data.json'];
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     assert.deepEqual(await service.listWorkspaceEntries(handle, { maxDepth: 24 }), [
@@ -677,7 +677,7 @@ describe('E2BCodeAgentSandboxService', () => {
     driver.ignoredWorkspaceStdinError = new Error('[not_found] process with pid 42 not found');
     const warnings: Array<{ error?: Error; sandboxId?: string }> = [];
     const service = new E2BCodeAgentSandboxService(driver, {
-      templateId: 'roomtalk-code-agent',
+      templateId: 'coworkerhouse-code-agent',
       logger: {
         warn: (_message, meta) => warnings.push(meta as { error?: Error; sandboxId?: string }),
       },
@@ -699,7 +699,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('initializes an empty workspace with a baseline commit', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.initializeWorkspaceVersionControl(handle);
@@ -715,7 +715,7 @@ describe('E2BCodeAgentSandboxService', () => {
   });
 
   it('creates an empty baseline for a newly initialized empty workspace', async () => {
-    const workspace = mkdtempSync(path.join(tmpdir(), 'roomtalk-empty-workspace-'));
+    const workspace = mkdtempSync(path.join(tmpdir(), 'coworkerhouse-empty-workspace-'));
     try {
       const command = await captureWorkspaceVersionControlCommand(workspace);
 
@@ -729,7 +729,7 @@ describe('E2BCodeAgentSandboxService', () => {
   });
 
   it('creates a baseline for a populated unborn git workspace without tracking dependency outputs', async () => {
-    const workspace = mkdtempSync(path.join(tmpdir(), 'roomtalk-unborn-workspace-'));
+    const workspace = mkdtempSync(path.join(tmpdir(), 'coworkerhouse-unborn-workspace-'));
     try {
       assert.equal(runGit(workspace, ['init', '-b', 'main']).status, 0);
       mkdirSync(path.join(workspace, 'src'), { recursive: true });
@@ -759,7 +759,7 @@ describe('E2BCodeAgentSandboxService', () => {
   });
 
   it('creates a baseline for a populated workspace that is not yet a git repository', async () => {
-    const workspace = mkdtempSync(path.join(tmpdir(), 'roomtalk-populated-workspace-'));
+    const workspace = mkdtempSync(path.join(tmpdir(), 'coworkerhouse-populated-workspace-'));
     try {
       mkdirSync(path.join(workspace, 'src'), { recursive: true });
       mkdirSync(path.join(workspace, 'node_modules/pkg'), { recursive: true });
@@ -779,7 +779,7 @@ describe('E2BCodeAgentSandboxService', () => {
   });
 
   it('does not create a new baseline for an imported workspace with existing git history', async () => {
-    const workspace = mkdtempSync(path.join(tmpdir(), 'roomtalk-imported-workspace-'));
+    const workspace = mkdtempSync(path.join(tmpdir(), 'coworkerhouse-imported-workspace-'));
     try {
       assert.equal(runGit(workspace, ['init', '-b', 'main']).status, 0);
       writeFileSync(path.join(workspace, 'README.md'), 'before\n');
@@ -801,7 +801,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('reads workspace changed files from git status output', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     assert.deepEqual(await service.getWorkspaceChanges(handle), {
@@ -825,7 +825,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('reads workspace diffs from git patch output', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     const patch = [
@@ -861,7 +861,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('uses git whitespace filtering when reading workspace diffs with the T3 option', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.getWorkspaceDiff(handle, { ignoreWhitespace: true });
@@ -874,7 +874,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('reads T3 working tree diffs without the HEAD comparison target', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.getWorkspaceDiff(handle, { scope: 'unstaged' });
@@ -887,7 +887,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('reads T3 branch diffs against a selected base ref', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await service.getWorkspaceDiff(handle, { baseRef: 'origin/main' });
@@ -900,7 +900,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('lists T3-style local and remote workspace refs from git', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     assert.deepEqual(await service.listWorkspaceRefs(handle, { query: 'main', maxRefs: 3 }), {
@@ -931,7 +931,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('searches workspace entries with T3-style fuzzy path ranking', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     const results = await service.searchWorkspaceEntries(handle, {
@@ -946,7 +946,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('rejects workspace file reads that resolve outside the workspace like T3', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await assert.rejects(
@@ -961,7 +961,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('rejects workspace asset reads that resolve outside the workspace like T3', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await assert.rejects(
@@ -974,7 +974,7 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('rejects workspace mutations whose canonical path escapes through a symlink', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
 
     await assert.rejects(
@@ -1002,13 +1002,13 @@ describe('E2BCodeAgentSandboxService', () => {
 
   it('fails loudly when the driver cannot execute commands or kill sandboxes', async () => {
     const driver = new FakeE2BDriver();
-    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'roomtalk-code-agent' });
+    const service = new E2BCodeAgentSandboxService(driver, { templateId: 'coworkerhouse-code-agent' });
     const handle = await service.create({ roomId: 'room-1', creatorId: 'client-1', ttlMs: 60_000 });
     driver.handles.set(handle.id, { id: handle.id });
 
     await assert.rejects(() => service.initializeWorkspaceVersionControl(handle), /command execution/);
     await assert.rejects(() => service.getWorkspaceChanges(handle), /command execution/);
-    await assert.rejects(() => service.startRunner({ handle, command: 'python -m roomtalk_code_agent_runner' }), /command execution/);
+    await assert.rejects(() => service.startRunner({ handle, command: 'python -m coworkerhouse_code_agent_runner' }), /command execution/);
     await assert.rejects(() => service.destroy(handle.id), /kill/);
   });
 });

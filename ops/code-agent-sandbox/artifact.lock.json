@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "artifactName": "roomtalk-code-agent",
-  "artifactVersion": "roomtalk-code-agent-2026-10-06-openmuse-parity-v7",
+  "artifactName": "coworkerhouse-code-agent",
+  "artifactVersion": "coworkerhouse-code-agent-2026-10-23-runner-rebrand-v1",
   "pythonVersion": "3.12",
   "baseImage": {
     "name": "python",
@@ -15,36 +15,36 @@
     "sourceRef": "0b5e44eb29ad1bec89b2143737f6917aafa79359"
   },
   "runner": {
-    "packageName": "roomtalk-code-agent-runner",
-    "packageVersion": "0.1.69",
-    "sourcePath": "server/roomtalk_code_agent_runner",
-    "command": "python -m roomtalk_code_agent_runner",
+    "packageName": "coworkerhouse-code-agent-runner",
+    "packageVersion": "0.1.70",
+    "sourcePath": "server/coworkerhouse_code_agent_runner",
+    "command": "python -m coworkerhouse_code_agent_runner",
     "backends": {
       "code_agent_cli": {
-        "command": "python -m roomtalk_code_agent_runner"
+        "command": "python -m coworkerhouse_code_agent_runner"
       },
       "codex_cli": {
-        "command": "python -m roomtalk_code_agent_runner.codex_cli",
+        "command": "python -m coworkerhouse_code_agent_runner.codex_cli",
         "codexCliVersion": "0.160.0"
       },
       "codex_app_server": {
-        "command": "python -m roomtalk_code_agent_runner.codex_app_server",
+        "command": "python -m coworkerhouse_code_agent_runner.codex_app_server",
         "codexCliVersion": "0.160.0",
         "pythonSdkVersion": "0.1.0b3"
       },
       "opencode_acp": {
-        "command": "python -m roomtalk_code_agent_runner.acp_harness --backend opencode",
+        "command": "python -m coworkerhouse_code_agent_runner.acp_harness --backend opencode",
         "opencodeVersion": "1.18.34",
         "acpSdkVersion": "0.9.0"
       },
       "hermes_agent_acp": {
-        "command": "python -m roomtalk_code_agent_runner.acp_harness --backend hermes-agent",
+        "command": "python -m coworkerhouse_code_agent_runner.acp_harness --backend hermes-agent",
         "hermesAgentVersion": "0.21.5",
         "acpSdkVersion": "0.9.0",
         "extras": ["acp", "anthropic"]
       },
       "daemon": {
-        "command": "python -m roomtalk_code_agent_runner.daemon"
+        "command": "python -m coworkerhouse_code_agent_runner.daemon"
       }
     }
   },
@@ -144,6 +144,6 @@
     "codexSdkRequirementsLock": "ops/code-agent-sandbox/codex-sdk.requirements.lock",
     "workspace": "/workspace",
     "engineInstallPath": "/opt/code-agent-engine",
-    "runnerInstallPath": "/opt/roomtalk_code_agent_runner"
+    "runnerInstallPath": "/opt/coworkerhouse_code_agent_runner"
   }
 }

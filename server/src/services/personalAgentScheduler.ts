@@ -62,9 +62,9 @@ export class PersonalAgentScheduler {
   }
 
   async delegate(clientId:string,input:{kind:'plan'|'document'|'finance'|'agent';prompt:string;title?:string;goalId?:string;input:{csv?:string;messageId?:string}}):Promise<{room:Room}>{
-    const instruction=[input.prompt,'',`This is a delegated ${input.kind} task. Read roomtalk task get --json for the persisted task input.`,
+    const instruction=[input.prompt,'',`This is a delegated ${input.kind} task. Read coworkerhouse task get --json for the persisted task input.`,
       input.kind==='finance'?'Use the complete imported CSV from task.input.csv. Save a finance result from those actual rows; do not invent transactions.':
-      input.kind==='document'?'Read the chosen email with roomtalk google message --id <task.input.messageId> --json, import the actual PDF, ask for missing personal details, and prepare the filled copy and reply for review.':
+      input.kind==='document'?'Read the chosen email with coworkerhouse google message --id <task.input.messageId> --json, import the actual PDF, ask for missing personal details, and prepare the filled copy and reply for review.':
       'Save a practical plan and reusable result for the requested outcome.'].join('\n');
     const {room,message}=await this.prepareTask(clientId,input.title ?? input.prompt.slice(0,100),instruction,input.goalId);
     const saved=await this.store.startPersonalAgentTask!({roomId:room.id,clientId,kind:input.kind,prompt:input.prompt,input:input.input,createdAt:message.timestamp},room,message);
@@ -86,7 +86,7 @@ export class PersonalAgentScheduler {
     // could wake the code-agent queue. Execution itself owns the existing lease.
     const reviews=await this.store.readPersonalAgentReviewContinuations?.() || [];
     for(const review of reviews){
-      const content=`The reviewed action ${review.id} is ${review.data.status}. ${review.data.result || review.data.error || 'No external action was taken.'} Read roomtalk google actions --json for its saved receipt. Continue the saved task from this outcome. Do not execute this reviewed action again; an uncertain outcome must be reconciled by the user before another attempt.`;
+      const content=`The reviewed action ${review.id} is ${review.data.status}. ${review.data.result || review.data.error || 'No external action was taken.'} Read coworkerhouse google actions --json for its saved receipt. Continue the saved task from this outcome. Do not execute this reviewed action again; an uncertain outcome must be reconciled by the user before another attempt.`;
       const message=this.createQueuedMessage(review.clientId,String(review.data.sourceRoomId),content);
       const room=await this.store.continuePersonalAgentReview!(review,message);
       if(room)await this.options.onRunQueued?.(room);

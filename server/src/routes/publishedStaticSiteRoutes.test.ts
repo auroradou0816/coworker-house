@@ -104,22 +104,22 @@ describe('published static site routes', () => {
       body: JSON.stringify({
         roomId: 'room-1',
         turnId: 'turn-1',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [
           textFile('index.html', '<!doctype html><script src="assets/app.js"></script>'),
-          textFile('assets/app.js', 'window.roomtalkDemo = true'),
+          textFile('assets/app.js', 'window.coworkerhouseDemo = true'),
         ],
       }),
     });
 
     assert.equal(publishResponse.status, 201);
     const published = await publishResponse.json() as { url: string; slug: string; fileCount: number };
-    assert.equal(published.url, `${server.baseUrl}/p/roomtalk-demo/`);
-    assert.equal(published.slug, 'roomtalk-demo');
+    assert.equal(published.url, `${server.baseUrl}/p/coworkerhouse-demo/`);
+    assert.equal(published.slug, 'coworkerhouse-demo');
     assert.equal(published.fileCount, 2);
 
-    const indexResponse = await fetch(`${server.baseUrl}/p/roomtalk-demo/`);
+    const indexResponse = await fetch(`${server.baseUrl}/p/coworkerhouse-demo/`);
     assert.equal(indexResponse.status, 200);
     assert.match(indexResponse.headers.get('content-type') || '', /^text\/html/);
     assert.equal(indexResponse.headers.get('access-control-allow-origin'), '*');
@@ -127,14 +127,14 @@ describe('published static site routes', () => {
     assert.equal(indexResponse.headers.get('x-content-type-options'), 'nosniff');
     assert.match(await indexResponse.text(), /doctype/);
 
-    const assetResponse = await fetch(`${server.baseUrl}/p/roomtalk-demo/assets/app.js`, {
+    const assetResponse = await fetch(`${server.baseUrl}/p/coworkerhouse-demo/assets/app.js`, {
       headers: { origin: 'null' },
     });
     assert.equal(assetResponse.status, 200);
     assert.match(assetResponse.headers.get('content-type') || '', /^text\/javascript/);
     assert.equal(assetResponse.headers.get('access-control-allow-origin'), '*');
     assert.equal(assetResponse.headers.get('access-control-allow-credentials'), null);
-    assert.equal(await assetResponse.text(), 'window.roomtalkDemo = true');
+    assert.equal(await assetResponse.text(), 'window.coworkerhouseDemo = true');
 
     const unpublishResponse = await fetch(`${server.baseUrl}/api/code-agent/publish-static-site`, {
       method: 'DELETE',
@@ -142,15 +142,15 @@ describe('published static site routes', () => {
         'content-type': 'application/json',
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ slug: 'roomtalk-demo' }),
+      body: JSON.stringify({ slug: 'coworkerhouse-demo' }),
     });
     assert.equal(unpublishResponse.status, 200);
     const unpublished = await unpublishResponse.json() as { url: string; slug: string; objectCount: number };
-    assert.equal(unpublished.url, `${server.baseUrl}/p/roomtalk-demo/`);
-    assert.equal(unpublished.slug, 'roomtalk-demo');
+    assert.equal(unpublished.url, `${server.baseUrl}/p/coworkerhouse-demo/`);
+    assert.equal(unpublished.slug, 'coworkerhouse-demo');
     assert.equal(unpublished.objectCount, 6);
 
-    const unpublishedResponse = await fetch(`${server.baseUrl}/p/roomtalk-demo/`);
+    const unpublishedResponse = await fetch(`${server.baseUrl}/p/coworkerhouse-demo/`);
     assert.equal(unpublishedResponse.status, 404);
   });
 
@@ -317,7 +317,7 @@ describe('published static site routes', () => {
       body: JSON.stringify({
         roomId: 'room-1',
         turnId: 'turn-1',
-        slug: 'roomtalk-demo',
+        slug: 'coworkerhouse-demo',
         entry: 'index.html',
         files: [textFile('index.html', '<!doctype html>published')],
       }),
@@ -326,7 +326,7 @@ describe('published static site routes', () => {
 
     server.roomIds.delete('room-1');
 
-    const response = await fetch(`${server.baseUrl}/p/roomtalk-demo/`);
+    const response = await fetch(`${server.baseUrl}/p/coworkerhouse-demo/`);
     assert.equal(response.status, 404);
   });
 

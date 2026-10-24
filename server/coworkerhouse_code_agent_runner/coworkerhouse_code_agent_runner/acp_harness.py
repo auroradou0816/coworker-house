@@ -37,8 +37,8 @@ MAX_ACP_IMAGE_BYTES = 10 * 1024 * 1024
 # Keep the replacement bounded so a broken harness cannot grow memory without
 # limit while still leaving room for the separately-truncated tool payloads.
 MAX_ACP_FRAME_BYTES = 8 * 1024 * 1024
-HARNESS_STATE_ROOT = Path("/tmp/roomtalk-harnesses")
-HERMES_ROOMTALK_PROVIDER = "roomtalk"
+HARNESS_STATE_ROOT = Path("/tmp/coworkerhouse-harnesses")
+HERMES_ROOMTALK_PROVIDER = "coworkerhouse"
 OPENCODE_SHELL_ABORT_SENTINEL = "<shell_metadata>\nUser aborted the command\n</shell_metadata>"
 OPENCODE_INVALID_TOOL_OUTPUT_PREFIX = "The arguments provided to the tool are invalid: "
 OPENCODE_INVALID_TOOL_PUBLIC_OUTPUT = "OpenCode rejected an invalid tool request."
@@ -89,12 +89,12 @@ def _model_gateway(env: Mapping[str, str]) -> tuple[str, str]:
     parsed = urlparse(base_url)
     if parsed.scheme != "https" or not parsed.netloc:
         raise RunnerError(
-            "OpenCode and Hermes require the RoomTalk HTTPS model gateway",
+            "OpenCode and Hermes require the CoworkerHouse HTTPS model gateway",
             code="harness_model_gateway_required",
         )
     if not token:
         raise RunnerError(
-            "OpenCode and Hermes require a turn-scoped RoomTalk model gateway token",
+            "OpenCode and Hermes require a turn-scoped CoworkerHouse model gateway token",
             code="harness_model_gateway_token_missing",
         )
     return base_url, token
@@ -119,15 +119,15 @@ def opencode_config(request: RunnerRequest, base_url: str, token: str) -> dict[s
 
     return {
         "$schema": "https://opencode.ai/config.json",
-        "model": f"roomtalk/{request.api_model}",
+        "model": f"coworkerhouse/{request.api_model}",
         "provider": {
-            "roomtalk": {
+            "coworkerhouse": {
                 "npm": (
                     "@ai-sdk/anthropic"
                     if request.provider == "anthropic"
                     else "@ai-sdk/openai-compatible"
                 ),
-                "name": "RoomTalk",
+                "name": "CoworkerHouse",
                 "options": {
                     "baseURL": base_url,
                     "apiKey": token,
@@ -159,7 +159,7 @@ def hermes_config(request: RunnerRequest, base_url: str, token: str) -> dict[str
         },
         "providers": {
             HERMES_ROOMTALK_PROVIDER: {
-                "name": "RoomTalk",
+                "name": "CoworkerHouse",
                 "base_url": base_url,
                 "api_key": token,
                 "default_model": request.api_model,
@@ -172,7 +172,7 @@ def hermes_config(request: RunnerRequest, base_url: str, token: str) -> dict[str
             "cwd": str(request.workspace),
             "env_type": "local",
         },
-        # RoomTalk owns room labels; Hermes' daemon-thread auto title can issue
+        # CoworkerHouse owns room labels; Hermes' daemon-thread auto title can issue
         # another model request after ACP has already returned the turn result.
         "auxiliary": {
             "title_generation": {
@@ -228,7 +228,7 @@ def build_harness_env(
             "HERMES_ACP_SKIP_CONFIGURED_MCP": "1",
             "HERMES_INFERENCE_MODEL": request.api_model,
             "HERMES_INFERENCE_PROVIDER": "custom",
-            "HERMES_SESSION_SOURCE": "roomtalk",
+            "HERMES_SESSION_SOURCE": "coworkerhouse",
             "OPENAI_API_KEY": token,
             "OPENAI_BASE_URL": base_url,
         })
@@ -242,7 +242,7 @@ def _launch_command(
     request: RunnerRequest,
     env: Mapping[str, str],
 ) -> tuple[str, tuple[str, ...]]:
-    configured = (env.get(f"ROOMTALK_{spec.backend.upper().replace('-', '_')}_BIN") or "").strip()
+    configured = (env.get(f"COWORKERHOUSE_{spec.backend.upper().replace('-', '_')}_BIN") or "").strip()
     command = configured or spec.command
     args = spec.args
     if request.mode != "plan":
@@ -1022,20 +1022,20 @@ def _prompt_text(request: RunnerRequest, *, restored_session: bool, env: Mapping
         "plan": "This turn is read-only. Inspect and explain; do not modify workspace files.",
         "edit": "Ask for permission before commands or file changes that the harness marks as sensitive.",
         "acceptEdits": "Workspace edits are allowed; ask before sensitive commands or external side effects.",
-        "approveForMe": "RoomTalk may auto-approve routine sandbox actions. Keep actions scoped to the request.",
+        "approveForMe": "CoworkerHouse may auto-approve routine sandbox actions. Keep actions scoped to the request.",
         "fullAccess": "The isolated sandbox is fully enabled. Keep all actions relevant to the request.",
     }[request.mode]
     policy = [
-        "RoomTalk orchestration policy (system-provided):",
+        "CoworkerHouse orchestration policy (system-provided):",
         mode_guidance,
-        "Work only in the current workspace. RoomTalk owns room permissions, turn lifecycle, and durable conversation state.",
+        "Work only in the current workspace. CoworkerHouse owns room permissions, turn lifecycle, and durable conversation state.",
     ]
     if env.get("ROOMTALK_ROOM_CONTEXT_SOCKET"):
         policy.append(
-            "Use `roomtalk room history --limit 20 --json` or `roomtalk room search --query <text> --limit 20 --json` only when older room context is needed."
+            "Use `coworkerhouse room history --limit 20 --json` or `coworkerhouse room search --query <text> --limit 20 --json` only when older room context is needed."
         )
     if request.prior_messages and not restored_session:
-        policy.append("Recovered RoomTalk conversation context:")
+        policy.append("Recovered CoworkerHouse conversation context:")
         for message in request.prior_messages:
             role = str(message.get("role") or "unknown").capitalize()
             text = _prior_message_text(message)
@@ -1242,7 +1242,7 @@ async def _configure_session(
     session_response: Any,
 ) -> None:
     desired_model = (
-        f"roomtalk/{request.api_model}"
+        f"coworkerhouse/{request.api_model}"
         if backend == "opencode"
         else f"custom:{HERMES_ROOMTALK_PROVIDER}:{request.api_model}"
     )
@@ -1389,8 +1389,8 @@ async def _run_request_async(
                 initialized = await connection.initialize(
                     protocol_version=PROTOCOL_VERSION,
                     client_info=Implementation(
-                        name="roomtalk",
-                        title="RoomTalk orchestration layer",
+                        name="coworkerhouse",
+                        title="CoworkerHouse orchestration layer",
                         version="1",
                     ),
                 )
@@ -1538,7 +1538,7 @@ def main(
     stdout: TextIO | None = None,
     argv: list[str] | None = None,
 ) -> int:
-    parser = argparse.ArgumentParser(description="RoomTalk ACP harness adapter")
+    parser = argparse.ArgumentParser(description="CoworkerHouse ACP harness adapter")
     parser.add_argument("--backend", choices=ACP_BACKENDS, required=True)
     args = parser.parse_args(argv)
     stdin = stdin or sys.stdin

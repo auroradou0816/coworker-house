@@ -1,7 +1,7 @@
 const APP_HEIGHT_CSS_VAR = '--app-height';
 const APP_VIEWPORT_TOP_CSS_VAR = '--app-viewport-top';
-const KEYBOARD_OPEN_CLASS = 'roomtalk-keyboard-open';
-const LEGACY_EDITING_CLASS = 'roomtalk-editing';
+const KEYBOARD_OPEN_CLASS = 'coworkerhouse-keyboard-open';
+const LEGACY_EDITING_CLASS = 'coworkerhouse-editing';
 const KEYBOARD_HEIGHT_THRESHOLD_PX = 120;
 
 const getViewportHeight = (win: Window) => {

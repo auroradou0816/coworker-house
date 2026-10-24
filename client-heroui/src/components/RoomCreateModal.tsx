@@ -106,7 +106,7 @@ export const RoomCreateModal: React.FC<RoomCreateModalProps> = ({
       size="lg"
       scrollBehavior="inside"
       placement="auto"
-      classNames={{ wrapper: 'roomtalk-modal-viewport' }}
+      classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}
     >
       <ModalContent className="m-0 h-[var(--app-height,100dvh)] max-h-[var(--app-height,100dvh)] w-full max-w-full rounded-none sm:mx-6 sm:my-16 sm:h-auto sm:max-h-[85dvh] sm:max-w-lg sm:rounded-large">
         <ModalHeader className="flex flex-col gap-1 px-4 pb-3 pt-[max(env(safe-area-inset-top),1rem)] sm:px-6 sm:pt-4">

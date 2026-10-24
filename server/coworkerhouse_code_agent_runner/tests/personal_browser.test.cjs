@@ -8,10 +8,10 @@ const http = require('node:http');
 const { spawn } = require('node:child_process');
 
 test('real browser shares page actions and restores saved login state in a fresh context', async () => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'roomtalk-browser-test-'));
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'coworkerhouse-browser-test-'));
   const socketPath = path.join(directory, 'browser.sock');
   process.env.ROOMTALK_BROWSER_SOCKET = socketPath;
-  const modulePath = path.resolve(__dirname, '../roomtalk_code_agent_runner/personal_browser.cjs');
+  const modulePath = path.resolve(__dirname, '../coworkerhouse_code_agent_runner/personal_browser.cjs');
   const { request } = require(modulePath);
   const server = http.createServer((req, res) => {
     if(req.url === '/form.pdf'){res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=form.pdf'});res.end('%PDF-1.4 actual downloaded fixture');return;}

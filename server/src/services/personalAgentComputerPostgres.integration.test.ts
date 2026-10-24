@@ -53,7 +53,7 @@ import type { ComputerCommand } from "./personalComputer/types";
 
 import {PersonalAgentComputerService} from './personalAgentComputer';
 import type {PersonalAgentFileService} from './personalAgentFiles';
-// Compare the original desktop tool receipt fields while invoking the real RoomTalk
+// Compare the original desktop tool receipt fields while invoking the real CoworkerHouse
 // API adapter. CopilotKit's agent engine is replaced by the Codex runner.
 function desktopTools(computer:ComputerService,files:unknown,owner:string,scope:string){
   const api=new PersonalAgentComputerService(computer,files as PersonalAgentFileService);
@@ -247,7 +247,7 @@ let db: Store;
 let owners = 0;
 before(async()=>{
   pool=createPostgresPool(url!,logger as any);records=new PostgresStore(pool,logger as any);await records.initializeSchema();
-  db=new Store(records as any);storageDir=await mkdtemp(join(tmpdir(),'roomtalk-desktop-test-'));storage=new LocalMediaObjectStorage(storageDir,logger as any);
+  db=new Store(records as any);storageDir=await mkdtemp(join(tmpdir(),'coworkerhouse-desktop-test-'));storage=new LocalMediaObjectStorage(storageDir,logger as any);
   for(let index=1;index<=100;index++){const clientId=`${prefix}-${index}`;await records.createPasswordAccountForClient({clientId,accountId:clientId,now:new Date().toISOString()});await records.ensurePersonalAgentProfile(clientId);}
 });
 after(async()=>{if(pool){const owners=Array.from({length:100},(_,index)=>`${prefix}-${index+1}`);await pool.query('DELETE FROM rooms WHERE creator_id=ANY($1::text[])',[owners]);await pool.query('DELETE FROM accounts WHERE id=ANY($1::text[])',[owners]);await pool.end?.();}if(storageDir)await rm(storageDir,{recursive:true,force:true});});

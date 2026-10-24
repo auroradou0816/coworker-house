@@ -4,7 +4,7 @@ import { resolveAIStreamOwnerId } from './aiStreamRecovery';
 
 describe('resolveAIStreamOwnerId', () => {
   it('keeps owners unique per runtime instance even under one deployment namespace', () => {
-    const env = { AI_STREAM_OWNER_ID: 'roomtalk-production' } as NodeJS.ProcessEnv;
+    const env = { AI_STREAM_OWNER_ID: 'coworkerhouse-production' } as NodeJS.ProcessEnv;
 
     const first = resolveAIStreamOwnerId(env, 'instance-a');
     const second = resolveAIStreamOwnerId(env, 'instance-b');

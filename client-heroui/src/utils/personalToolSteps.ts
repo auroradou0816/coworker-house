@@ -20,12 +20,12 @@ export function readPersonalInlineSteps(messages:Message[]):PersonalInlineStep[]
     let kind=sourceKinds[call.toolName || ''];
     const command=call.toolArgs?.command ?? call.toolArgs?.cmd;
     if(!kind && typeof command==='string'){
-      if(/\broomtalk\s+google\s+mail\b/.test(command))kind='mail-search';
-      else if(/\broomtalk\s+google\s+thread\b/.test(command))kind='mail-thread';
-      else if(/\broomtalk\s+search\s+web\b/.test(command))kind='search';
-      else if(/\broomtalk\s+goal\s+(?:create|update|run)\b/.test(command))kind='goal';
-      else if(/\broomtalk\s+memory\s+(?:save|set|merge|forget)\b/.test(command))kind='memory';
-      else if(/\broomtalk\s+task\s+list\b/.test(command))kind='status';
+      if(/\b(?:coworkerhouse|roomtalk)\s+google\s+mail\b/.test(command))kind='mail-search';
+      else if(/\b(?:coworkerhouse|roomtalk)\s+google\s+thread\b/.test(command))kind='mail-thread';
+      else if(/\b(?:coworkerhouse|roomtalk)\s+search\s+web\b/.test(command))kind='search';
+      else if(/\b(?:coworkerhouse|roomtalk)\s+goal\s+(?:create|update|run)\b/.test(command))kind='goal';
+      else if(/\b(?:coworkerhouse|roomtalk)\s+memory\s+(?:save|set|merge|forget)\b/.test(command))kind='memory';
+      else if(/\b(?:coworkerhouse|roomtalk)\s+task\s+list\b/.test(command))kind='status';
     }
     if(!kind)return [];
     const result=call.toolCallId?results.get(call.toolCallId):undefined;

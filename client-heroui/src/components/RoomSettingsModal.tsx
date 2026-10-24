@@ -1078,7 +1078,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
         size="lg"
         scrollBehavior="inside"
         placement="auto"
-        classNames={{ wrapper: 'roomtalk-modal-viewport' }}
+        classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}
       >
         <ModalContent className="m-0 h-[88dvh] max-h-full w-full max-w-full rounded-b-none sm:mx-6 sm:my-16 sm:h-[560px] sm:max-h-[85dvh] sm:max-w-lg sm:rounded-large">
           <ModalHeader className="flex items-center gap-3">
@@ -1157,7 +1157,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
           if (!isSaving) setIsClearConfirmOpen(false);
         }}
         size="sm"
-        classNames={{ wrapper: 'roomtalk-modal-viewport' }}
+        classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}
       >
         <ModalContent>
           <ModalHeader className="flex items-center gap-2 text-danger-600 dark:text-danger-400">
@@ -1199,7 +1199,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
           if (!isSaving) setIsDeleteConfirmOpen(false);
         }}
         size="sm"
-        classNames={{ wrapper: 'roomtalk-modal-viewport' }}
+        classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}
       >
         <ModalContent>
           <ModalHeader className="flex items-center gap-2 text-danger-600 dark:text-danger-400">
@@ -1240,7 +1240,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
           if (!isSaving) setPendingTransfer(null);
         }}
         size="sm"
-        classNames={{ wrapper: 'roomtalk-modal-viewport' }}
+        classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}
       >
         <ModalContent>
           <ModalHeader className="flex items-center gap-2 text-danger-600 dark:text-danger-400">

@@ -17,7 +17,7 @@ type WebPushSendError = Error & {
 export const getPushConfig = (env: NodeJS.ProcessEnv = process.env): PushConfig => {
   const publicKey = env.WEB_PUSH_VAPID_PUBLIC_KEY || '';
   const privateKey = env.WEB_PUSH_VAPID_PRIVATE_KEY || '';
-  const subject = env.WEB_PUSH_SUBJECT || 'mailto:admin@roomtalk.local';
+  const subject = env.WEB_PUSH_SUBJECT || 'mailto:admin@coworkerhouse.local';
 
   return {
     enabled: Boolean(publicKey && privateKey),

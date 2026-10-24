@@ -64,7 +64,7 @@ interface DesktopSidebarProps {
 const DESKTOP_SIDEBAR_COLLAPSED_WIDTH = 72;
 const DESKTOP_SIDEBAR_MIN_WIDTH = 240;
 const DESKTOP_MAIN_MIN_WIDTH = CODE_AGENT_CHAT_SIDEBAR_MIN_WIDTH;
-const DESKTOP_SIDEBAR_WIDTH_STORAGE_KEY = 'roomtalk.desktopSidebar.width';
+const DESKTOP_SIDEBAR_WIDTH_STORAGE_KEY = 'coworkerhouse.desktopSidebar.width';
 
 const readCssPixelValue = (value: string): number => {
   const parsed = Number.parseFloat(value);

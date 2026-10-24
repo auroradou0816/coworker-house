@@ -258,7 +258,7 @@ describe('MessageInput optimistic send flow', () => {
     stickerMocks.suggestions = [];
     disclosureMocks.isOpen = false;
     setNavigatorPlatform('Win32');
-    localStorage.removeItem('roomtalk:ai-context-message-limit');
+    localStorage.removeItem('coworkerhouse:ai-context-message-limit');
     socketMocks.requestAIResponse.mockResolvedValue(undefined);
     socketMocks.interruptCodeAgentTurn.mockResolvedValue(undefined);
     socketMocks.queueCodeAgentInput.mockResolvedValue(message({
@@ -1090,7 +1090,7 @@ describe('MessageInput optimistic send flow', () => {
     fireEvent.click(screen.getByText('stopRecording'));
 
     await waitFor(() => expect(screen.getByText('doNotSend')).toBeTruthy());
-    expect(document.querySelector('audio.roomtalk-audio-player')).toBeTruthy();
+    expect(document.querySelector('audio.coworkerhouse-audio-player')).toBeTruthy();
 
     fireEvent.click(screen.getByText('send'));
 

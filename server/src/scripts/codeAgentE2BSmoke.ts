@@ -8,7 +8,7 @@ import { resolveCodeAgentRuntimeConfig, CodeAgentRuntimeConfig } from '../servic
 import { E2BCodeAgentSandboxService } from '../services/e2bCodeAgentSandboxService';
 import { createE2BSdkDriver } from '../services/e2bSdkDriver';
 
-const DEFAULT_SMOKE_PROMPT = 'Reply with a short confirmation that RoomTalk Coco Agent E2B smoke is working. Do not modify files.';
+const DEFAULT_SMOKE_PROMPT = 'Reply with a short confirmation that CoworkerHouse Coco Agent E2B smoke is working. Do not modify files.';
 const DEFAULT_SANDBOX_TTL_MS = 60 * 60 * 1000;
 
 type CodeAgentE2BSmokePlan =

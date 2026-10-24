@@ -4,7 +4,7 @@ import { requireSafeE2EDatabaseUrl, requireSafeE2EQueueRedisUrl, requireSafeE2ER
 
 describe('E2E PostgreSQL safety', () => {
   it('accepts only explicitly named test databases in E2E mode', () => {
-    const safe = 'postgresql://localhost/roomtalk_e2e_13';
+    const safe = 'postgresql://localhost/coworkerhouse_e2e_13';
     assert.equal(requireSafeE2EDatabaseUrl({
       E2E_TEST_MODE: 'true',
       DATABASE_URL: safe,
@@ -17,7 +17,7 @@ describe('E2E PostgreSQL safety', () => {
     assert.throws(
       () => requireSafeE2EDatabaseUrl({
         E2E_TEST_MODE: 'true',
-        DATABASE_URL: 'postgresql://localhost/roomtalk_production',
+        DATABASE_URL: 'postgresql://localhost/coworkerhouse_production',
       }),
       /non-test PostgreSQL database/,
     );

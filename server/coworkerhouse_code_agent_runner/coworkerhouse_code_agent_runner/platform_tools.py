@@ -128,32 +128,32 @@ def main(argv: Sequence[str] | None = None) -> int:
         _print_result({"success": False, "error": str(exc), "code": exc.code}, json_output=bool(getattr(args, "json", False)))
         return 1
     except Exception as exc:
-        _print_result({"success": False, "error": str(exc), "code": "roomtalk_tool_error"}, json_output=bool(getattr(args, "json", False)))
+        _print_result({"success": False, "error": str(exc), "code": "coworkerhouse_tool_error"}, json_output=bool(getattr(args, "json", False)))
         return 1
 
 
 def _require_write_access(env: dict[str, str]) -> None:
     if (env.get("ROOMTALK_CODE_AGENT_CLI_ACCESS") or "").strip().lower() == "read-only":
         raise RunnerError(
-            "This RoomTalk CLI command is not available in Plan mode",
-            code="roomtalk_cli_read_only",
+            "This CoworkerHouse CLI command is not available in Plan mode",
+            code="coworkerhouse_cli_read_only",
         )
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="roomtalk",
-        description="RoomTalk sandbox helper tools for code-agent backends.",
+        prog="coworkerhouse",
+        description="CoworkerHouse sandbox helper tools for code-agent backends.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     legacy_publish = subparsers.add_parser(
         "publish-static-site",
-        help="Compatibility alias for `roomtalk site publish`.",
+        help="Compatibility alias for `coworkerhouse site publish`.",
     )
     _add_publish_arguments(legacy_publish)
 
-    site = subparsers.add_parser("site", help="Publish and manage versioned RoomTalk static sites.")
+    site = subparsers.add_parser("site", help="Publish and manage versioned CoworkerHouse static sites.")
     site_subparsers = site.add_subparsers(dest="site_command", required=True)
     site_list = site_subparsers.add_parser("list", help="List static sites published by the current room.")
     site_list.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
@@ -300,7 +300,7 @@ def _build_parser() -> argparse.ArgumentParser:
             command.add_argument("--limit", type=int, default=50)
             command.add_argument("--offset", type=int, default=0)
 
-    room = subparsers.add_parser("room", help="Read the current RoomTalk room context.")
+    room = subparsers.add_parser("room", help="Read the current CoworkerHouse room context.")
     room_subparsers = room.add_subparsers(dest="room_command", required=True)
 
     history = room_subparsers.add_parser("history", help="Read recent room messages.")
@@ -729,7 +729,7 @@ def _publish_static_site(args: argparse.Namespace, env: dict[str, str]) -> dict[
     if not publish_url or not _has_static_publish_credentials(env):
         raise RunnerError("Static site publishing is not available for this turn", code="publish_unavailable")
     if not room_id or not turn_id:
-        raise RunnerError("RoomTalk publish metadata is missing for this turn", code="publish_metadata_missing")
+        raise RunnerError("CoworkerHouse publish metadata is missing for this turn", code="publish_metadata_missing")
 
     workspace = _workspace_from_env(env)
     entry, files, total_bytes = _collect_static_publish_files(workspace, {
@@ -977,7 +977,7 @@ def _print_result(result: dict[str, Any], *, json_output: bool) -> None:
         content = result.get("content")
         print(str(content or "OK"))
         return
-    print(f"Error: {result.get('error') or result.get('content') or 'RoomTalk tool failed'}", file=sys.stderr)
+    print(f"Error: {result.get('error') or result.get('content') or 'CoworkerHouse tool failed'}", file=sys.stderr)
 
 
 if __name__ == "__main__":

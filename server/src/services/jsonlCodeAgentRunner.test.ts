@@ -30,7 +30,7 @@ const sandbox: CodeAgentSandboxHandle = {
 };
 
 class MemoryRunnerProcess implements CodeAgentRunnerProcess {
-  readonly command = 'python -m roomtalk_code_agent_runner';
+  readonly command = 'python -m coworkerhouse_code_agent_runner';
   readonly stdin = new PassThrough();
   readonly stdout = new PassThrough();
   readonly stderr = new PassThrough();
@@ -75,7 +75,7 @@ class MemoryRunnerProcess implements CodeAgentRunnerProcess {
 }
 
 class StdinFailureRunnerProcess implements CodeAgentRunnerProcess {
-  readonly command = 'python -m roomtalk_code_agent_runner';
+  readonly command = 'python -m coworkerhouse_code_agent_runner';
   readonly stdin: Writable;
   readonly stdout = new PassThrough();
   readonly stderr = new PassThrough();
@@ -120,7 +120,7 @@ describe('JsonlCodeAgentRunnerClient', () => {
     }, createContext(process));
 
     process.stdout.write('{"schemaVersion":1,"type":"tool_call","id":"tool-1","name":"Read","args":{"file_path":"README.md"}}\n');
-    process.stdout.write('{"schemaVersion":1,"type":"tool_result","id":"tool-1","name":"Read","success":true,"output":"# RoomTalk"}\n');
+    process.stdout.write('{"schemaVersion":1,"type":"tool_result","id":"tool-1","name":"Read","success":true,"output":"# CoworkerHouse"}\n');
     process.stdout.write('{"schemaVersion":1,"type":"final","messageId":"ai-1","answer":"done","sessionId":"session-1"}\n');
     process.complete(0);
 
@@ -182,13 +182,13 @@ describe('JsonlCodeAgentRunnerClient', () => {
       },
     }, createContext(process));
 
-    process.stderr.write('ModuleNotFoundError: roomtalk_code_agent_runner.codex_cli');
+    process.stderr.write('ModuleNotFoundError: coworkerhouse_code_agent_runner.codex_cli');
     process.complete(1);
 
     const result = await run;
     assert.equal(result.errorEvent?.code, 'runner_stdin_write_failed');
     assert.match(result.errorEvent?.message || '', /broken pipe/);
-    assert.match(result.errorEvent?.message || '', /roomtalk_code_agent_runner\.codex_cli/);
+    assert.match(result.errorEvent?.message || '', /coworkerhouse_code_agent_runner\.codex_cli/);
     assert.deepEqual(emitted.map(event => event.type), ['error']);
   });
 

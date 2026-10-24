@@ -397,7 +397,7 @@ const getMediaFileName = (media: ActiveMedia) => {
     ? mediaFileExtensions[media.mimeType] || media.mimeType.split("/")[1]?.split(";")[0]?.replace(/[^a-z0-9]/gi, "")
     : undefined;
   const fallbackExtension = media.kind === "video" ? "mp4" : "jpg";
-  return `roomtalk-${media.kind}-${media.assetId || "media"}.${extension || fallbackExtension}`;
+  return `coworkerhouse-${media.kind}-${media.assetId || "media"}.${extension || fallbackExtension}`;
 };
 
 const triggerBrowserDownload = (url: string, fileName: string, openInNewTab = false) => {

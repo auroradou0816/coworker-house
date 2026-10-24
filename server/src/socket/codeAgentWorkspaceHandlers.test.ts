@@ -434,9 +434,9 @@ describe('code-agent workspace socket handlers', () => {
       },
       publishedArtifacts: [
         {
-          slug: 'roomtalk-demo',
-          title: 'RoomTalk Demo',
-          url: 'https://coworker.example.com/p/roomtalk-demo/',
+          slug: 'coworkerhouse-demo',
+          title: 'CoworkerHouse Demo',
+          url: 'https://coworker.example.com/p/coworkerhouse-demo/',
           entry: 'index.html',
           versionId: '20260630T120000Z_aaaaaaaa',
           fileCount: 1,
@@ -445,7 +445,7 @@ describe('code-agent workspace socket handlers', () => {
           updatedAt: '2026-06-30T12:00:00.000Z',
           versions: [{
             versionId: '20260630T120000Z_aaaaaaaa',
-            url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+            url: 'https://coworker.example.com/p/coworkerhouse-demo/__versions/20260630T120000Z_aaaaaaaa/',
             entry: 'index.html',
             fileCount: 1,
             totalBytes: 128,
@@ -491,9 +491,9 @@ describe('code-agent workspace socket handlers', () => {
     });
     assert.deepEqual(response.snapshot.artifacts, [
       {
-        slug: 'roomtalk-demo',
-        title: 'RoomTalk Demo',
-        url: 'https://coworker.example.com/p/roomtalk-demo/',
+        slug: 'coworkerhouse-demo',
+        title: 'CoworkerHouse Demo',
+        url: 'https://coworker.example.com/p/coworkerhouse-demo/',
         entry: 'index.html',
         versionId: '20260630T120000Z_aaaaaaaa',
         fileCount: 1,
@@ -502,7 +502,7 @@ describe('code-agent workspace socket handlers', () => {
         updatedAt: '2026-06-30T12:00:00.000Z',
         versions: [{
           versionId: '20260630T120000Z_aaaaaaaa',
-          url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+          url: 'https://coworker.example.com/p/coworkerhouse-demo/__versions/20260630T120000Z_aaaaaaaa/',
           entry: 'index.html',
           fileCount: 1,
           totalBytes: 128,

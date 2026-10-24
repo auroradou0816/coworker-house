@@ -14,7 +14,7 @@ const message = (overrides: Partial<Message>): Message => ({
 });
 
 describe('code-agent transcript projection', () => {
-  it('projects RoomTalk user, assistant, and tool messages into code-agent prior_messages', () => {
+  it('projects CoworkerHouse user, assistant, and tool messages into code-agent prior_messages', () => {
     const transcript = buildCodeAgentPriorMessages([
       message({ id: 'u1', content: 'list files' }),
       message({ id: 'ai1', clientId: 'ai_assistant', messageType: 'ai', content: 'I will inspect.', status: 'complete' }),
@@ -82,13 +82,13 @@ describe('code-agent transcript projection', () => {
         content: 'Grep',
         toolCallId: 'tool-2',
         toolName: 'Grep',
-        toolArgs: { pattern: 'RoomTalk' },
+        toolArgs: { pattern: 'CoworkerHouse' },
       }),
       message({
         id: 'result1',
         clientId: 'code_agent_runner',
         messageType: 'tool_result',
-        content: '# RoomTalk',
+        content: '# CoworkerHouse',
         toolCallId: 'tool-1',
         toolName: 'Read',
       }),
@@ -110,13 +110,13 @@ describe('code-agent transcript projection', () => {
         content: [
           { type: 'text', text: 'I will run two checks.' },
           { type: 'tool_use', id: 'tool-1', name: 'Read', input: { file_path: 'README.md' } },
-          { type: 'tool_use', id: 'tool-2', name: 'Grep', input: { pattern: 'RoomTalk' } },
+          { type: 'tool_use', id: 'tool-2', name: 'Grep', input: { pattern: 'CoworkerHouse' } },
         ],
       },
       {
         role: 'user',
         content: [
-          { type: 'tool_result', tool_use_id: 'tool-1', content: '# RoomTalk' },
+          { type: 'tool_result', tool_use_id: 'tool-1', content: '# CoworkerHouse' },
           { type: 'tool_result', tool_use_id: 'tool-2', content: 'Error: missing pattern', is_error: true },
         ],
       },

@@ -3,7 +3,7 @@ export interface PersonalTaskStep {id:string;roomId?:string;loading:boolean;erro
 // Native Codex CLI receipts provide the saved task id for OpenMuse's TaskThreadCard.
 export function readPersonalTaskSteps(messages:Message[]):PersonalTaskStep[]{
   const results=new Map(messages.filter(message=>message.messageType==='tool_result' && message.toolCallId).map(message=>[message.toolCallId!,message]));
-  return messages.filter(message=>message.messageType==='tool_call' && typeof (message.toolArgs?.command ?? message.toolArgs?.cmd)==='string' && /\broomtalk\s+(?:task\s+(?:delegate|get|control)|watch\s+create)\b/.test(String(message.toolArgs?.command ?? message.toolArgs?.cmd))).map(call=>{
+  return messages.filter(message=>message.messageType==='tool_call' && typeof (message.toolArgs?.command ?? message.toolArgs?.cmd)==='string' && /\b(?:coworkerhouse|roomtalk)\s+(?:task\s+(?:delegate|get|control)|watch\s+create)\b/.test(String(message.toolArgs?.command ?? message.toolArgs?.cmd))).map(call=>{
     const result=call.toolCallId?results.get(call.toolCallId):undefined,step:PersonalTaskStep={id:call.id,loading:!result};
     if(!result)return step;
     for(const line of result.content.split('\n')){

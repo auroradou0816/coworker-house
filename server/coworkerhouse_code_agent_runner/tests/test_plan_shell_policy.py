@@ -3,14 +3,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from roomtalk_code_agent_runner.codex_app_server import _turn_start_params
-from roomtalk_code_agent_runner.codex_cli import (
+from coworkerhouse_code_agent_runner.codex_app_server import _turn_start_params
+from coworkerhouse_code_agent_runner.codex_cli import (
     ROOM_CONTEXT_PERMISSION_PROFILE,
     CodexCliRunConfig,
     _build_codex_exec_args,
     _write_codex_config,
 )
-from roomtalk_code_agent_runner.runner import _read_only_shell_argv, parse_request
+from coworkerhouse_code_agent_runner.runner import _read_only_shell_argv, parse_request
 
 
 def plan_request(workspace: Path):
@@ -54,7 +54,7 @@ def test_plan_shell_policy_is_read_only_and_offline_without_room_context(tmp_pat
     assert args[args.index("--sandbox") + 1] == "read-only"
 
 
-def test_plan_shell_policy_allows_only_turn_scoped_roomtalk_broker(tmp_path: Path):
+def test_plan_shell_policy_allows_only_turn_scoped_coworkerhouse_broker(tmp_path: Path):
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     request = plan_request(workspace)
@@ -63,7 +63,7 @@ def test_plan_shell_policy_allows_only_turn_scoped_roomtalk_broker(tmp_path: Pat
         "ROOMTALK_ROOM_CONTEXT_SOCKET": str(tmp_path / "room-context.sock"),
     }
 
-    coco_argv = _read_only_shell_argv("roomtalk room history --json", workspace, env)
+    coco_argv = _read_only_shell_argv("coworkerhouse room history --json", workspace, env)
     assert "--ro-bind" in coco_argv
     assert "--share-net" not in coco_argv
     assert "ROOMTALK_ROOM_CONTEXT_SOCKET" in coco_argv

@@ -206,7 +206,7 @@ const AgentTurnItemComponent: React.FC<AgentTurnItemProps> = ({
         placement="center"
         scrollBehavior="inside"
         classNames={{
-          wrapper: 'roomtalk-modal-viewport px-3',
+          wrapper: 'coworkerhouse-modal-viewport px-3',
           backdrop: 'bg-[#141413]/50 backdrop-blur-sm',
         }}
       >

@@ -44,7 +44,7 @@ export class CodexCliDeviceAuthDriver implements CodexDeviceAuthDriver {
     signal?: AbortSignal;
   }): Promise<CodexDeviceAuthResult> {
     await access(this.scriptBin, constants.X_OK);
-    const codexHome = await mkdtemp(path.join(this.tmpDir, 'roomtalk-codex-device-auth-'));
+    const codexHome = await mkdtemp(path.join(this.tmpDir, 'coworkerhouse-codex-device-auth-'));
     try {
       await writeCodexConfig(codexHome);
       assertNotAborted(input.signal);

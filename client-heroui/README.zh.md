@@ -1,11 +1,11 @@
-# RoomTalk Client
+# CoworkerHouse Client
 
 [English](README.md)
 
 状态：当前 package 指南
 更新：2026-07-12
 
-RoomTalk 的 React + TypeScript + Vite 前端。应用负责 room discovery、实时聊天、AI streaming、媒体上传、贴纸、saved rooms、设置，以及移动/桌面布局。
+CoworkerHouse 的 React + TypeScript + Vite 前端。应用负责 room discovery、实时聊天、AI streaming、媒体上传、贴纸、saved rooms、设置，以及移动/桌面布局。
 
 ## 目录
 

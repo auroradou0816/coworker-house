@@ -25,7 +25,7 @@ export const RoomJoinModal: React.FC<RoomJoinModalProps> = ({
   const requiresPassword = Boolean(roomToJoin.hasPassword);
 
   return (
-    <Modal isOpen={!!roomToJoin} onClose={() => handleConfirmJoin(false)} scrollBehavior="inside" classNames={{ wrapper: 'roomtalk-modal-viewport' }}>
+    <Modal isOpen={!!roomToJoin} onClose={() => handleConfirmJoin(false)} scrollBehavior="inside" classNames={{ wrapper: 'coworkerhouse-modal-viewport' }}>
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">{t("confirmJoinTitle")}</ModalHeader>
         <ModalBody>

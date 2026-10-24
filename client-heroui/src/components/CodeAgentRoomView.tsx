@@ -82,8 +82,8 @@ interface CodeAgentRoomViewProps {
   personalAgent?: boolean;
 }
 
-const FILE_MANAGER_WIDTH_STORAGE_KEY = 'roomtalk.codeWorkspace.fileManagerWidth';
-const FILE_MANAGER_COLLAPSED_STORAGE_KEY = 'roomtalk.codeWorkspace.fileManagerCollapsed';
+const FILE_MANAGER_WIDTH_STORAGE_KEY = 'coworkerhouse.codeWorkspace.fileManagerWidth';
+const FILE_MANAGER_COLLAPSED_STORAGE_KEY = 'coworkerhouse.codeWorkspace.fileManagerCollapsed';
 const MESSAGE_LIST_BOTTOM_GAP_PX = 12;
 type WorkspaceFileOpenRequest = { path: string; line: number | null; requestId: number };
 

@@ -28,7 +28,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "openmuse-zod";
-const project = {name:"roomtalk",version:"1.0.0"};
+const project = {name:"coworkerhouse",version:"1.0.0"};
 import type { Store } from "./personalComputer/store";
 
 export const searchInputSchema = z.object({

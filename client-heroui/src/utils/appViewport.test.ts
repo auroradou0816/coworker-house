@@ -3,7 +3,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installAppViewportSizing } from './appViewport';
 
-const KEYBOARD_OPEN_CLASS = 'roomtalk-keyboard-open';
+const KEYBOARD_OPEN_CLASS = 'coworkerhouse-keyboard-open';
 
 const createVisualViewport = (initialHeight: number, initialOffsetTop = 0) => {
   const target = new EventTarget();

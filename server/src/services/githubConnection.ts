@@ -172,7 +172,7 @@ export async function validateGitHubToken(token: string): Promise<GitHubAccountS
     headers: {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
-      'User-Agent': 'RoomTalk-GitHub-Connector',
+      'User-Agent': 'CoworkerHouse-GitHub-Connector',
       'X-GitHub-Api-Version': '2022-11-28',
     },
   });

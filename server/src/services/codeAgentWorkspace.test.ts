@@ -37,7 +37,7 @@ const toolResult = (overrides: Partial<Message> = {}): Message => ({
   messageType: 'tool_result',
   toolCallId: 'tool-1',
   toolName: 'Read',
-  toolOutputPreview: '# RoomTalk',
+  toolOutputPreview: '# CoworkerHouse',
   ...overrides,
 });
 
@@ -158,9 +158,9 @@ describe('code-agent workspace snapshots', () => {
       new Date('2026-05-29T01:00:00.000Z'),
       { available: false, changedFiles: [], changedFileStats: [], diffSummary: null },
       [{
-        slug: 'roomtalk-demo',
-        title: 'RoomTalk Demo',
-        url: 'https://coworker.example.com/p/roomtalk-demo/',
+        slug: 'coworkerhouse-demo',
+        title: 'CoworkerHouse Demo',
+        url: 'https://coworker.example.com/p/coworkerhouse-demo/',
         entry: 'index.html',
         versionId: '20260630T120000Z_aaaaaaaa',
         fileCount: 1,
@@ -169,7 +169,7 @@ describe('code-agent workspace snapshots', () => {
         updatedAt: '2026-06-30T12:00:00.000Z',
         versions: [{
           versionId: '20260630T120000Z_aaaaaaaa',
-          url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+          url: 'https://coworker.example.com/p/coworkerhouse-demo/__versions/20260630T120000Z_aaaaaaaa/',
           entry: 'index.html',
           fileCount: 1,
           totalBytes: 128,
@@ -180,9 +180,9 @@ describe('code-agent workspace snapshots', () => {
     );
 
     assert.deepEqual(snapshot.artifacts, [{
-      slug: 'roomtalk-demo',
-      title: 'RoomTalk Demo',
-      url: 'https://coworker.example.com/p/roomtalk-demo/',
+      slug: 'coworkerhouse-demo',
+      title: 'CoworkerHouse Demo',
+      url: 'https://coworker.example.com/p/coworkerhouse-demo/',
       entry: 'index.html',
       versionId: '20260630T120000Z_aaaaaaaa',
       fileCount: 1,
@@ -191,7 +191,7 @@ describe('code-agent workspace snapshots', () => {
       updatedAt: '2026-06-30T12:00:00.000Z',
       versions: [{
         versionId: '20260630T120000Z_aaaaaaaa',
-        url: 'https://coworker.example.com/p/roomtalk-demo/__versions/20260630T120000Z_aaaaaaaa/',
+        url: 'https://coworker.example.com/p/coworkerhouse-demo/__versions/20260630T120000Z_aaaaaaaa/',
         entry: 'index.html',
         fileCount: 1,
         totalBytes: 128,

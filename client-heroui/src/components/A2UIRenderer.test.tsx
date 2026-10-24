@@ -149,7 +149,7 @@ const payload: A2UIPayload = {
         path: '/',
         value: {
           title: 'A2UI summary',
-          name: 'RoomTalk',
+          name: 'CoworkerHouse',
           ready: true,
           channels: ['chat'],
           confidence: 88,
@@ -206,7 +206,7 @@ describe('A2UIRenderer', () => {
         // what the user actually entered/selected in the inputs above.
         dataModel: {
           title: 'A2UI summary',
-          name: 'RoomTalk',
+          name: 'CoworkerHouse',
           ready: true,
           channels: ['chat'],
           confidence: 88,

@@ -23,7 +23,7 @@ test('delegate retains complete task inputs and queued work after executor wake 
     assert.equal(task.input.csv,csv);assert.equal(await store.readPersonalAgentTask(other,saved.room.id),null);
     const messages=(await store.readMessagePageByRoom(saved.room.id,{limit:100})).messages;
     assert.equal(messages.length,1);assert.equal(messages[0].codeAgentQueuedInput?.state,'queued');assert.equal(messages[0].codeAgentQueuedInput?.requestedMode,'fullAccess');
-    assert.match(messages[0].content,/roomtalk task get/);assert.equal(messages[0].content.includes('Confirmed row 999'),false);
+    assert.match(messages[0].content,/coworkerhouse task get/);assert.equal(messages[0].content.includes('Confirmed row 999'),false);
     let wakes=0;await new PersonalAgentScheduler(store as any,{resumeQueuedTurns:async()=>{wakes++;}},logger as any,options).tick();
     assert.equal(wakes,1);assert.equal((await store.readPersonalAgentRooms(owner)).filter(room=>room.personalAgentThreadKind==='task').length,1);
     const goal=await store.savePersonalAgentGoal({id:randomUUID(),clientId:owner,title:'Source goal',prompt:'',category:'Health',schedule:'manual',time:'09:00',timezone:'UTC',enabled:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});

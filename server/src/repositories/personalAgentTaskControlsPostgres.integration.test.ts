@@ -70,7 +70,7 @@ test('review outcomes recover into one durable task continuation and stay held w
     await store.initializeSchema();await store.createPasswordAccountForClient({clientId:owner,accountId:owner,now:new Date().toISOString()});await store.ensurePersonalAgentProfile(owner);
     const room=await store.createPersonalAgentThread(owner,'Review result'),now=new Date().toISOString(),turnId=randomUUID();
     await store.upsertRoomAgentTurn({id:turnId,roomId:room.id,status:'complete',startedAt:now,backend:'codex-app-server',assistantName:'Agent',updatedAt:now});
-    // Backend Codex turn ids are deliberately different from durable RoomTalk turn ids.
+    // Backend Codex turn ids are deliberately different from durable CoworkerHouse turn ids.
     await pool.query('UPDATE rooms SET code_agent_last_turn_id=$2 WHERE id=$1',[room.id,'backend-turn-42']);
     const record={clientId:owner,kind:'action' as const,id:randomUUID(),data:{sourceRoomId:room.id,sourceTurnId:turnId,status:'succeeded',result:'Gmail sent message · actual-receipt'},updatedAt:now};
     await store.savePersonalGoogleRecord(record);

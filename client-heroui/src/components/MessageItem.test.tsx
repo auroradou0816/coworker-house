@@ -125,7 +125,7 @@ describe('MessageItem replies', () => {
   afterEach(() => {
     cleanup();
     vi.useRealTimers();
-    document.getElementById('roomtalk-pierre-file-icon-sprite')?.remove();
+    document.getElementById('coworkerhouse-pierre-file-icon-sprite')?.remove();
     getMediaDownloadUrlMock.mockReset();
     getMediaThumbnailUrlMock.mockReset();
     getRoomMediaHistoryMock.mockReset();
@@ -380,12 +380,12 @@ describe('MessageItem replies', () => {
       />
     );
 
-    const bubble = screen.getByText('follow up').closest('.roomtalk-sender-outline') as HTMLElement | null;
+    const bubble = screen.getByText('follow up').closest('.coworkerhouse-sender-outline') as HTMLElement | null;
     const theme = getSenderColorTheme('sender');
 
     expect(bubble).toBeTruthy();
-    expect(bubble?.style.getPropertyValue('--roomtalk-sender-outline-light')).toBe(theme.outlineLight);
-    expect(bubble?.style.getPropertyValue('--roomtalk-sender-outline-dark')).toBe(theme.outlineDark);
+    expect(bubble?.style.getPropertyValue('--coworkerhouse-sender-outline-light')).toBe(theme.outlineLight);
+    expect(bubble?.style.getPropertyValue('--coworkerhouse-sender-outline-dark')).toBe(theme.outlineDark);
   });
 
   it('treats messageType ai as an assistant message even when clientId differs', async () => {
@@ -520,7 +520,7 @@ describe('MessageItem replies', () => {
             '<review_comment sectionId="file:/workspace/package.json" sectionTitle="File comment" filePath="/workspace/package.json" startIndex="0" endIndex="1" rangeLabel="L1 to L2">',
             'Clarify this.',
             '```json',
-            '{ "name": "roomtalk" }',
+            '{ "name": "coworkerhouse" }',
             '```',
             '</review_comment>',
           ].join('\n'),
@@ -1359,8 +1359,8 @@ describe('MessageItem replies', () => {
 
     expect(screen.getByText('notes.md')).toBeTruthy();
     expect(screen.getByText('2 KB')).toBeTruthy();
-    const fileCard = screen.getByText('notes.md').closest('.roomtalk-sender-outline') as HTMLElement | null;
-    expect(fileCard?.style.getPropertyValue('--roomtalk-sender-outline-light')).toBe(getSenderColorTheme('sender').outlineLight);
+    const fileCard = screen.getByText('notes.md').closest('.coworkerhouse-sender-outline') as HTMLElement | null;
+    expect(fileCard?.style.getPropertyValue('--coworkerhouse-sender-outline-light')).toBe(getSenderColorTheme('sender').outlineLight);
     await waitFor(() => {
       expect(getMediaDownloadUrlMock).toHaveBeenCalledWith({ roomId: 'room-1', assetId: 'file-1' });
     });
@@ -2499,7 +2499,7 @@ describe('MessageItem replies', () => {
     await waitFor(() => {
       expect(getMediaDownloadUrlMock).toHaveBeenCalledWith({ roomId: 'room-1', assetId: 'audio-1' });
     });
-    const audio = container.querySelector('audio.roomtalk-audio-player');
+    const audio = container.querySelector('audio.coworkerhouse-audio-player');
     expect(audio).toBeTruthy();
     await waitFor(() => {
       expect(audio?.getAttribute('src')).toBe('https://signed.example/rooms/room-1/audio-1.webm');

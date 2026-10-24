@@ -138,7 +138,7 @@ describe('S3MediaObjectStorage', () => {
 
 describe('LocalMediaObjectStorage', () => {
   it('stores and reads media objects from the local filesystem', async () => {
-    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'roomtalk-media-'));
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), 'coworkerhouse-media-'));
 
     try {
       const storage = new LocalMediaObjectStorage(rootDir, new Logger('LocalMediaObjectStorageTest'));
@@ -173,7 +173,7 @@ describe('LocalMediaObjectStorage', () => {
   });
 
   it('signs production-style local URLs by method, object key, and expiry', async () => {
-    const storage = new LocalMediaObjectStorage('/tmp/roomtalk-signed-media', new Logger('LocalMediaObjectStorageTest'), 'test-signing-secret');
+    const storage = new LocalMediaObjectStorage('/tmp/coworkerhouse-signed-media', new Logger('LocalMediaObjectStorageTest'), 'test-signing-secret');
     const objectKey = 'rooms/room-1/media/image/asset-1';
     const writeUrl = await storage.createWriteUrl({
       objectKey,
@@ -203,7 +203,7 @@ describe('createMediaObjectStorageFromEnv', () => {
   it('uses local media storage by default outside production when no bucket is configured', () => {
     const storage = createMediaObjectStorageFromEnv(new Logger('MediaObjectStorageFactoryTest'), {
       NODE_ENV: 'development',
-      LOCAL_MEDIA_DIR: path.join(os.tmpdir(), 'roomtalk-local-media'),
+      LOCAL_MEDIA_DIR: path.join(os.tmpdir(), 'coworkerhouse-local-media'),
     } as NodeJS.ProcessEnv);
 
     assert.ok(storage instanceof LocalMediaObjectStorage);
@@ -213,8 +213,8 @@ describe('createMediaObjectStorageFromEnv', () => {
     const storage = createMediaObjectStorageFromEnv(new Logger('MediaObjectStorageFactoryTest'), {
       NODE_ENV: 'production',
       MEDIA_STORAGE_MODE: 'local',
-      LOCAL_MEDIA_DIR: '/var/lib/roomtalk/media',
-      POSTGRES_PASSWORD: 'roomtalk-test-password-32-bytes',
+      LOCAL_MEDIA_DIR: '/var/lib/coworkerhouse/media',
+      POSTGRES_PASSWORD: 'coworkerhouse-test-password-32-bytes',
     } as NodeJS.ProcessEnv);
 
     assert.ok(storage instanceof LocalMediaObjectStorage);
@@ -225,7 +225,7 @@ describe('createMediaObjectStorageFromEnv', () => {
       () => createMediaObjectStorageFromEnv(new Logger('MediaObjectStorageFactoryTest'), {
         NODE_ENV: 'production',
         MEDIA_STORAGE_MODE: 'local',
-        LOCAL_MEDIA_DIR: '/var/lib/roomtalk/media',
+        LOCAL_MEDIA_DIR: '/var/lib/coworkerhouse/media',
       } as NodeJS.ProcessEnv),
       /requires LOCAL_MEDIA_SIGNING_SECRET or POSTGRES_PASSWORD/
     );
@@ -253,7 +253,7 @@ describe('createMediaObjectStorageFromEnv', () => {
     const storage = createMediaObjectStorageFromEnv(new Logger('MediaObjectStorageFactoryTest'), {
       NODE_ENV: 'production',
       MEDIA_STORAGE_MODE: 's3',
-      MEDIA_BUCKET_NAME: 'roomtalk-media',
+      MEDIA_BUCKET_NAME: 'coworkerhouse-media',
       MEDIA_STORAGE_REGION: 'us-west-2',
     } as NodeJS.ProcessEnv);
 
@@ -273,7 +273,7 @@ describe('createMediaObjectStorageFromEnv', () => {
     const config = resolveMediaObjectStorageConfig({
       MEDIA_BUCKET_NAME: 'media-bucket',
       MEDIA_STORAGE_ENDPOINT: 'http://object-storage:8333',
-      MEDIA_STORAGE_PUBLIC_ENDPOINT: 'https://objects.roomtalk.example',
+      MEDIA_STORAGE_PUBLIC_ENDPOINT: 'https://objects.coworkerhouse.example',
       MEDIA_STORAGE_CONNECTION_TIMEOUT_MS: '4000',
       MEDIA_STORAGE_REQUEST_TIMEOUT_MS: '20000',
       MEDIA_STORAGE_SOCKET_TIMEOUT_MS: '12000',
@@ -283,7 +283,7 @@ describe('createMediaObjectStorageFromEnv', () => {
 
     assert.equal(config?.connectionTimeoutMs, 4000);
     assert.equal(config?.endpoint, 'http://object-storage:8333');
-    assert.equal(config?.publicEndpoint, 'https://objects.roomtalk.example');
+    assert.equal(config?.publicEndpoint, 'https://objects.coworkerhouse.example');
     assert.equal(config?.requestTimeoutMs, 20000);
     assert.equal(config?.socketTimeoutMs, 12000);
     assert.equal(config?.maxAttempts, 3);

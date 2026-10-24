@@ -72,8 +72,8 @@ test('connects, cancels, completes, and disconnects Codex through the settings U
   expect(connectedStatus.ok()).toBeTruthy();
   const connectedPayloadText = await connectedStatus.text();
   expect(connectedPayloadText).toContain('"status":"connected"');
-  expect(connectedPayloadText).not.toContain('roomtalk-e2e-fake-access-value');
-  expect(connectedPayloadText).not.toContain('roomtalk-e2e-fake-refresh-value');
+  expect(connectedPayloadText).not.toContain('coworkerhouse-e2e-fake-access-value');
+  expect(connectedPayloadText).not.toContain('coworkerhouse-e2e-fake-refresh-value');
 
   await page.getByRole('button', { name: 'Disconnect' }).click();
   await expect(page.getByText('Codex disconnected.')).toBeVisible();
@@ -86,7 +86,7 @@ const startCodexLogin = async (page: Page) => {
 
 const resetFakeCodexState = () => {
   const serverPort = process.env.E2E_SERVER_PORT || '3332';
-  const stateDir = path.join('/tmp', `roomtalk-codex-ui-e2e-${serverPort}`);
+  const stateDir = path.join('/tmp', `coworkerhouse-codex-ui-e2e-${serverPort}`);
   rmSync(stateDir, { recursive: true, force: true });
   mkdirSync(stateDir, { recursive: true });
 };

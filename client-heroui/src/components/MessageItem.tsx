@@ -59,8 +59,8 @@ export type MessageUserAction = 'setAdmin' | 'removeAdmin' | 'removeMember' | 't
 type ReplyReferenceValue = NonNullable<Message['replyTo']>;
 type Translate = (key: string, values?: { name?: string }) => string;
 type SenderOutlineStyle = React.CSSProperties & {
-  "--roomtalk-sender-outline-light": string;
-  "--roomtalk-sender-outline-dark": string;
+  "--coworkerhouse-sender-outline-light": string;
+  "--coworkerhouse-sender-outline-dark": string;
 };
 
 const tooltipClassNames = {
@@ -281,7 +281,7 @@ const ReplyReference: React.FC<{
           controls
           src={displayMediaUrl}
           crossOrigin="anonymous"
-          className="roomtalk-audio-player mt-1 block h-8 min-w-[160px] max-w-full"
+          className="coworkerhouse-audio-player mt-1 block h-8 min-w-[160px] max-w-full"
           onCanPlay={markMediaLoadedForCache}
           onError={() => setMediaError(true)}
         />
@@ -397,14 +397,14 @@ const MessageItemComponent: React.FC<MessageItemProps> = ({
   const canTransferToSender = canActOnSender && Boolean(roomPermissions?.canTransferOwnership) && senderRole !== 'owner';
   const senderColorTheme = React.useMemo(() => getSenderColorTheme(message.clientId), [message.clientId]);
   const senderOutlineStyle = React.useMemo<SenderOutlineStyle>(() => ({
-    "--roomtalk-sender-outline-light": senderColorTheme.outlineLight,
-    "--roomtalk-sender-outline-dark": senderColorTheme.outlineDark,
+    "--coworkerhouse-sender-outline-light": senderColorTheme.outlineLight,
+    "--coworkerhouse-sender-outline-dark": senderColorTheme.outlineDark,
   }), [senderColorTheme]);
   const senderAvatarStyle = React.useMemo<React.CSSProperties>(() => ({
     backgroundColor: senderColorTheme.avatarBackground,
     color: senderColorTheme.avatarForeground,
   }), [senderColorTheme]);
-  const senderOutlineClassName = isAI ? "" : "roomtalk-sender-outline";
+  const senderOutlineClassName = isAI ? "" : "coworkerhouse-sender-outline";
   const senderOutlineElementStyle = isAI ? undefined : senderOutlineStyle;
   const reviewCommentSegments = React.useMemo(
     () => parseReviewCommentMessageSegments(message.content),
@@ -987,7 +987,7 @@ const MessageItemComponent: React.FC<MessageItemProps> = ({
             controls
             src={displayMediaUrl}
             crossOrigin="anonymous"
-            className={`roomtalk-audio-player block h-9 min-w-[180px] max-w-[240px] ${senderOutlineClassName}`}
+            className={`coworkerhouse-audio-player block h-9 min-w-[180px] max-w-[240px] ${senderOutlineClassName}`}
             style={senderOutlineElementStyle}
             onCanPlay={handleMediaLoaded}
             onError={handleMediaError}

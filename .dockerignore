@@ -23,7 +23,7 @@ server/dist
 docs
 ops
 output
-server/roomtalk_code_agent_runner
+server/coworkerhouse_code_agent_runner
 server/scripts
 
 # Misc

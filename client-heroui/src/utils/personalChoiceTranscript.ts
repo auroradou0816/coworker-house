@@ -4,7 +4,7 @@ import type {JevToolResult} from './personalChoiceDomain';
 
 export function isPersonalChoicesCall(message:Message):boolean {
   const command=message.toolArgs?.command ?? message.toolArgs?.cmd;
-  return message.messageType==='tool_call' && (message.toolName==='present_choices' || (typeof command==='string' && /\broomtalk\s+choices\s+present\b/.test(command)));
+  return message.messageType==='tool_call' && (message.toolName==='present_choices' || (typeof command==='string' && /\b(?:coworkerhouse|roomtalk)\s+choices\s+present\b/.test(command)));
 }
 export function personalChoiceResult(message:Message):JevToolResult|null {
   for(const line of message.content.split('\n')) {

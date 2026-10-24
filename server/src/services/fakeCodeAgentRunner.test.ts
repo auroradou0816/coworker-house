@@ -22,7 +22,7 @@ describe('FakeCodeAgentRunnerClient', () => {
     const events: CodeAgentRunnerEvent[] = [
       { schemaVersion: 1, type: 'text_delta', messageId: 'ai-1', delta: 'checking' },
       { schemaVersion: 1, type: 'tool_call', id: 'tool-1', name: 'Read', args: { file_path: 'README.md' } },
-      { schemaVersion: 1, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# RoomTalk' },
+      { schemaVersion: 1, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# CoworkerHouse' },
       { schemaVersion: 1, type: 'final', messageId: 'ai-1', answer: 'done', sessionId: 'session-1' },
     ];
     const runner = new FakeCodeAgentRunnerClient(events);

@@ -8,7 +8,7 @@ import type { Message, Room } from '../src/utils/types';
 
 test.beforeEach(async ({ request }) => {
   await resetE2EData(request);
-  const stateDir = path.join('/tmp', `roomtalk-codex-ui-e2e-${process.env.E2E_SERVER_PORT || '3332'}`);
+  const stateDir = path.join('/tmp', `coworkerhouse-codex-ui-e2e-${process.env.E2E_SERVER_PORT || '3332'}`);
   rmSync(stateDir, { recursive: true, force: true });
   mkdirSync(stateDir, { recursive: true });
   // The test server uses the existing deterministic Codex login double.
@@ -152,7 +152,7 @@ test('tracks a real page, deduplicates updates, pauses and preserves read/prefer
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.getByRole('button', { name: 'Apps', exact: true })).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.screenshot({ path: '/tmp/roomtalk-personal-tracking-mobile.png', fullPage: true });
+    await page.screenshot({ path: '/tmp/coworkerhouse-personal-tracking-mobile.png', fullPage: true });
     await openMemorySettings(page);
     await page.getByRole('checkbox', { name: 'Show background updates on your agent page', exact: true }).uncheck();
 
@@ -203,7 +203,7 @@ test('accepts an edited sourced suggestion exactly once and preserves dismissed 
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('personal-ideas-mobile.png'), fullPage: true });
-  copyFileSync(testInfo.outputPath('personal-ideas-mobile.png'), '/tmp/roomtalk-personal-ideas-mobile.png');
+  copyFileSync(testInfo.outputPath('personal-ideas-mobile.png'), '/tmp/coworkerhouse-personal-ideas-mobile.png');
   const [accepted]=await Promise.all([page.waitForResponse(response=>response.url().endsWith(`/ideas/${original.id}`) && response.request().method()==='PATCH'),card.getByRole('button',{name:'Start this',exact:true}).click()]);
   const roomId=(await accepted.json()).room.id;
   await expect(page.getByRole('dialog')).toBeVisible();
@@ -237,7 +237,7 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   await page.addInitScript(() => { window.open = () => null; });
   await openRoomsPage(page);
 
-  // Provision a real password account through RoomTalk's existing settings UI.
+  // Provision a real password account through CoworkerHouse's existing settings UI.
   await page.getByRole('button', { name: 'Settings', exact: true }).first().click();
   await page.getByLabel('User ID password', { exact: true }).first().fill('Personal-agent-test-2026');
   await page.getByRole('button', { name: 'Set password', exact: true }).click();
@@ -271,20 +271,20 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   await expect(page.getByTestId('personal-memory-entry')).toContainText('keep it concise');
   await page.getByRole('button', { name: 'Chat', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('personal-agent-desktop.png'), fullPage: true });
-  copyFileSync(testInfo.outputPath('personal-agent-desktop.png'), '/tmp/roomtalk-personal-agent-desktop.png');
+  copyFileSync(testInfo.outputPath('personal-agent-desktop.png'), '/tmp/coworkerhouse-personal-agent-desktop.png');
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByTestId('bottom-nav')).toHaveCount(0);
   await expect(page.getByTestId('personal-agent-conversation')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('personal-agent-mobile.png'), fullPage: true });
-  copyFileSync(testInfo.outputPath('personal-agent-mobile.png'), '/tmp/roomtalk-personal-agent-mobile.png');
+  copyFileSync(testInfo.outputPath('personal-agent-mobile.png'), '/tmp/coworkerhouse-personal-agent-mobile.png');
   await page.setViewportSize({ width: 1280, height: 720 });
   await expect(page.getByRole('button', { name: 'Talk to your agent', exact: true })).toHaveCount(0);
   await expect(page.getByTestId('message-editor')).toBeVisible();
-  await page.screenshot({ path: '/tmp/roomtalk-personal-conversation-desktop.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-conversation-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-conversation-mobile.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-conversation-mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 720 });
 
   await expect(page.getByTestId('personal-agent-conversation')).toBeVisible();
@@ -299,9 +299,9 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   await expect(page.getByTestId('personal-agent-message').filter({ hasText: /fake runner received the task/ })).toBeVisible({ timeout: 20000 });
   const topicRoomId = await page.evaluate(() => JSON.parse(localStorage.getItem('roomtalk_current_room')!).id as string);
   await expectCompletedTurn(request, clientId, token!, topicRoomId);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-conversation-desktop.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-conversation-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({ path: '/tmp/roomtalk-personal-conversation-mobile.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-conversation-mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 720 });
   await openThreads(page);
 
@@ -323,10 +323,10 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   const archiveToggle=page.getByRole('button',{name:/^(Archived|Show active)$/});
   if(await archiveToggle.textContent()==='Archived')await archiveToggle.click();
   await expect(renamedCard).toBeVisible();
-  await page.screenshot({ path: '/tmp/roomtalk-personal-chats-archive-desktop.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-chats-archive-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-chats-archive-mobile.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-chats-archive-mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 720 });
   await renamedCard.getByRole('button').filter({ hasText: 'My weekly plan' }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -379,7 +379,7 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   await sheet.getByRole('checkbox',{name:'Prepare a weekly plan',exact:true}).click();
   await expect(sheet.getByRole('checkbox',{name:'Prepare a weekly plan',exact:true})).toBeChecked();
   await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-goal-detail-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-goal-detail-mobile.png',fullPage:true});
   await sheet.getByRole('button',{name:'Complete goal',exact:true}).click();
   await expect(sheet).toHaveCount(0);await expect(goalRow).not.toBeVisible();
   const completed=page.getByTestId('personal-completed-goals');
@@ -395,7 +395,7 @@ test('creates a private Codex agent, persists memory, runs a task and goal, and 
   await sheet.getByLabel('Your goal',{exact:true}).fill('A short walk');
   await sheet.getByRole('button',{name:'Create goal',exact:true}).click();
   await expect(page.getByRole('button',{name:'Open goal: A short walk',exact:true})).toBeVisible();
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-goals-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-goals-mobile.png',fullPage:true});
   await page.setViewportSize({width:1280,height:720});
 
   await openMemorySettings(page);
@@ -461,7 +461,7 @@ test('inspects and corrects source memory inline, preserves conflicting drafts, 
   await row.getByRole('button',{name:'Edit',exact:true}).click();await row.getByLabel('Memory',{exact:true}).fill('Late afternoons confirmed.');
   await row.getByRole('button',{name:'Save correction',exact:true}).click();await expect(row).toContainText('Late afternoons confirmed.');
   await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-memory-inline-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-memory-inline-mobile.png',fullPage:true});
   await row.getByRole('button',{name:'Forget',exact:true}).click();await expect(row).toHaveCount(0);
 });
 
@@ -541,10 +541,10 @@ test('replays private plan, document and interactive web cards and downloads per
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await expect(page.getByRole('dialog')).toHaveCSS('opacity', '1');
   await page.waitForTimeout(400);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-result-web-mobile.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-result-web-mobile.png', fullPage: true });
   await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).last().click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-result-cards-mobile.png', fullPage: true });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-result-cards-mobile.png', fullPage: true });
   const lateSave = await request.patch(`${serverURL}/api/code-agent/room-context/personal-results`, { headers: { authorization }, data: {
     kind: 'plan', title: 'Too late', filename: 'late.md', content: Buffer.from(plan).toString('base64'),
   } });
@@ -664,7 +664,7 @@ test('shares a real browser with user takeover, sourced replay and restored logi
     expect(await dialog.getByTestId('personal-browser-screen').evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
     await clickAt(100, 125);
     await expect.poll(() => clicks).toBe(2);
-    await page.screenshot({ path: '/tmp/roomtalk-personal-browser-control-mobile.png', fullPage: true });
+    await page.screenshot({ path: '/tmp/coworkerhouse-personal-browser-control-mobile.png', fullPage: true });
     await dialog.getByRole('button', { name: 'Return to chat', exact: true }).click();
     await expect(dialog).toHaveCount(0);
     await expect(visit.getByText(url, { exact: true })).toBeVisible();
@@ -732,7 +732,7 @@ test('imports a real fillable PDF and downloads a distinct saved copy on mobile'
   await dialog.getByRole('button', { name: 'Close', exact: true }).last().click();
   await expect(page.getByTestId('personal-file-card')).toHaveCount(2);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: '/tmp/roomtalk-personal-files-mobile.png', fullPage: true, animations: 'disabled' });
+  await page.screenshot({ path: '/tmp/coworkerhouse-personal-files-mobile.png', fullPage: true, animations: 'disabled' });
   await page.reload();
   await openFiles(page);
   await expect(page.getByTestId('personal-file-card')).toHaveCount(2);
@@ -770,7 +770,7 @@ test('automatically titles a new side chat and preserves a manual rename across 
   await page.getByRole('button',{name:'Save name',exact:true}).click();
   await expect(page.getByTestId('personal-agent-chat-card').filter({hasText:'我的雪季'})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-chat-titles-menu-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-chat-titles-menu-mobile.png',fullPage:true});
   await closeThreads(page);await page.reload();await openThreads(page);
   await expect(page.getByTestId('personal-agent-chat-card').filter({hasText:'我的雪季'})).toBeVisible();
   const token=await page.evaluate(()=>localStorage.getItem('clientAuthToken')!);
@@ -804,7 +804,7 @@ test('shows a side chat title once while work is starting on mobile',async({page
   await expect(page.getByText('Side chat',{exact:true})).toHaveCount(1);
   await expect(page.getByRole('button',{name:'Task details',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-side-chat-title-fixed-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-side-chat-title-fixed-mobile.png',fullPage:true});
   const editor=page.getByTestId('message-editor');
   for(const height of [844,420]){
     await page.setViewportSize({width:390,height});
@@ -823,7 +823,7 @@ test('shows a side chat title once while work is starting on mobile',async({page
     expect(layout.gap).toBeLessThanOrEqual(12);
     expect(layout.composerBottom).toBeLessThanOrEqual(height);
     expect(layout.menuBottom).toBeLessThanOrEqual(height);
-    await page.screenshot({path:`/tmp/roomtalk-composer-${height}-fixed-mobile.png`,fullPage:true});
+    await page.screenshot({path:`/tmp/coworkerhouse-composer-${height}-fixed-mobile.png`,fullPage:true});
   }
 });
 
@@ -886,7 +886,7 @@ test('keeps one app entry, searches all tools and opens connected apps directly 
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
     await expect(page.getByRole('button',{name:'Apps',exact:true})).toBeInViewport();
   }
-  await page.screenshot({path:'/tmp/roomtalk-apps-fixed-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-apps-fixed-mobile.png',fullPage:true});
 });
 
 test('ports OpenMuse mail/thread/review UI with Google response fixtures and persists real drafts', async ({page,context,request})=>{
@@ -944,7 +944,7 @@ test('ports OpenMuse mail/thread/review UI with Google response fixtures and per
   await page.getByRole('button',{name:'Drafts',exact:true}).click();await expect(page.getByRole('button').filter({hasText:'Re: Complete conversation'})).toBeVisible();
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-mail-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-mail-mobile.png',fullPage:true});
 });
 
 test('resumes a persisted PDF input request and replays a real computed finance result',async({page,context,request})=>{
@@ -1042,7 +1042,7 @@ test('ports calendar zone-aware editing and read-only choices with explicit Goog
   await expect(page.getByRole('button',{name:'New event',exact:true})).toBeDisabled();
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-calendar-mobile.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-calendar-mobile.png',fullPage:true,animations:'disabled'});
   // Reproduce the disabled Calendar API error observed in production.
   const apiError='Google API (403): Google Calendar API is disabled. Enable it by visiting https://console.developers.google.com/apis/api/calendar-json.googleapis.com/overview then retry.';
   await page.route('**/api/personal-agent/calendar/events?**',route=>route.fulfill({status:403,json:{error:apiError}}));
@@ -1051,7 +1051,7 @@ test('ports calendar zone-aware editing and read-only choices with explicit Goog
   await expect(page.getByText('No events in this time range.',{exact:true})).toHaveCount(0);
   expect(await page.getByRole('alert').evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-calendar-error-fixed-mobile.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'/tmp/coworkerhouse-calendar-error-fixed-mobile.png',fullPage:true,animations:'disabled'});
 });
 
 
@@ -1078,7 +1078,7 @@ test('uses the personal computer source tabs and preserves unsent work on mobile
   await sheet.getByLabel('Website address',{exact:true}).fill('https://example.org/unfinished');
   await expect(sheet.getByRole('button',{name:'Open a browser session',exact:true})).toBeDisabled();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:'/tmp/roomtalk-openmuse-computer-unconfigured-mobile.png',fullPage:true});
+  await page.screenshot({path:'/tmp/coworkerhouse-openmuse-computer-unconfigured-mobile.png',fullPage:true});
   await sheet.getByRole('button',{name:'Close',exact:true}).click();
   await page.getByRole('button',{name:'Agent computer',exact:true}).click();
   await expect(sheet.getByLabel('Website address',{exact:true})).toHaveValue('https://example.org/unfinished');
@@ -1108,7 +1108,7 @@ test('controls the real personal desktop, terminal and persisted files through t
     await expect(sheet.getByText('Running · files persist when stopped',{exact:true})).toBeVisible({timeout:30000});
     await sheet.getByRole('tab',{name:'Desktop',exact:true}).click();
     const canvas=sheet.frameLocator('iframe').locator('#noVNC_container canvas');
-    await expect(canvas).toBeVisible({timeout:30000});await page.screenshot({path:'/tmp/roomtalk-openmuse-real-desktop-mobile.png',fullPage:true});
+    await expect(canvas).toBeVisible({timeout:30000});await page.screenshot({path:'/tmp/coworkerhouse-openmuse-real-desktop-mobile.png',fullPage:true});
     await sheet.getByRole('tab',{name:'Terminal',exact:true}).click();
     await sheet.getByLabel('Command',{exact:true}).fill("printf 'actual UI command' > /workspace/verified-ui.txt; cat /workspace/verified-ui.txt");
     await sheet.getByRole('button',{name:'Run command',exact:true}).click();
@@ -1124,7 +1124,7 @@ test('controls the real personal desktop, terminal and persisted files through t
     await sheet.getByRole('button',{name:'Stop computer',exact:true}).click();await expect(sheet.getByText('Stopped · your files are saved',{exact:true})).toBeVisible({timeout:30000});
     await sheet.getByRole('button',{name:'Start computer',exact:true}).click();await expect(sheet.getByText('Running · files persist when stopped',{exact:true})).toBeVisible({timeout:30000});
     await sheet.getByRole('button',{name:/verified-ui.txt/}).click();await expect(sheet.getByLabel('File contents',{exact:true})).toHaveValue('Edited through the source file UI');
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/roomtalk-openmuse-real-files-mobile.png',fullPage:true});
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/coworkerhouse-openmuse-real-files-mobile.png',fullPage:true});
     await sheet.getByRole('button',{name:'Stop computer',exact:true}).click();await expect(sheet.getByText('Stopped · your files are saved',{exact:true})).toBeVisible({timeout:30000});
   }finally{
     const sandboxes=await Sandbox.list({apiKey,query:{metadata,state:['running','paused']}}).nextItems();
@@ -1176,7 +1176,7 @@ test('uses the source goal categories, read-only list and milestone-preserving c
   await expect(sheet.getByText('Completed',{exact:true})).toBeVisible();
   await expect(sheet.getByRole('checkbox',{name:'Review my budget',exact:true})).not.toBeChecked();
   await expect(sheet.getByRole('button').filter({hasText:'Plan: Emergency fund'})).toBeVisible();
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/roomtalk-openmuse-goal-detail-mobile.png',fullPage:true});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/coworkerhouse-openmuse-goal-detail-mobile.png',fullPage:true});
 });
 
 test('uses source task sheets and activity filters to pause, resume and cancel durable delegated work on mobile',async({page,context,request})=>{
@@ -1213,7 +1213,7 @@ test('uses source task sheets and activity filters to pause, resume and cancel d
   const stopped=page.getByRole('button',{name:`Open task: ${cancelled.name}`,exact:true});await expect(stopped).toContainText('Stopped');
   await stopped.click();await expect(sheet.getByRole('button',{name:'Resume',exact:true})).toHaveCount(0);await expect(sheet.getByRole('button',{name:'Continue task',exact:true})).toHaveCount(0);
   const saved=await (await request.get(`${serverURL}/api/personal-agent/tasks/${cancelled.id}`,{headers:accountHeaders(clientId,token)})).json();expect(saved.room.personalAgentTaskControl).toBe('cancelled');
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/roomtalk-openmuse-task-controls-mobile.png',fullPage:true});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'/tmp/coworkerhouse-openmuse-task-controls-mobile.png',fullPage:true});
 });
 
 test('replays and selects source interactive choices with explicit scripted Jev and executor fixtures',async({page,context,request})=>{
@@ -1244,7 +1244,7 @@ test('replays and selects source interactive choices with explicit scripted Jev 
   const pool=createPostgresPool(process.env.E2E_DATABASE_URL!,logger),store=new PostgresStore(pool,logger);
   try {
     const callId=randomUUID();const common={clientId:'ai',roomId,turnId,timestamp:new Date().toISOString(),username:'Agent',status:'complete'};
-    await store.appendMessage({...common,id:randomUUID(),content:'roomtalk choices present',messageType:'tool_call',toolCallId:callId,toolName:'exec_command',toolArgs:{cmd:'roomtalk choices present --file choices.json --json'}});
+    await store.appendMessage({...common,id:randomUUID(),content:'coworkerhouse choices present',messageType:'tool_call',toolCallId:callId,toolName:'exec_command',toolArgs:{cmd:'coworkerhouse choices present --file choices.json --json'}});
     await store.appendMessage({...common,id:randomUUID(),content:JSON.stringify({success:true,tool:'PersonalChoices',panel}),messageType:'tool_result',toolCallId:callId,toolName:'exec_command'});
     await expectCompletedTurn(request,clientId,token,roomId);await page.reload();
     await expect(page.getByTestId('personal-choice-card')).toContainText('Sample · scripted decisions');
@@ -1258,7 +1258,7 @@ test('replays and selects source interactive choices with explicit scripted Jev 
     await expect(page.getByRole('button',{name:'Research options',exact:true})).toBeDisabled();
     await expect(page.getByTestId('personal-user-message').filter({hasText:'Selected: Plan my day'})).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-    await page.screenshot({path:'/tmp/roomtalk-openmuse-choices-mobile.png',fullPage:true});
+    await page.screenshot({path:'/tmp/coworkerhouse-openmuse-choices-mobile.png',fullPage:true});
   }finally{await pool.end();}
 });
 
@@ -1281,9 +1281,9 @@ test('opens source mail and memory cards from the personal chat with explicit to
   const logger={debug(){},info(){},warn(){},error(){}},pool=createPostgresPool(process.env.E2E_DATABASE_URL!,logger),store=new PostgresStore(pool,logger);
   try{
     for(const [command,result] of [
-      ['roomtalk google thread --id thread-inline --json',{success:true,tool:'PersonalGoogle',messages:[mail],truncated:false}],
-      ['roomtalk search web --objective public --query public --json',{success:true,tool:'PersonalSearch',results:[{url:'https://github.com/CopilotKit/openmuse',title:'Source fixture repository'},{url:'https://github.com/CopilotKit/openmuse',title:'Source fixture repository'}],warnings:[],truncated:false}],
-      ['roomtalk memory save --file memory.json --json',{success:true,tool:'PersonalMemory',memory:{id:'fixture-memory'}}],
+      ['coworkerhouse google thread --id thread-inline --json',{success:true,tool:'PersonalGoogle',messages:[mail],truncated:false}],
+      ['coworkerhouse search web --objective public --query public --json',{success:true,tool:'PersonalSearch',results:[{url:'https://github.com/CopilotKit/openmuse',title:'Source fixture repository'},{url:'https://github.com/CopilotKit/openmuse',title:'Source fixture repository'}],warnings:[],truncated:false}],
+      ['coworkerhouse memory save --file memory.json --json',{success:true,tool:'PersonalMemory',memory:{id:'fixture-memory'}}],
     ] as const){
       const callId=randomUUID(),common={clientId:'ai',roomId,turnId,timestamp:new Date().toISOString(),username:'Agent',status:'complete'};
       await store.appendMessage({...common,id:randomUUID(),content:command,messageType:'tool_call',toolCallId:callId,toolName:'exec_command',toolArgs:{cmd:command}});
@@ -1291,7 +1291,7 @@ test('opens source mail and memory cards from the personal chat with explicit to
     }
     // Replay the two successful searches whose output was redirected in the reported chat.
     for(const filename of ['ski-search.json','ski-search2.json']){
-      const callId=randomUUID(),command=`/bin/sh -lc "roomtalk search web --objective public --query public --json > /workspace/${filename}"`;
+      const callId=randomUUID(),command=`/bin/sh -lc "coworkerhouse search web --objective public --query public --json > /workspace/${filename}"`;
       const common={clientId:'ai',roomId,turnId,timestamp:new Date().toISOString(),username:'Agent',status:'complete'};
       await store.appendMessage({...common,id:randomUUID(),content:command,messageType:'tool_call',toolCallId:callId,toolName:'shell',toolArgs:{command}});
       await store.appendMessage({...common,id:randomUUID(),content:'',messageType:'tool_result',toolCallId:callId,toolName:'shell',exitCode:0,isError:false});
@@ -1302,11 +1302,11 @@ test('opens source mail and memory cards from the personal chat with explicit to
     await expect(page.getByText('Results were saved to a file.',{exact:true})).toHaveCount(2);
     await expect(page.getByText('Search failed',{exact:true})).toHaveCount(0);
     await expect(page.getByText('Search did not return readable results.',{exact:true})).toHaveCount(0);
-    await page.screenshot({path:'/tmp/roomtalk-openmuse-inline-cards-mobile.png',fullPage:true});
+    await page.screenshot({path:'/tmp/coworkerhouse-openmuse-inline-cards-mobile.png',fullPage:true});
     await page.getByRole('button',{name:'Open email',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Second complete thread message');
     await page.getByRole('dialog').getByRole('button',{name:'Close',exact:true}).click();await page.getByRole('button',{name:'Chat',exact:true}).click();
     await page.getByRole('button',{name:'View Memory',exact:true}).click();await expect(page.getByTestId('personal-memory-library')).toBeVisible();await expect(page.getByTestId('personal-agent-profile-summary')).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-    await page.screenshot({path:'/tmp/roomtalk-openmuse-source-memory-mobile.png',fullPage:true});
+    await page.screenshot({path:'/tmp/coworkerhouse-openmuse-source-memory-mobile.png',fullPage:true});
   }finally{await pool.end();}
 });

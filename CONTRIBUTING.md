@@ -50,7 +50,7 @@ npm run test:e2e:postgres
 
 Production code-agent rooms do not run runner source directly from the CoWorker House application image. Changes to any of the following require a new pinned E2B artifact:
 
-- `server/roomtalk_code_agent_runner/`
+- `server/coworkerhouse_code_agent_runner/`
 - runner tools or system prompts
 - `ops/code-agent-sandbox/Dockerfile`
 - `ops/code-agent-sandbox/artifact.lock.json`

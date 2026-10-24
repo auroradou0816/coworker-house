@@ -669,7 +669,7 @@ describe('CodeAgentFileBrowserPanel', () => {
     dispatchPointer(window, 'pointerup', { pointerId: 11, clientX: 0, buttons: 0 });
 
     expect(panel!.style.getPropertyValue('--workspace-file-explorer-width')).toBe('480px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileExplorerWidth')).toBe('480');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileExplorerWidth')).toBe('480');
   });
 
   it('tracks T3-style file surfaces as switchable preview tabs', async () => {
@@ -2054,7 +2054,7 @@ describe('CodeAgentFileBrowserPanel', () => {
     dispatchPointer(window, 'pointermove', { pointerId: 17, clientX: 300, buttons: 1 });
 
     expect(panel!.style.getPropertyValue('--workspace-diff-changed-files-width')).toBe('440px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.diffChangedFilesWidth')).toBe('440');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.diffChangedFilesWidth')).toBe('440');
     expect(document.body.style.userSelect).toBe('');
     expect(document.body.style.cursor).toBe('');
   });
@@ -2348,7 +2348,7 @@ describe('CodeAgentFileBrowserPanel', () => {
 
     expect(screen.getByTestId('diff-file').dataset.overflow).toBe('wrap');
     expect(screen.getByLabelText('codeAgentDisableFileLineWrapping')).toBeTruthy();
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileWordWrap')).toBe('true');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileWordWrap')).toBe('true');
   });
 
   it('passes T3-style theme and file reveal CSS into editable file previews', async () => {

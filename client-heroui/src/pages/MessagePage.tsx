@@ -154,7 +154,7 @@ export const MessagePage: React.FC = () => {
     if(storedView === "chat" && getStoredRoom()?.personalAgentOwnerId)return "personal";
     return storedView === "saved" && isDesktopLayout() ? "rooms" : storedView;
   });
-  const [personalChatId,setPersonalChatId] = useState<string | null>(() => localStorage.getItem('roomtalk.personalAgent.activeChat') || (getStoredView() === 'chat' && getStoredRoom()?.personalAgentOwnerId ? getStoredRoom()!.id : null));
+  const [personalChatId,setPersonalChatId] = useState<string | null>(() => localStorage.getItem('coworkerhouse.personalAgent.activeChat') || (getStoredView() === 'chat' && getStoredRoom()?.personalAgentOwnerId ? getStoredRoom()!.id : null));
   const [personalChatSelection,setPersonalChatSelection] = useState(0);
   const viewRef = useRef<AppView>(view);
   const [error, setError] = useState<string | null>(null);
@@ -328,7 +328,7 @@ export const MessagePage: React.FC = () => {
 
   useEffect(() => {
     currentRoomRef.current = currentRoom;
-    if (currentRoom && !currentRoom.personalAgentOwnerId) localStorage.setItem(`roomtalk.chat.activeRoom.${clientId}`,currentRoom.id);
+    if (currentRoom && !currentRoom.personalAgentOwnerId) localStorage.setItem(`coworkerhouse.chat.activeRoom.${clientId}`,currentRoom.id);
   }, [currentRoom]);
 
   // 切换语言方法修改为支持多语言
@@ -683,7 +683,7 @@ export const MessagePage: React.FC = () => {
   const handleViewChange = useCallback((nextView: AppView) => {
     setError(null);
     if (nextView === 'chat' && currentRoomRef.current?.personalAgentOwnerId) {
-      const ordinaryRoomId = localStorage.getItem(`roomtalk.chat.activeRoom.${clientId}`);
+      const ordinaryRoomId = localStorage.getItem(`coworkerhouse.chat.activeRoom.${clientId}`);
       if (!ordinaryRoomId) {setView('rooms');return;}
       void ensureActiveRoomSession({roomId:ordinaryRoomId,source:'manual'}).then(room=>{
         if (room && !room.personalAgentOwnerId) setView('chat');
@@ -1095,7 +1095,7 @@ export const MessagePage: React.FC = () => {
         source: searchParams.get("room") === room.id ? "url" : "manual",
       });
       if (joinedRoom) {
-        if(joinedRoom.personalAgentOwnerId){setPersonalChatId(joinedRoom.id);localStorage.setItem('roomtalk.personalAgent.activeChat',joinedRoom.id);}
+        if(joinedRoom.personalAgentOwnerId){setPersonalChatId(joinedRoom.id);localStorage.setItem('coworkerhouse.personalAgent.activeChat',joinedRoom.id);}
         setView(joinedRoom.personalAgentOwnerId ? 'personal' : 'chat');
         clearRoomUrlParam();
       }

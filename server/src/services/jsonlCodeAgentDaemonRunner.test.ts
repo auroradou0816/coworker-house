@@ -35,7 +35,7 @@ const sandbox: CodeAgentSandboxHandle = {
 };
 
 class MemoryDaemonProcess implements CodeAgentRunnerProcess {
-  readonly command = 'python -m roomtalk_code_agent_runner.daemon';
+  readonly command = 'python -m coworkerhouse_code_agent_runner.daemon';
   readonly stdin = new PassThrough();
   readonly stdout = new PassThrough();
   readonly stderr = new PassThrough();

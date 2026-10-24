@@ -1290,7 +1290,7 @@ describe('CodeAgentSessionService', () => {
     }} as any});
     await service.startTurn({roomId:'room-1',clientId:'client-1',selectedModel},response=>{assert.equal(response.success,true);assert.equal(selected,true);});
     assert.match(runner.requests[0].prompt,/I choose “Plan”/);
-    assert.match(runner.requests[0].prompt,/roomtalk choices present/);
+    assert.match(runner.requests[0].prompt,/coworkerhouse choices present/);
     assert.equal(store.messages.get('room-1')!.find(message=>message.messageType==='text')!.content,text);
   });
   it('returns a rejected personal choice to the UI without invoking the runner',async()=>{
@@ -1866,7 +1866,7 @@ describe('CodeAgentSessionService', () => {
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'text_delta', messageId: 'ai-1', delta: 'Working...' },
       cocoModelStep(1, true, ['tool-1'], { promptTokens: 60, completionTokens: 10, totalTokens: 70 }),
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_call', id: 'tool-1', name: 'Read', args: { file_path: 'README.md' } },
-      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# RoomTalk' },
+      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# CoworkerHouse' },
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'text_delta', messageId: 'ai-1', delta: 'Done' },
       cocoModelStep(2, true, [], { promptTokens: 40, completionTokens: 10, totalTokens: 50 }),
       {
@@ -1911,8 +1911,8 @@ describe('CodeAgentSessionService', () => {
     assert.equal((messages[1] as any).aiStreamOwnerId, undefined);
     assert.equal((messages[1] as any).aiStreamFence, undefined);
     assert.equal(messages[2].toolCallId, 'tool-1');
-    assert.equal(messages[3].toolOutputPreview, '# RoomTalk');
-    assert.equal(messages[3].content, '# RoomTalk');
+    assert.equal(messages[3].toolOutputPreview, '# CoworkerHouse');
+    assert.equal(messages[3].content, '# CoworkerHouse');
     assert.equal(messages[4].status, 'complete');
     assert.equal(messages[4].content, 'Done');
     assert.ok(Math.abs((messages[1].cost?.totalUsd || 0) - 0.0000272) < 1e-12);
@@ -1962,7 +1962,7 @@ describe('CodeAgentSessionService', () => {
     ]);
     assert.equal((observability.events[3].payload as any)?.messageLength, 'starting'.length);
     assert.equal('message' in (observability.events[3].payload as any), false);
-    assert.equal((observability.events[6].payload as any)?.outputLength, '# RoomTalk'.length);
+    assert.equal((observability.events[6].payload as any)?.outputLength, '# CoworkerHouse'.length);
     assert.equal(observability.events.some(event => event.event === 'code_agent.runner.text_delta'), false);
   });
 
@@ -4276,7 +4276,7 @@ describe('CodeAgentSessionService', () => {
             id: toolCall.id,
             name: toolCall.name,
             success: true,
-            output: '# RoomTalk',
+            output: '# CoworkerHouse',
           };
           const firstText = {
             schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION,
@@ -4403,7 +4403,7 @@ describe('CodeAgentSessionService', () => {
           id: `${harness.backend}-tool-1`,
           name: 'Read',
           success: true,
-          output: '# RoomTalk',
+          output: '# CoworkerHouse',
         },
         {
           schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION,
@@ -4604,7 +4604,7 @@ describe('CodeAgentSessionService', () => {
     assert.equal(messages[4].turnId, messages[1].turnId);
   });
 
-  it('passes prior RoomTalk Workspace history to the runner and excludes the current prompt', async () => {
+  it('passes prior CoworkerHouse Workspace history to the runner and excludes the current prompt', async () => {
     const initialMessages: Message[] = [
       userMessage('list files'),
       {
@@ -5952,7 +5952,7 @@ describe('CodeAgentSessionService', () => {
     const runner = new FakeCodeAgentRunnerClient([
       cocoModelStep(1, false, ['tool-1'], { promptTokens: 10, completionTokens: 2, totalTokens: 12 }),
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_call', id: 'tool-1', name: 'Read', args: { file_path: 'README.md' } },
-      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# RoomTalk' },
+      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# CoworkerHouse' },
     ]);
     const store = new MemoryCodeAgentStore(room(), [userMessage()]);
     store.appendFailures = 1;
@@ -6238,8 +6238,8 @@ describe('CodeAgentSessionService', () => {
     const runner = new FakeCodeAgentRunnerClient([
       cocoModelStep(1, false, ['tool-1'], { promptTokens: 10, completionTokens: 2, totalTokens: 12 }),
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_call', id: 'tool-1', name: 'Read', args: { file_path: 'README.md' } },
-      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# RoomTalk' },
-      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'text_delta', messageId: 'ai-1', delta: 'The project uses RoomTalk.' },
+      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_result', id: 'tool-1', name: 'Read', success: true, output: '# CoworkerHouse' },
+      { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'text_delta', messageId: 'ai-1', delta: 'The project uses CoworkerHouse.' },
       cocoModelStep(2, true, ['tool-2'], { promptTokens: 8, completionTokens: 2, totalTokens: 10 }),
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'tool_call', id: 'tool-2', name: 'Shell', args: { command: 'npm test' } },
       { schemaVersion: CODE_AGENT_RUNNER_SCHEMA_VERSION, type: 'error', message: 'runner stopped', code: 'runner_exit', retryable: false },
@@ -6272,7 +6272,7 @@ describe('CodeAgentSessionService', () => {
       'sandbox_status',
       'ai',
     ]);
-    assert.equal(messages[3].content, 'The project uses RoomTalk.');
+    assert.equal(messages[3].content, 'The project uses CoworkerHouse.');
     assert.equal(messages[3].status, 'complete');
     assert.equal(messages[5].toolCallId, 'tool-2');
     assert.equal(messages[5].status, 'error');

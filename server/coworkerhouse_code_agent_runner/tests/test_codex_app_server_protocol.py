@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from roomtalk_code_agent_runner import _codex_app_server_protocol as codex_app_server
+from coworkerhouse_code_agent_runner import _codex_app_server_protocol as codex_app_server
 
 
 class FakeImageResponse:
@@ -41,7 +41,7 @@ class FakeImageResponse:
 
 def test_codex_user_message_item_confirms_pending_steer_insertion(tmp_path: Path):
     mapper = codex_app_server.CodexAppServerJsonRpcMapper(
-        turn_id="turn-roomtalk",
+        turn_id="turn-coworkerhouse",
         message_id="ai-1",
         workspace=tmp_path,
     )
@@ -59,14 +59,14 @@ def test_codex_user_message_item_confirms_pending_steer_insertion(tmp_path: Path
     }) == [{
         "schemaVersion": 1,
         "type": "user_input_inserted",
-        "turnId": "turn-roomtalk",
+        "turnId": "turn-coworkerhouse",
         "messageId": "queued-steer-1",
     }]
 
 
 def test_codex_retrying_error_is_a_safe_non_terminal_status(tmp_path: Path):
     mapper = codex_app_server.CodexAppServerJsonRpcMapper(
-        turn_id="turn-roomtalk",
+        turn_id="turn-coworkerhouse",
         message_id="ai-1",
         workspace=tmp_path,
     )
@@ -84,7 +84,7 @@ def test_codex_retrying_error_is_a_safe_non_terminal_status(tmp_path: Path):
     assert events == [{
         "schemaVersion": 1,
         "type": "status",
-        "turnId": "turn-roomtalk",
+        "turnId": "turn-coworkerhouse",
         "status": "running",
         "message": "codex app-server reconnecting",
     }]
@@ -94,7 +94,7 @@ def test_codex_retrying_error_is_a_safe_non_terminal_status(tmp_path: Path):
 @pytest.mark.parametrize("will_retry", [False, None, 1, "true"])
 def test_codex_error_without_strict_retry_signal_remains_terminal(tmp_path: Path, will_retry: Any):
     mapper = codex_app_server.CodexAppServerJsonRpcMapper(
-        turn_id="turn-roomtalk",
+        turn_id="turn-coworkerhouse",
         message_id="ai-1",
         workspace=tmp_path,
     )
@@ -111,7 +111,7 @@ def test_codex_error_without_strict_retry_signal_remains_terminal(tmp_path: Path
 
 def test_codex_failed_turn_completion_remains_terminal_after_retrying_error(tmp_path: Path):
     mapper = codex_app_server.CodexAppServerJsonRpcMapper(
-        turn_id="turn-roomtalk",
+        turn_id="turn-coworkerhouse",
         message_id="ai-1",
         workspace=tmp_path,
     )

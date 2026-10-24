@@ -20,11 +20,11 @@ describe('FakeCodeAgentSandboxService', () => {
 
     const runner = await service.startRunner({
       handle,
-      command: 'python -m roomtalk_code_agent_runner',
+      command: 'python -m coworkerhouse_code_agent_runner',
       env: { PYTHONUNBUFFERED: '1' },
     });
-    assert.equal(runner.command, 'python -m roomtalk_code_agent_runner');
-    assert.deepEqual(service.startedRunnerCommands, ['python -m roomtalk_code_agent_runner']);
+    assert.equal(runner.command, 'python -m coworkerhouse_code_agent_runner');
+    assert.deepEqual(service.startedRunnerCommands, ['python -m coworkerhouse_code_agent_runner']);
     assert.deepEqual(service.startedRunnerEnvs, [{ PYTHONUNBUFFERED: '1' }]);
 
     await service.destroy(handle.id);
@@ -47,7 +47,7 @@ describe('FakeCodeAgentSandboxService', () => {
     await assert.rejects(() => service.destroy(handle.id), /destroy failed/);
 
     service.failNext('startRunner');
-    await assert.rejects(() => service.startRunner({ handle, command: 'python -m roomtalk_code_agent_runner' }), /startRunner failed/);
+    await assert.rejects(() => service.startRunner({ handle, command: 'python -m coworkerhouse_code_agent_runner' }), /startRunner failed/);
   });
 
   it('stores sandbox secret files outside the fake workspace and enforces the secret root', async () => {

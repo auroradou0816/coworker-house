@@ -47,20 +47,20 @@ export interface CodeAgentRuntimeConfig {
   };
 }
 
-export const DEFAULT_CODE_AGENT_RUNNER_COMMAND = 'python -m roomtalk_code_agent_runner';
-export const DEFAULT_CODEX_CLI_RUNNER_COMMAND = 'python -m roomtalk_code_agent_runner.codex_cli';
-export const DEFAULT_CODEX_APP_SERVER_RUNNER_COMMAND = 'python -m roomtalk_code_agent_runner.codex_app_server';
-export const DEFAULT_OPENCODE_RUNNER_COMMAND = 'python -m roomtalk_code_agent_runner.acp_harness --backend opencode';
-export const DEFAULT_HERMES_AGENT_RUNNER_COMMAND = 'python -m roomtalk_code_agent_runner.acp_harness --backend hermes-agent';
+export const DEFAULT_CODE_AGENT_RUNNER_COMMAND = 'python -m coworkerhouse_code_agent_runner';
+export const DEFAULT_CODEX_CLI_RUNNER_COMMAND = 'python -m coworkerhouse_code_agent_runner.codex_cli';
+export const DEFAULT_CODEX_APP_SERVER_RUNNER_COMMAND = 'python -m coworkerhouse_code_agent_runner.codex_app_server';
+export const DEFAULT_OPENCODE_RUNNER_COMMAND = 'python -m coworkerhouse_code_agent_runner.acp_harness --backend opencode';
+export const DEFAULT_HERMES_AGENT_RUNNER_COMMAND = 'python -m coworkerhouse_code_agent_runner.acp_harness --backend hermes-agent';
 export const DEFAULT_CODE_AGENT_DAEMON_COMMAND = [
   "bash -lc '",
-  'pkill -TERM -f "^python -m roomtalk_code_agent_runner[.]daemon$|[c]odex app-server --listen stdio://|[c]odex-code-mode-host|[o]pencode acp|[h]ermes acp" 2>/dev/null || true;',
+  'pkill -TERM -f "^python -m coworkerhouse_code_agent_runner[.]daemon$|[c]odex app-server --listen stdio://|[c]odex-code-mode-host|[o]pencode acp|[h]ermes acp" 2>/dev/null || true;',
   'sleep 0.2;',
-  'pkill -KILL -f "^python -m roomtalk_code_agent_runner[.]daemon$|[c]odex app-server --listen stdio://|[c]odex-code-mode-host|[o]pencode acp|[h]ermes acp" 2>/dev/null || true;',
-  'exec python -m roomtalk_code_agent_runner.daemon',
+  'pkill -KILL -f "^python -m coworkerhouse_code_agent_runner[.]daemon$|[c]odex app-server --listen stdio://|[c]odex-code-mode-host|[o]pencode acp|[h]ermes acp" 2>/dev/null || true;',
+  'exec python -m coworkerhouse_code_agent_runner.daemon',
   "'",
 ].join(' ');
-export const DEFAULT_CODE_AGENT_RUNNER_PYTHONPATH = '/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner';
+export const DEFAULT_CODE_AGENT_RUNNER_PYTHONPATH = '/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner';
 export const DEFAULT_CODE_AGENT_WORKSPACE_ROOT = '/workspace';
 export const DEFAULT_PLAYWRIGHT_BROWSERS_PATH = '/ms-playwright';
 export const DEFAULT_NODE_PATH = '/usr/lib/node_modules';
@@ -245,7 +245,7 @@ const hasModelProxySettings = (env: NodeJS.ProcessEnv) => (
   Boolean(env.CODE_AGENT_MODEL_PROXY_URL) || Boolean(env.CODE_AGENT_MODEL_PROXY_TOKEN)
 );
 
-const hasRoomTalkModelGatewaySettings = (env: NodeJS.ProcessEnv) => (
+const hasCoworkerHouseModelGatewaySettings = (env: NodeJS.ProcessEnv) => (
   env.CODE_AGENT_MODEL_ACCESS_STRATEGY === 'roomtalk_gateway' ||
   Boolean(env.CODE_AGENT_MODEL_GATEWAY_SECRET) ||
   Boolean(env.CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL)
@@ -269,7 +269,7 @@ const hasScopedProviderKeyContract = (env: NodeJS.ProcessEnv) => (
 const usesOutOfBandModelAccess = (env: NodeJS.ProcessEnv) => (
   env.CODE_AGENT_MODEL_ACCESS_STRATEGY === 'proxy' ||
   env.CODE_AGENT_MODEL_ACCESS_STRATEGY === 'roomtalk_gateway' ||
-  hasRoomTalkModelGatewaySettings(env) ||
+  hasCoworkerHouseModelGatewaySettings(env) ||
   hasModelProxySettings(env) ||
   env.CODE_AGENT_SCOPED_PROVIDER_KEY === 'true'
 );
@@ -282,7 +282,7 @@ const hasApprovedModelAccess = (config: CodeAgentRuntimeConfig, env: NodeJS.Proc
     return true;
   }
   // This flag means the sandbox image/session already has a short-lived scoped
-  // provider key provisioned out of band. RoomTalk must not forward long-lived
+  // provider key provisioned out of band. CoworkerHouse must not forward long-lived
   // provider keys when this contract or a model proxy is configured.
   return hasScopedProviderKeyContract(env);
 };
@@ -343,7 +343,7 @@ const parsePositiveNumberEnv = (env: NodeJS.ProcessEnv, name: string, fallback: 
 };
 
 const readModelGatewayConfig = (env: NodeJS.ProcessEnv): CodeAgentRuntimeConfig['modelGateway'] | undefined => {
-  if (!hasRoomTalkModelGatewaySettings(env)) {
+  if (!hasCoworkerHouseModelGatewaySettings(env)) {
     return undefined;
   }
   if (env.CODE_AGENT_MODEL_ACCESS_STRATEGY && env.CODE_AGENT_MODEL_ACCESS_STRATEGY !== 'roomtalk_gateway') {
@@ -352,14 +352,14 @@ const readModelGatewayConfig = (env: NodeJS.ProcessEnv): CodeAgentRuntimeConfig[
 
   const tokenSecret = env.CODE_AGENT_MODEL_GATEWAY_SECRET?.trim();
   if (!tokenSecret) {
-    throw new Error('RoomTalk Code agent model gateway requires CODE_AGENT_MODEL_GATEWAY_SECRET');
+    throw new Error('CoworkerHouse Code agent model gateway requires CODE_AGENT_MODEL_GATEWAY_SECRET');
   }
   const baseUrl = (env.CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL || (env.CLIENT_URL ? `${env.CLIENT_URL.replace(/\/+$/, '')}/api/code-agent/model-gateway` : '')).trim();
   if (!baseUrl) {
-    throw new Error('RoomTalk Code agent model gateway requires CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL or CLIENT_URL');
+    throw new Error('CoworkerHouse Code agent model gateway requires CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL or CLIENT_URL');
   }
   if (!isHttpsUrl(baseUrl) && env.E2E_TEST_MODE !== 'true') {
-    throw new Error('RoomTalk Code agent model gateway public URL must be HTTPS');
+    throw new Error('CoworkerHouse Code agent model gateway public URL must be HTTPS');
   }
 
   return {
@@ -400,11 +400,11 @@ const validateEnabledConfig = (config: CodeAgentRuntimeConfig, env: NodeJS.Proce
     config.availableModes.some(codeAgentModeAllowsWriteTools);
   const requiresModelAccessContract = shellEnabled || writeToolsEnabled;
   if (
-    hasRoomTalkModelGatewaySettings(env) &&
+    hasCoworkerHouseModelGatewaySettings(env) &&
     env.CODE_AGENT_MODEL_ACCESS_STRATEGY &&
     env.CODE_AGENT_MODEL_ACCESS_STRATEGY !== 'roomtalk_gateway'
   ) {
-    throw new Error('RoomTalk Code agent model gateway settings require CODE_AGENT_MODEL_ACCESS_STRATEGY=roomtalk_gateway');
+    throw new Error('CoworkerHouse Code agent model gateway settings require CODE_AGENT_MODEL_ACCESS_STRATEGY=roomtalk_gateway');
   }
   if (
     hasModelProxySettings(env) &&
@@ -419,7 +419,7 @@ const validateEnabledConfig = (config: CodeAgentRuntimeConfig, env: NodeJS.Proce
     throw new Error('JSONL/daemon code-agent scoped provider key mode requires TTL, budget, and audit id');
   }
   if ((config.runnerClient === 'jsonl' || config.runnerClient === 'daemon') && requiresModelAccessContract && !hasApprovedModelAccess(config, env)) {
-    throw new Error('JSONL/daemon code-agent write or shell mode requires RoomTalk model gateway, model proxy with token, or scoped provider key contract');
+    throw new Error('JSONL/daemon code-agent write or shell mode requires CoworkerHouse model gateway, model proxy with token, or scoped provider key contract');
   }
 
   if (config.sandboxProvider === 'e2b' && (config.runnerClient === 'jsonl' || config.runnerClient === 'daemon')) {

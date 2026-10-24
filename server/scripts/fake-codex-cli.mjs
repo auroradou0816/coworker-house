@@ -4,8 +4,8 @@ import path from 'node:path'
 
 const DEVICE_URL = 'https://auth.openai.com/codex/device'
 const DEVICE_CODE = 'ABCD-EFGH'
-const FAKE_ACCESS_VALUE = 'roomtalk-e2e-fake-access-value-0123456789'
-const FAKE_REFRESH_VALUE = 'roomtalk-e2e-fake-refresh-value-0123456789'
+const FAKE_ACCESS_VALUE = 'coworkerhouse-e2e-fake-access-value-0123456789'
+const FAKE_REFRESH_VALUE = 'coworkerhouse-e2e-fake-refresh-value-0123456789'
 
 const [command, subcommand] = process.argv.slice(2)
 

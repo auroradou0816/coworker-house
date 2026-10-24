@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from roomtalk_code_agent_runner import platform_tools, room_context_broker
+from coworkerhouse_code_agent_runner import platform_tools, room_context_broker
 
 
 class FakeResponse:
@@ -52,7 +52,7 @@ def test_suggestions_cli_uses_private_broker_and_preserves_source_and_page(monke
         capsys.readouterr()
         assert platform_tools.main(["idea", "propose", "--source-kind", "memory", "--source-id", "real-note",
                                     "--title", "Follow up", "--reason", "Saved decision", "--prompt", "Create next steps", "--json"]) == 1
-        assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+        assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
         assert len(calls) == 2
     finally:
         broker.close()
@@ -65,7 +65,7 @@ def test_search_and_choices_cli_cross_the_private_unix_broker(tmp_path: Path, mo
         assert request.headers['Authorization'] == 'Bearer private-tool-token'
         return FakeResponse({'results': [{'url': 'https://github.com/CopilotKit/openmuse'}], 'warnings': [], 'truncated': False})
     monkeypatch.setattr(room_context_broker.urllib_request, 'urlopen', upstream)
-    env = {'ROOMTALK_ROOM_CONTEXT_URL': 'https://roomtalk.example/api/code-agent/room-context', 'ROOMTALK_ROOM_CONTEXT_TOKEN': 'private-tool-token', 'ROOMTALK_CODE_AGENT_CLI_ACCESS': 'full-access'}
+    env = {'ROOMTALK_ROOM_CONTEXT_URL': 'https://coworkerhouse.example/api/code-agent/room-context', 'ROOMTALK_ROOM_CONTEXT_TOKEN': 'private-tool-token', 'ROOMTALK_CODE_AGENT_CLI_ACCESS': 'full-access'}
     broker = room_context_broker.RoomContextBroker(env, 'source-search').start()
     monkeypatch.setenv('ROOMTALK_ROOM_CONTEXT_SOCKET', env['ROOMTALK_ROOM_CONTEXT_SOCKET'])
     try:
@@ -260,7 +260,7 @@ def test_tracking_cli_uses_private_broker_for_watches_updates_and_versions(monke
         capsys.readouterr()
         monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
         assert platform_tools.main(["watch", "remove", "--id", "w", "--json"]) == 1
-        assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+        assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
     finally:
         broker.close()
 
@@ -292,7 +292,7 @@ def test_goal_cli_uses_private_broker_for_revisions_and_owner_scoped_status(tmp_
         assert requests[-1][3]["milestones"] == ["Read", "Summarize"]
         monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
         assert platform_tools.main(["goal", "delete", "--id", "g", "--expected-updated-at", "2026-10-06T12:00:00Z", "--json"]) == 1
-        assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+        assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
     finally:
         broker.close()
 
@@ -322,7 +322,7 @@ def test_memory_merge_cli_keeps_revisions_and_token_inside_private_broker(tmp_pa
         assert requests[-1][2:] == ("PATCH", {**payload, "action": "merge"})
         monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
         assert platform_tools.main(["memory", "merge", "--file", str(source), "--json"]) == 1
-        assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+        assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
         assert len(requests) == 2
     finally:
         broker.close()

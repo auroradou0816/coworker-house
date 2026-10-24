@@ -9,9 +9,9 @@ import {
 const baseEnv = {
   RUN_CODEX_E2B_SMOKE: 'true',
   E2B_API_KEY: 'e2b-test-key',
-  CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dual-cli',
+  CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dual-cli',
   CODE_AGENT_ARTIFACT_MODE: 'production',
-  CODE_AGENT_ARTIFACT_VERSION: 'roomtalk-code-agent-2026-07-04-dual-cli-candidate',
+  CODE_AGENT_ARTIFACT_VERSION: 'coworkerhouse-code-agent-2026-07-04-dual-cli-candidate',
   CODE_AGENT_SOURCE_REF: '0d783dd662c823d6a671c6bba596a3ec5ef00491',
   CODEX_E2B_SMOKE_AUTH_JSON_PATH: '/tmp/codex-auth.json',
   CODEX_CLI_BIN: '/usr/local/bin/codex',
@@ -43,11 +43,11 @@ describe('buildCodexE2BSmokePlan', () => {
     assertSkipped({ RUN_CODEX_E2B_SMOKE: 'true' }, /CODE_AGENT_E2B_TEMPLATE_ID/);
     assertSkipped({
       RUN_CODEX_E2B_SMOKE: 'true',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dual-cli',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dual-cli',
     }, /E2B_API_KEY/);
     assertSkipped({
       RUN_CODEX_E2B_SMOKE: 'true',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dual-cli',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dual-cli',
       E2B_API_KEY: 'e2b-test-key',
       HOME: '',
     }, /CODEX_E2B_SMOKE_AUTH_JSON_PATH/);

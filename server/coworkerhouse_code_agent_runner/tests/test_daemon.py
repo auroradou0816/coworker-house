@@ -7,9 +7,9 @@ import threading
 import time
 from typing import Any
 
-from roomtalk_code_agent_runner import daemon as daemon_module
-from roomtalk_code_agent_runner.daemon import SandboxDaemon
-from roomtalk_code_agent_runner.runner import EventEmitter, RunnerRequest
+from coworkerhouse_code_agent_runner import daemon as daemon_module
+from coworkerhouse_code_agent_runner.daemon import SandboxDaemon
+from coworkerhouse_code_agent_runner.runner import EventEmitter, RunnerRequest
 
 
 def request(**overrides: Any) -> dict[str, Any]:
@@ -251,7 +251,7 @@ def test_daemon_runs_thread_query_with_per_request_env(monkeypatch: Any):
             "backwardsCursor": None,
         })
 
-    from roomtalk_code_agent_runner import codex_app_server
+    from coworkerhouse_code_agent_runner import codex_app_server
     monkeypatch.setattr(codex_app_server, "run_thread_query_request", fake_run_thread_query_request)
 
     stdout = io.StringIO()

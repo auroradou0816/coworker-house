@@ -21,7 +21,7 @@ from .codex_cli import (
     _normalize_codex_reasoning_effort,
     _normalize_codex_service_tier,
     _normalize_workspace_text,
-    _roomtalk_tool_name,
+    _coworkerhouse_tool_name,
     _write_private_file,
 )
 from .runner import RunnerError, RunnerRequest, parse_request
@@ -36,8 +36,8 @@ CODEX_IMAGE_MIME_TYPES = frozenset({
     "image/webp",
 })
 APP_SERVER_CLIENT_INFO = {
-    "name": "roomtalk",
-    "title": "RoomTalk",
+    "name": "coworkerhouse",
+    "title": "CoworkerHouse",
     "version": "0.1.0",
 }
 
@@ -77,7 +77,7 @@ class _PendingApproval:
 
 @dataclass
 class _AppServerRunState:
-    roomtalk_turn_id: str
+    coworkerhouse_turn_id: str
     thread_id: str | None = None
     app_turn_id: str | None = None
     pending_approvals: dict[str, _PendingApproval] = field(default_factory=dict)
@@ -352,7 +352,7 @@ class CodexAppServerJsonRpcMapper:
 
         if item_type == "commandExecution" and not completed:
             command = str(item.get("command") or "")
-            tool_name = _roomtalk_tool_name(command) or "shell"
+            tool_name = _coworkerhouse_tool_name(command) or "shell"
             self.command_tool_names[item_id] = tool_name
             return [{
                 "schemaVersion": SCHEMA_VERSION,
@@ -367,7 +367,7 @@ class CodexAppServerJsonRpcMapper:
             exit_code = item.get("exitCode")
             normalized_exit_code = exit_code if isinstance(exit_code, int) else None
             command = str(item.get("command") or "")
-            tool_name = _roomtalk_tool_name(command) or self.command_tool_names.get(item_id) or "shell"
+            tool_name = _coworkerhouse_tool_name(command) or self.command_tool_names.get(item_id) or "shell"
             status = str(item.get("status") or "")
             aggregated_output = str(item.get("aggregatedOutput") or "")
             if not aggregated_output:
@@ -612,7 +612,7 @@ def _materialize_codex_image_url(image_url: str, *, turn_id: str) -> str:
         image_url,
         headers={
             "Accept": ", ".join(sorted(CODEX_IMAGE_MIME_TYPES)),
-            "User-Agent": "RoomTalk-Code-Agent/1.0",
+            "User-Agent": "CoworkerHouse-Code-Agent/1.0",
         },
         method="GET",
     )
@@ -735,9 +735,9 @@ def _codex_app_server_permissions(request: RunnerRequest):
 
 
 def _prompt_with_app_server_tools(request: RunnerRequest, env: dict[str, str]) -> str:
-    from .codex_cli import _prompt_with_roomtalk_tools
+    from .codex_cli import _prompt_with_coworkerhouse_tools
 
-    return _prompt_with_roomtalk_tools(request, env)
+    return _prompt_with_coworkerhouse_tools(request, env)
 
 
 def _control_result(
@@ -913,11 +913,11 @@ def _chatgpt_auth_tokens_refresh_result(
     params: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if config.auth_refresh_url and config.auth_refresh_token:
-        payload = _request_roomtalk_auth_refresh(config, params or {})
+        payload = _request_coworkerhouse_auth_refresh(config, params or {})
         auth_json = payload.get("authJson")
         if not isinstance(auth_json, str) or not auth_json.strip():
             raise RunnerError(
-                "RoomTalk Codex auth refresh response did not include authJson",
+                "CoworkerHouse Codex auth refresh response did not include authJson",
                 code="codex_auth_refresh_invalid_response",
             )
         _write_private_file(codex_home / "auth.json", auth_json)
@@ -928,7 +928,7 @@ def _chatgpt_auth_tokens_refresh_result(
         account_id = payload.get("chatgptAccountId")
         if not isinstance(access_token, str) or not access_token or not isinstance(account_id, str) or not account_id:
             raise RunnerError(
-                "RoomTalk Codex auth refresh response did not include accessToken and chatgptAccountId",
+                "CoworkerHouse Codex auth refresh response did not include accessToken and chatgptAccountId",
                 code="codex_auth_refresh_invalid_response",
             )
         plan_type = payload.get("chatgptPlanType")
@@ -964,7 +964,7 @@ def _chatgpt_auth_tokens_refresh_result(
     }
 
 
-def _request_roomtalk_auth_refresh(config: CodexCliRunConfig, params: dict[str, Any]) -> dict[str, Any]:
+def _request_coworkerhouse_auth_refresh(config: CodexCliRunConfig, params: dict[str, Any]) -> dict[str, Any]:
     assert config.auth_refresh_url is not None
     assert config.auth_refresh_token is not None
     body = json.dumps({
@@ -993,22 +993,22 @@ def _request_roomtalk_auth_refresh(config: CodexCliRunConfig, params: dict[str, 
             error_payload = {}
         message = error_payload.get("error") if isinstance(error_payload, dict) else None
         raise RunnerError(
-            str(message or f"RoomTalk Codex auth refresh failed with HTTP {exc.code}"),
+            str(message or f"CoworkerHouse Codex auth refresh failed with HTTP {exc.code}"),
             code="codex_auth_refresh_failed",
         ) from exc
     except Exception as exc:
         raise RunnerError(
-            f"RoomTalk Codex auth refresh request failed: {exc}",
+            f"CoworkerHouse Codex auth refresh request failed: {exc}",
             code="codex_auth_refresh_failed",
         ) from exc
     if len(raw) > 2 * 1024 * 1024:
-        raise RunnerError("RoomTalk Codex auth refresh response is too large", code="codex_auth_refresh_invalid_response")
+        raise RunnerError("CoworkerHouse Codex auth refresh response is too large", code="codex_auth_refresh_invalid_response")
     try:
         payload = json.loads(raw.decode("utf-8"))
     except Exception as exc:
-        raise RunnerError("RoomTalk Codex auth refresh response is not valid JSON", code="codex_auth_refresh_invalid_response") from exc
+        raise RunnerError("CoworkerHouse Codex auth refresh response is not valid JSON", code="codex_auth_refresh_invalid_response") from exc
     if not isinstance(payload, dict):
-        raise RunnerError("RoomTalk Codex auth refresh response was not an object", code="codex_auth_refresh_invalid_response")
+        raise RunnerError("CoworkerHouse Codex auth refresh response was not an object", code="codex_auth_refresh_invalid_response")
     return payload
 
 

@@ -9,6 +9,19 @@ permissions:
   contents: read
 
 jobs:
+  sandbox-runner:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server/coworkerhouse_code_agent_runner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest tests -q
+
   server:
     runs-on: ubuntu-latest
     services:
@@ -17,11 +30,11 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: roomtalk_test
+          POSTGRES_DB: coworkerhouse_test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d roomtalk_test"
+          --health-cmd "pg_isready -U postgres -d coworkerhouse_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 12
@@ -38,7 +51,7 @@ jobs:
       run:
         working-directory: server
     env:
-      ROOM_EVENT_TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/roomtalk_test
+      ROOM_EVENT_TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/coworkerhouse_test
       BULLMQ_TEST_REDIS_URL: redis://127.0.0.1:6379/15
     steps:
       - uses: actions/checkout@v4
@@ -66,11 +79,11 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: roomtalk_e2e
+          POSTGRES_DB: coworkerhouse_e2e
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d roomtalk_e2e"
+          --health-cmd "pg_isready -U postgres -d coworkerhouse_e2e"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 12
@@ -84,7 +97,7 @@ jobs:
           --health-timeout 3s
           --health-retries 12
     env:
-      E2E_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/roomtalk_e2e
+      E2E_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/coworkerhouse_e2e
       E2E_REDIS_URL: redis://127.0.0.1:6379/15
     steps:
       - uses: actions/checkout@v4
@@ -113,7 +126,7 @@ jobs:
         run: npm run test:e2e:postgres
         working-directory: client-heroui
       - if: matrix.suite == 'codex'
-        run: node --test ../server/roomtalk_code_agent_runner/tests/personal_browser.test.cjs
+        run: node --test ../server/coworkerhouse_code_agent_runner/tests/personal_browser.test.cjs
         working-directory: client-heroui
         env:
           NODE_PATH: ${{ github.workspace }}/client-heroui/node_modules

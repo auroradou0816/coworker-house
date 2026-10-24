@@ -43,7 +43,7 @@ const runnerVersion = runnerPyproject.match(/^\s*version\s*=\s*"([^"]+)"/m)?.[1]
 if (!/^[0-9a-f]{40}$/i.test(engineRef)) {
   throw new Error(`Code-agent engine sourceRef must be a pinned 40-character commit SHA, got: ${engineRef}`);
 }
-if (!codeAgentCliBackend || codeAgentCliBackend.command !== 'python -m roomtalk_code_agent_runner') {
+if (!codeAgentCliBackend || codeAgentCliBackend.command !== 'python -m coworkerhouse_code_agent_runner') {
   throw new Error('Code-agent artifact lock must declare runner.backends.code_agent_cli.command');
 }
 if (runnerName !== lock.runner?.packageName) {
@@ -52,13 +52,13 @@ if (runnerName !== lock.runner?.packageName) {
 if (runnerVersion !== lock.runner?.packageVersion) {
   throw new Error(`Runner package version mismatch: artifact lock has ${lock.runner?.packageVersion || ''}, pyproject has ${runnerVersion}`);
 }
-if (!codexCliBackend || codexCliBackend.command !== 'python -m roomtalk_code_agent_runner.codex_cli') {
+if (!codexCliBackend || codexCliBackend.command !== 'python -m coworkerhouse_code_agent_runner.codex_cli') {
   throw new Error('Code-agent artifact lock must declare runner.backends.codex_cli.command');
 }
 if (!/^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/.test(codexCliBackend.codexCliVersion || '')) {
   throw new Error(`Codex CLI version must be pinned, got: ${codexCliBackend.codexCliVersion || ''}`);
 }
-if (!codexAppServerBackend || codexAppServerBackend.command !== 'python -m roomtalk_code_agent_runner.codex_app_server') {
+if (!codexAppServerBackend || codexAppServerBackend.command !== 'python -m coworkerhouse_code_agent_runner.codex_app_server') {
   throw new Error('Code-agent artifact lock must declare runner.backends.codex_app_server.command');
 }
 if (codexAppServerBackend.codexCliVersion !== codexCliBackend.codexCliVersion) {
@@ -69,14 +69,14 @@ if (codexAppServerBackend.pythonSdkVersion !== '0.1.0b3') {
 }
 if (
   !openCodeBackend
-  || openCodeBackend.command !== 'python -m roomtalk_code_agent_runner.acp_harness --backend opencode'
+  || openCodeBackend.command !== 'python -m coworkerhouse_code_agent_runner.acp_harness --backend opencode'
   || openCodeBackend.opencodeVersion !== lock.harnesses?.openCode?.packageVersion
 ) {
   throw new Error('Code-agent artifact lock must declare a pinned OpenCode ACP backend');
 }
 if (
   !hermesAgentBackend
-  || hermesAgentBackend.command !== 'python -m roomtalk_code_agent_runner.acp_harness --backend hermes-agent'
+  || hermesAgentBackend.command !== 'python -m coworkerhouse_code_agent_runner.acp_harness --backend hermes-agent'
   || hermesAgentBackend.hermesAgentVersion !== hermesAgentSource?.packageVersion
   || hermesAgentBackend.acpSdkVersion !== hermesAgentSource?.acpSdkVersion
 ) {
@@ -85,7 +85,7 @@ if (
 if (!/^[0-9a-f]{40}$/i.test(hermesAgentSource?.sourceRef || '')) {
   throw new Error(`Hermes Agent sourceRef must be a pinned 40-character commit SHA, got: ${hermesAgentSource?.sourceRef || ''}`);
 }
-if (!daemonBackend || daemonBackend.command !== 'python -m roomtalk_code_agent_runner.daemon') {
+if (!daemonBackend || daemonBackend.command !== 'python -m coworkerhouse_code_agent_runner.daemon') {
   throw new Error('Code-agent artifact lock must declare runner.backends.daemon.command');
 }
 
@@ -122,7 +122,7 @@ const createEngineArchive = archivePath => {
     throw new Error('Code-agent engine sourceRepo is required when no local checkout is supplied.');
   }
 
-  const sourceCheckout = mkdtempSync(resolve(tmpdir(), 'roomtalk-code-agent-source-'));
+  const sourceCheckout = mkdtempSync(resolve(tmpdir(), 'coworkerhouse-code-agent-source-'));
   try {
     execFileSync('git', ['init', '--quiet', sourceCheckout]);
     execFileSync('git', ['-C', sourceCheckout, 'fetch', '--quiet', '--depth=1', engineSourceRepo, engineRef]);
@@ -150,7 +150,7 @@ const createHermesAgentArchive = archivePath => {
     return { sourceRepo: repo, sourceMode: 'local' };
   }
 
-  const sourceCheckout = mkdtempSync(resolve(tmpdir(), 'roomtalk-hermes-agent-source-'));
+  const sourceCheckout = mkdtempSync(resolve(tmpdir(), 'coworkerhouse-hermes-agent-source-'));
   try {
     execFileSync('git', ['init', '--quiet', sourceCheckout]);
     execFileSync('git', ['-C', sourceCheckout, 'fetch', '--quiet', '--depth=1', hermesAgentSource.sourceRepo, sourceRef]);
@@ -165,7 +165,7 @@ const createHermesAgentArchive = archivePath => {
   }
 };
 
-const sourceArchiveDir = mkdtempSync(resolve(tmpdir(), 'roomtalk-code-agent-archive-'));
+const sourceArchiveDir = mkdtempSync(resolve(tmpdir(), 'coworkerhouse-code-agent-archive-'));
 const archivePath = resolve(sourceArchiveDir, 'code-agent-engine-source.tar');
 const hermesAgentArchivePath = resolve(sourceArchiveDir, 'hermes-agent-source.tar');
 try {
@@ -180,7 +180,7 @@ try {
   execFileSync('tar', ['-xf', archivePath, '-C', resolve(outputDir, 'code-agent-engine')]);
   execFileSync('tar', ['-xf', hermesAgentArchivePath, '-C', resolve(outputDir, 'hermes-agent')]);
 
-  cpSync(resolve(repoRoot, lock.runner.sourcePath), resolve(outputDir, 'roomtalk_code_agent_runner'), {
+  cpSync(resolve(repoRoot, lock.runner.sourcePath), resolve(outputDir, 'coworkerhouse_code_agent_runner'), {
     recursive: true,
     filter: source => {
       const normalized = source.split('\\').join('/');

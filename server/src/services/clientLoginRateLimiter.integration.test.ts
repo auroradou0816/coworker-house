@@ -6,7 +6,7 @@ import { RedisClientLoginRateLimiter } from './clientLoginRateLimiter';
 const redisUrl = process.env.BULLMQ_TEST_REDIS_URL;
 
 describe('client login rate limiter integration', { skip: !redisUrl }, () => {
-  const keyPrefix = `roomtalk:client-login-rate-test:${process.pid}:${Date.now()}`;
+  const keyPrefix = `coworkerhouse:client-login-rate-test:${process.pid}:${Date.now()}`;
   let redis: RedisClientType;
 
   before(async () => {

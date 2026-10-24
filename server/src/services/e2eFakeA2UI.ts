@@ -121,7 +121,7 @@ export const buildE2EFakeA2UIBatches = (surfaceId: string, prompt: string): unkn
         title: 'Streaming A2UI',
         prompt,
         ctaLabel: 'Send UI action',
-        reviewer: 'RoomTalk',
+        reviewer: 'CoworkerHouse',
         ready: true,
         reviewAt: `2026-06-13T12:${String(index * 5).padStart(2, '0')}:00-07:00`,
         modalText: 'The modal, controls, and media preview share the streamed data model.',

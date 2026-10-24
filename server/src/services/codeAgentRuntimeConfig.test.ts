@@ -17,7 +17,7 @@ import {
 } from './codeAgentRuntimeConfig';
 
 const pinnedArtifactEnv = {
-  CODE_AGENT_ARTIFACT_VERSION: 'roomtalk-code-agent-2026-06-28-a4e70e6',
+  CODE_AGENT_ARTIFACT_VERSION: 'coworkerhouse-code-agent-2026-06-28-a4e70e6',
   CODE_AGENT_SOURCE_REF: 'a4e70e674e46d59a63874371276f5fec0fcd3f41',
 };
 
@@ -169,14 +169,14 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'fake',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
     }), /requires CODE_AGENT_RUNNER_CLIENT=jsonl/);
 
     const testConfig = resolveCodeAgentRuntimeConfig({
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'fake',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       E2E_TEST_MODE: 'true',
     });
     assert.equal(testConfig.sandboxProvider, 'e2b');
@@ -199,7 +199,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ...e2bCredentialEnv,
     }), /requires CODE_AGENT_ARTIFACT_VERSION and CODE_AGENT_SOURCE_REF/);
 
@@ -208,7 +208,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_SOURCE_DIR: '/path/to/projects/code-agent-engine/src',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
@@ -220,7 +220,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'daemon',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_DAEMON_COMMAND: 'python -m custom_daemon',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
@@ -242,7 +242,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ...pinnedArtifactEnv,
     }), /requires E2B_API_KEY or E2B_ACCESS_TOKEN/);
   });
@@ -252,7 +252,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
     });
@@ -287,7 +287,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
       CODE_AGENT_ARTIFACT_MODE: 'development',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dev',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dev',
       ...e2bCredentialEnv,
     }), /requires CODE_AGENT_SOURCE_DIR/);
 
@@ -297,7 +297,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
       CODE_AGENT_ARTIFACT_MODE: 'development',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent-dev',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent-dev',
       CODE_AGENT_SOURCE_DIR: '/path/to/projects/code-agent-engine/src',
       ...e2bCredentialEnv,
     });
@@ -317,7 +317,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       DEEPSEEK_API_KEY: 'deepseek-key',
       DEEPSEEK_BASE_URL: 'https://api.deepseek.com',
       ANTHROPIC_API_KEY: 'anthropic-key',
@@ -350,27 +350,27 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'acceptEdits',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
-    }), /requires RoomTalk model gateway, model proxy with token, or scoped provider key contract/);
+    }), /requires CoworkerHouse model gateway, model proxy with token, or scoped provider key contract/);
 
     assert.throws(() => resolveCodeAgentRuntimeConfig({
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ROOMTALK_CODE_AGENT_ALLOW_SHELL: 'true',
       ...e2bCredentialEnv,
       ...pinnedArtifactEnv,
-    }), /requires RoomTalk model gateway, model proxy with token, or scoped provider key contract/);
+    }), /requires CoworkerHouse model gateway, model proxy with token, or scoped provider key contract/);
 
     assert.throws(() => resolveCodeAgentRuntimeConfig({
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_ACCESS_STRATEGY: 'proxy',
       CODE_AGENT_MODEL_PROXY_URL: 'https://model-proxy.internal',
       ...e2bCredentialEnv,
@@ -381,7 +381,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_ACCESS_STRATEGY: 'proxy',
       CODE_AGENT_MODEL_PROXY_URL: 'http://model-proxy.internal',
       CODE_AGENT_MODEL_PROXY_TOKEN: 'short-lived-proxy-token',
@@ -394,7 +394,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_PROXY_URL: 'https://model-proxy.internal',
       CODE_AGENT_MODEL_PROXY_TOKEN: 'short-lived-proxy-token',
       DEEPSEEK_API_KEY: 'must-not-forward',
@@ -419,7 +419,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_ACCESS_STRATEGY: 'proxy',
       CODE_AGENT_MODEL_PROXY_URL: 'https://model-proxy.internal',
       CODE_AGENT_MODEL_PROXY_TOKEN: '   ',
@@ -431,7 +431,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_SCOPED_PROVIDER_KEY: 'true',
       CODE_AGENT_SCOPED_PROVIDER_KEY_TTL_SECONDS: '900',
       ...e2bCredentialEnv,
@@ -443,7 +443,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'acceptEdits',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       DEEPSEEK_API_KEY: 'must-not-forward',
       ...e2bCredentialEnv,
       ...scopedProviderKeyEnv,
@@ -454,14 +454,14 @@ describe('resolveCodeAgentRuntimeConfig', () => {
     assert.deepEqual(scoped.runnerProviderEnvByProvider, {});
   });
 
-  it('allows JSONL acceptEdits through the built-in RoomTalk model gateway', () => {
+  it('allows JSONL acceptEdits through the built-in CoworkerHouse model gateway', () => {
     const config = resolveCodeAgentRuntimeConfig({
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_ALLOWED_RUN_MODES: 'plan,acceptEdits',
       CODE_AGENT_DEFAULT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_ACCESS_STRATEGY: 'roomtalk_gateway',
       CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL: 'https://room.example/api/code-agent/model-gateway',
       CODE_AGENT_MODEL_GATEWAY_SECRET: 'gateway-secret',
@@ -483,14 +483,14 @@ describe('resolveCodeAgentRuntimeConfig', () => {
     assert.equal('DEEPSEEK_API_KEY' in config.runnerEnv, false);
   });
 
-  it('defaults the built-in RoomTalk model gateway request count to unlimited', () => {
+  it('defaults the built-in CoworkerHouse model gateway request count to unlimited', () => {
     const config = resolveCodeAgentRuntimeConfig({
       CODE_AGENT_ENABLED: 'true',
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_ALLOWED_RUN_MODES: 'plan,acceptEdits',
       CODE_AGENT_DEFAULT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       CODE_AGENT_MODEL_ACCESS_STRATEGY: 'roomtalk_gateway',
       CODE_AGENT_MODEL_GATEWAY_PUBLIC_URL: 'https://room.example/api/code-agent/model-gateway',
       CODE_AGENT_MODEL_GATEWAY_SECRET: 'gateway-secret',
@@ -507,7 +507,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       DEEPSEEK_API_KEY: 'must-not-forward',
       ...e2bCredentialEnv,
       ...scopedProviderKeyEnv,
@@ -520,7 +520,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'plan',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       DEEPSEEK_API_KEY: 'must-not-forward',
       ...e2bCredentialEnv,
       ...modelProxyEnv,
@@ -543,7 +543,7 @@ describe('resolveCodeAgentRuntimeConfig', () => {
       CODE_AGENT_SANDBOX_PROVIDER: 'e2b',
       CODE_AGENT_RUNNER_CLIENT: 'jsonl',
       CODE_AGENT_MODE: 'acceptEdits',
-      CODE_AGENT_E2B_TEMPLATE_ID: 'roomtalk-code-agent',
+      CODE_AGENT_E2B_TEMPLATE_ID: 'coworkerhouse-code-agent',
       ...e2bCredentialEnv,
       ...modelProxyEnv,
       ...pinnedArtifactEnv,

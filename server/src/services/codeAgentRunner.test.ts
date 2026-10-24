@@ -66,7 +66,7 @@ describe('CodeAgentRunner', () => {
     const runner = new CodeAgentRunnerAdapter(sharedClient);
     const context: CodeAgentRunnerRunContext = {
       process: {
-        command: 'python -m roomtalk_code_agent_runner',
+        command: 'python -m coworkerhouse_code_agent_runner',
         stdin: new Writable({
           write(_chunk, _encoding, callback) {
             callback();

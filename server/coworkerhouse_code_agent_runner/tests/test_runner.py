@@ -14,8 +14,8 @@ from typing import Any
 
 import pytest
 
-from roomtalk_code_agent_runner import runner as runner_module
-from roomtalk_code_agent_runner.runner import (
+from coworkerhouse_code_agent_runner import runner as runner_module
+from coworkerhouse_code_agent_runner.runner import (
     EventEmitter,
     RunnerError,
     RunnerRequest,
@@ -341,9 +341,9 @@ def test_system_prompt_matches_the_actual_tool_set():
         "plan",
         room_context_enabled=True,
     )
-    assert "RoomTalk is the source of truth" in room_context_prompt
-    assert "roomtalk room history --limit 20 --json" in room_context_prompt
-    assert "roomtalk site list --json" in room_context_prompt
+    assert "CoworkerHouse is the source of truth" in room_context_prompt
+    assert "coworkerhouse room history --limit 20 --json" in room_context_prompt
+    assert "coworkerhouse site list --json" in room_context_prompt
 
     edit_prompt = system_prompt_for_tools(("Read", "Glob", "Grep", "Write", "Edit"), "acceptEdits")
     assert "- Write:" in edit_prompt
@@ -362,12 +362,12 @@ def test_system_prompt_matches_the_actual_tool_set():
         static_site_write_enabled=True,
     )
     assert "PublishStaticSite" not in site_prompt
-    assert "roomtalk site list --json" in site_prompt
-    assert "roomtalk site publish --root <dir> --entry index.html --slug <slug>" in site_prompt
+    assert "coworkerhouse site list --json" in site_prompt
+    assert "coworkerhouse site publish --root <dir> --entry index.html --slug <slug>" in site_prompt
     assert "reuse exactly the same slug" in site_prompt
-    assert "roomtalk site versions --slug <slug> --json" in site_prompt
-    assert "roomtalk site activate --slug <slug> --version <version-id>" in site_prompt
-    assert "roomtalk site unpublish --slug <slug>" in site_prompt
+    assert "coworkerhouse site versions --slug <slug> --json" in site_prompt
+    assert "coworkerhouse site activate --slug <slug> --version <version-id>" in site_prompt
+    assert "coworkerhouse site unpublish --slug <slug>" in site_prompt
 
 
 def test_read_only_shell_uses_os_sandbox_and_disables_network_by_default(tmp_path: Path):
@@ -383,15 +383,15 @@ def test_read_only_shell_uses_os_sandbox_and_disables_network_by_default(tmp_pat
 
 def test_read_only_shell_keeps_network_off_and_exposes_scoped_room_context_socket(tmp_path: Path):
     socket_path = str(tmp_path / "room-context.sock")
-    argv = _read_only_shell_argv("roomtalk room history --json", tmp_path, {
-        "PYTHONPATH": "/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner",
+    argv = _read_only_shell_argv("coworkerhouse room history --json", tmp_path, {
+        "PYTHONPATH": "/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner",
         "ROOMTALK_ROOM_CONTEXT_SOCKET": socket_path,
     })
 
     assert "--share-net" not in argv
     assert "ROOMTALK_ROOM_CONTEXT_SOCKET" in argv
     assert argv[argv.index("ROOMTALK_ROOM_CONTEXT_SOCKET") + 1] == socket_path
-    assert argv[argv.index("PYTHONPATH") + 1] == "/opt/code-agent-engine/src:/opt/roomtalk_code_agent_runner"
+    assert argv[argv.index("PYTHONPATH") + 1] == "/opt/code-agent-engine/src:/opt/coworkerhouse_code_agent_runner"
     assert "ROOMTALK_STATIC_PUBLISH_TOKEN" not in argv
     assert argv[argv.index("ROOMTALK_CODE_AGENT_CLI_ACCESS") + 1] == "read-only"
 
@@ -464,7 +464,7 @@ def test_static_publish_post_uses_runner_user_agent(monkeypatch):
         "method": "POST",
         "url": "https://room.example/api/code-agent/publish-static-site/token",
         "authorization": "Bearer refresh-token",
-        "userAgent": "roomtalk-code-agent-runner/1",
+        "userAgent": "coworkerhouse-code-agent-runner/1",
         "payload": {},
         "timeout": 30,
     }
@@ -1156,7 +1156,7 @@ def test_main_emits_error_for_empty_stdin():
 
 
 def test_main_preserves_turn_id_when_engine_raises_after_request_parse(monkeypatch):
-    from roomtalk_code_agent_runner import runner
+    from coworkerhouse_code_agent_runner import runner
 
     def fail_run_request(parsed_request, *, emitter, **kwargs):
         del kwargs

@@ -240,13 +240,13 @@ function recoverablePreviewSessionSurfaces(
   ));
 }
 
-const FILE_WORD_WRAP_STORAGE_KEY = 'roomtalk.codeWorkspace.fileWordWrap';
-const FILE_EXPLORER_STORAGE_KEY = 'roomtalk.codeWorkspace.fileExplorerOpen';
-const FILE_EXPLORER_WIDTH_STORAGE_KEY = 'roomtalk.codeWorkspace.fileExplorerWidth';
+const FILE_WORD_WRAP_STORAGE_KEY = 'coworkerhouse.codeWorkspace.fileWordWrap';
+const FILE_EXPLORER_STORAGE_KEY = 'coworkerhouse.codeWorkspace.fileExplorerOpen';
+const FILE_EXPLORER_WIDTH_STORAGE_KEY = 'coworkerhouse.codeWorkspace.fileExplorerWidth';
 const FILE_EXPLORER_MIN_WIDTH = 160;
 const FILE_PREVIEW_MIN_WIDTH = 220;
 const FILE_EXPLORER_DEFAULT_WIDTH = 352;
-const DIFF_CHANGED_FILES_WIDTH_STORAGE_KEY = 'roomtalk.codeWorkspace.diffChangedFilesWidth';
+const DIFF_CHANGED_FILES_WIDTH_STORAGE_KEY = 'coworkerhouse.codeWorkspace.diffChangedFilesWidth';
 const DIFF_CHANGED_FILES_MIN_WIDTH = 180;
 const DIFF_VIEWER_MIN_WIDTH = 260;
 const DIFF_CHANGED_FILES_DEFAULT_WIDTH = 288;

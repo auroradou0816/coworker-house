@@ -53,7 +53,7 @@ SdkClientFactory = Callable[[Any, Callable[[str, dict[str, Any] | None], dict[st
 
 
 @dataclass(frozen=True)
-class _RoomTalkSdkConfig:
+class _CoworkerHouseSdkConfig:
     codex_bin: str
     cwd: str
     client_name: str
@@ -136,7 +136,7 @@ def run_request(
     workspace = validate_workspace_path(request.workspace, env)
     persistent_codex_home = _persistent_app_server_home_enabled(env)
     codex_home = _create_persistent_app_server_home(config, request) if persistent_codex_home else _create_codex_home_like_cli(config, request.turn_id)
-    state = _AppServerRunState(roomtalk_turn_id=request.turn_id)
+    state = _AppServerRunState(coworkerhouse_turn_id=request.turn_id)
     approvals = _SdkApprovalCoordinator(request=request, emitter=emitter, state=state, config=config, codex_home=codex_home)
     client: Any | None = None
     room_context_broker = start_room_context_broker(env, request.turn_id)
@@ -330,33 +330,33 @@ def _start_sdk_control_dispatch_thread(
                 return
             control_type = str(control.get("type") or "unknown")
             control_id = control.get("controlId")
-            if control.get("schemaVersion") != SCHEMA_VERSION or control.get("turnId") != state.roomtalk_turn_id:
+            if control.get("schemaVersion") != SCHEMA_VERSION or control.get("turnId") != state.coworkerhouse_turn_id:
                 if isinstance(control_id, str) and control_id:
-                    emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, False, "The target turn is no longer active"))
+                    emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, False, "The target turn is no longer active"))
                 continue
             try:
                 if control_type == "interrupt":
                     active_ids = state.active_ids()
                     if not active_ids:
                         if isinstance(control_id, str) and control_id:
-                            emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, False, "Codex turn is not ready to interrupt"))
+                            emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, False, "Codex turn is not ready to interrupt"))
                         continue
                     thread_id, app_turn_id = active_ids
                     client.turn_interrupt(thread_id, app_turn_id)
                     if isinstance(control_id, str) and control_id:
-                        emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, True))
-                    emitter.emit(_control_status(state.roomtalk_turn_id, "running", "Codex interrupt sent"))
+                        emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, True))
+                    emitter.emit(_control_status(state.coworkerhouse_turn_id, "running", "Codex interrupt sent"))
                 elif control_type == "steer":
                     prompt = control.get("prompt")
                     message_id = control.get("messageId")
                     if not isinstance(prompt, str) or not prompt.strip():
                         if isinstance(control_id, str) and control_id:
-                            emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, False, "Steer prompt is required"))
+                            emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, False, "Steer prompt is required"))
                         continue
                     active_ids = state.active_ids()
                     if not active_ids:
                         if isinstance(control_id, str) and control_id:
-                            emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, False, "Codex turn is not ready to steer"))
+                            emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, False, "Codex turn is not ready to steer"))
                         continue
                     thread_id, app_turn_id = active_ids
                     _steer_turn(
@@ -367,8 +367,8 @@ def _start_sdk_control_dispatch_thread(
                         message_id=message_id if isinstance(message_id, str) and message_id else None,
                     )
                     if isinstance(control_id, str) and control_id:
-                        emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, True))
-                    emitter.emit(_control_status(state.roomtalk_turn_id, "running", "Codex steer sent"))
+                        emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, True))
+                    emitter.emit(_control_status(state.coworkerhouse_turn_id, "running", "Codex steer sent"))
                 elif control_type == "approval_response":
                     approval_id = control.get("approvalId")
                     decision = control.get("decision")
@@ -377,10 +377,10 @@ def _start_sdk_control_dispatch_thread(
                     success = approvals.resolve(approval_id, decision)
                     emitter.emit(_approval_result_event(approval_id, decision, success=success, output=None if success else "Approval request is no longer pending."))
                     if isinstance(control_id, str) and control_id:
-                        emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, success, None if success else "Approval request is no longer pending"))
+                        emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, success, None if success else "Approval request is no longer pending"))
             except Exception as exc:
                 if isinstance(control_id, str) and control_id:
-                    emitter.emit(_control_result(state.roomtalk_turn_id, control_id, control_type, False, str(exc)))
+                    emitter.emit(_control_result(state.coworkerhouse_turn_id, control_id, control_type, False, str(exc)))
 
     thread = threading.Thread(target=dispatch_controls, daemon=True)
     thread.start()
@@ -447,7 +447,7 @@ def _default_server_request_result(
 
 
 def _build_sdk_config(config: CodexCliRunConfig, workspace: Path, env: dict[str, str] | None = None) -> Any:
-    return _RoomTalkSdkConfig(
+    return _CoworkerHouseSdkConfig(
         codex_bin=_resolve_codex_bin(config.cli_bin, env),
         cwd=str(workspace),
         client_name=APP_SERVER_CLIENT_INFO["name"],

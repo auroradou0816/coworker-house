@@ -36,8 +36,8 @@ describe('code-agent room context routes', () => {
       service,
       logger: new Logger('RoomContextRoutesTest'),
       listPublishedSites: async (roomId, requestBaseUrl) => [{
-        slug: 'roomtalk-demo',
-        url: `${requestBaseUrl}/p/roomtalk-demo/`,
+        slug: 'coworkerhouse-demo',
+        url: `${requestBaseUrl}/p/coworkerhouse-demo/`,
         roomId,
       }],
     });
@@ -82,8 +82,8 @@ describe('code-agent room context routes', () => {
     const body = await response.json() as { roomId: string; sites: Array<{ slug: string; url: string; roomId: string }> };
     assert.equal(body.roomId, 'room-1');
     assert.deepEqual(body.sites, [{
-      slug: 'roomtalk-demo',
-      url: `${baseUrl}/p/roomtalk-demo/`,
+      slug: 'coworkerhouse-demo',
+      url: `${baseUrl}/p/coworkerhouse-demo/`,
       roomId: 'room-1',
     }]);
   });

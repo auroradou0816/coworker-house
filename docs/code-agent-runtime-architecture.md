@@ -56,7 +56,7 @@ flowchart TB
   subgraph Sandbox["Per-room E2B execution plane"]
     Daemon["CoWorker House JSONL daemon"]
     Backends["Coco | Codex app-server | OpenCode ACP | Hermes ACP"]
-    Broker["Unix-socket room broker + roomtalk CLI"]
+    Broker["Unix-socket room broker + coworkerhouse CLI"]
     Workdir["/workspace\nGit, files, PTY, processes, previews"]
   end
 
@@ -154,7 +154,7 @@ The current default idle TTL is two minutes and the default active TTL is one ho
 
 ### Reusable JSONL daemon
 
-CoWorker House starts one `roomtalk_code_agent_runner.daemon` per sandbox and reuses it for sequential turns. The supported product paths are Coco (`code-agent`), Codex app-server (`codex-app-server`), OpenCode (`opencode`), and Hermes Agent (`hermes-agent`). OpenCode and Hermes share a capability-negotiated ACP client adapter instead of duplicating their native event protocols. The daemon still accepts the deprecated `codex` adapter only for migration and compatibility; new Codex behavior must target app-server. The protocol supports:
+CoWorker House starts one `coworkerhouse_code_agent_runner.daemon` per sandbox and reuses it for sequential turns. The supported product paths are Coco (`code-agent`), Codex app-server (`codex-app-server`), OpenCode (`opencode`), and Hermes Agent (`hermes-agent`). OpenCode and Hermes share a capability-negotiated ACP client adapter instead of duplicating their native event protocols. The daemon still accepts the deprecated `codex` adapter only for migration and compatibility; new Codex behavior must target app-server. The protocol supports:
 
 - `code-agent` (Coco, CoWorker House's self-built CLI agent and engine);
 - `codex-app-server` (Codex app-server thread/session protocol using the room owner's connection);
@@ -203,25 +203,25 @@ CoWorker House issues a short-lived token bound to room, client, turn, provider,
 
 ### Room-context broker
 
-Room history is not dumped into every system prompt. A turn-scoped Unix socket exposes the `roomtalk` CLI inside the sandbox:
+Room history is not dumped into every system prompt. A turn-scoped Unix socket exposes the `coworkerhouse` CLI inside the sandbox:
 
 ```text
-roomtalk room history
-roomtalk room delta
-roomtalk room search
-roomtalk room message
-roomtalk site list
-roomtalk memory get --json
-roomtalk memory set --file <utf8-file> --expected-updated-at <timestamp> --json
+coworkerhouse room history
+coworkerhouse room delta
+coworkerhouse room search
+coworkerhouse room message
+coworkerhouse site list
+coworkerhouse memory get --json
+coworkerhouse memory set --file <utf8-file> --expected-updated-at <timestamp> --json
 ```
 
 The runner holds the upstream URL/token and brokers bounded requests. Responses project only agent-safe message fields and omit internal recovery, billing, storage, and streaming metadata. This gives Coco and Codex the same on-demand room awareness without adding a separate MCP lifecycle.
 
-Personal memory commands require a private personal-agent room and an active turn lease. Reading returns the memory and `updatedAt`; writing replaces the complete memory using that timestamp to reject stale writes. Plan mode can read but cannot save memory. For personal turns, the broker credential lasts for the configured turn timeout, and the Unix socket closes when the runner turn ends. This capability requires runner 0.1.55 and artifact `roomtalk-code-agent-2026-10-05-personal-memory-v1` or a matching later artifact.
+Personal memory commands require a private personal-agent room and an active turn lease. Reading returns the memory and `updatedAt`; writing replaces the complete memory using that timestamp to reject stale writes. Plan mode can read but cannot save memory. For personal turns, the broker credential lasts for the configured turn timeout, and the Unix socket closes when the runner turn ends. This capability requires runner 0.1.55 and artifact `coworkerhouse-code-agent-2026-10-05-personal-memory-v1` or a matching later artifact.
 
 ### Static publishing
 
-Writable modes receive a separate turn-scoped publish token. `roomtalk site publish` uses a two-phase pipeline:
+Writable modes receive a separate turn-scoped publish token. `coworkerhouse site publish` uses a two-phase pipeline:
 
 1. validate paths, sizes, entry file, mode, room ownership, and slug;
 2. request presigned object uploads from CoWorker House;

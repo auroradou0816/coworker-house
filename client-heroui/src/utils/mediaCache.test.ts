@@ -47,7 +47,7 @@ describe("mediaCache", () => {
           put: vi.fn(async (key: string, response: Response) => {
             store.set(key, response);
           }),
-          keys: vi.fn(async () => [...store.keys()].map(key => new Request(`https://roomtalk.local${key}`))),
+          keys: vi.fn(async () => [...store.keys()].map(key => new Request(`https://coworkerhouse.local${key}`))),
           delete: vi.fn(async (request: Request) => store.delete(new URL(request.url).pathname)),
         };
       }),

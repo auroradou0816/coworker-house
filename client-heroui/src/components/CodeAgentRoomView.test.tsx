@@ -643,7 +643,7 @@ describe('CodeAgentRoomView', () => {
     dispatchPointer(window, 'pointermove', { pointerId: 4, clientX: 900, buttons: 1 });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('1120px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('1120');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('1120');
     expect(document.body.style.userSelect).toBe('');
     expect(document.body.style.cursor).toBe('');
   });
@@ -670,7 +670,7 @@ describe('CodeAgentRoomView', () => {
     dispatchPointer(window, 'pointerup', { pointerId: 6, clientX: -2000, buttons: 0 });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('1320px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('1320');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('1320');
   });
 
   it('finishes after a pressed viewport exit at the cap and ignores later movement', () => {
@@ -699,7 +699,7 @@ describe('CodeAgentRoomView', () => {
     dispatchPointer(window, 'pointermove', { pointerId: 8, clientX: -800, buttons: 1 });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('1120px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('1120');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('1120');
     expect(document.body.style.userSelect).toBe('');
     expect(document.body.style.cursor).toBe('');
   });
@@ -726,7 +726,7 @@ describe('CodeAgentRoomView', () => {
     dispatchPointer(window, 'pointerup', { pointerId: 5, clientX: -2000, buttons: 0 });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('1920px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('1920');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('1920');
   });
 
   it('shrinks the workspace files panel when the code-agent layout gets narrower', () => {
@@ -740,7 +740,7 @@ describe('CodeAgentRoomView', () => {
       }
     }
     vi.stubGlobal('ResizeObserver', MockResizeObserver);
-    localStorage.setItem('roomtalk.codeWorkspace.fileManagerWidth', '760');
+    localStorage.setItem('coworkerhouse.codeWorkspace.fileManagerWidth', '760');
 
     renderCodeAgentRoom(codeAgentRoom);
 
@@ -763,11 +763,11 @@ describe('CodeAgentRoomView', () => {
     });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('220px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('220');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('220');
   });
 
   it('syncs the workspace files panel width after sidebar resizing compresses it', () => {
-    localStorage.setItem('roomtalk.codeWorkspace.fileManagerWidth', '760');
+    localStorage.setItem('coworkerhouse.codeWorkspace.fileManagerWidth', '760');
     renderCodeAgentRoom(codeAgentRoom);
 
     const resizeHandle = screen.getByLabelText('codeAgentResizeWorkspaceFiles');
@@ -792,11 +792,11 @@ describe('CodeAgentRoomView', () => {
     });
 
     expect(layout.style.getPropertyValue('--code-agent-files-width')).toBe('420px');
-    expect(localStorage.getItem('roomtalk.codeWorkspace.fileManagerWidth')).toBe('420');
+    expect(localStorage.getItem('coworkerhouse.codeWorkspace.fileManagerWidth')).toBe('420');
   });
 
   it('opens the right file manager when a workspace diff file is selected', () => {
-    localStorage.setItem('roomtalk.codeWorkspace.fileManagerCollapsed', 'true');
+    localStorage.setItem('coworkerhouse.codeWorkspace.fileManagerCollapsed', 'true');
 
     renderCodeAgentRoom(codeAgentRoom);
 
@@ -813,7 +813,7 @@ describe('CodeAgentRoomView', () => {
   });
 
   it('passes T3-style file reveal requests into the right file manager', () => {
-    localStorage.setItem('roomtalk.codeWorkspace.fileManagerCollapsed', 'true');
+    localStorage.setItem('coworkerhouse.codeWorkspace.fileManagerCollapsed', 'true');
 
     renderCodeAgentRoom(codeAgentRoom);
 
@@ -1008,7 +1008,7 @@ describe('CodeAgentRoomView', () => {
   });
 
   it('constrains room edit mode when the server only allows plan mode', () => {
-    localStorage.setItem('roomtalk_code_agent_mode_code-agent-room', 'acceptEdits');
+    localStorage.setItem('coworkerhouse_code_agent_mode_code-agent-room', 'acceptEdits');
 
     renderCodeAgentRoom({ ...codeAgentRoom, codeAgentMode: 'acceptEdits' }, ['plan']);
 

@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 
-from roomtalk_code_agent_runner import platform_tools
+from coworkerhouse_code_agent_runner import platform_tools
 
 
 def test_personal_computer_receipts_keep_operation_ids_and_save_actual_images(tmp_path: Path, monkeypatch, capsys):
@@ -47,7 +47,7 @@ def test_personal_computer_plan_mode_can_read_but_cannot_operate(monkeypatch, ca
     capsys.readouterr()
     assert platform_tools.main(["computer", "start", "--json"]) == 1
     assert len(calls) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_personal_memory_set_refuses_plan_mode(tmp_path: Path, monkeypatch, capsys):
@@ -55,7 +55,7 @@ def test_personal_memory_set_refuses_plan_mode(tmp_path: Path, monkeypatch, caps
     source.write_text("Seattle", encoding="utf-8")
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
     assert platform_tools.main(["memory", "set", "--file", str(source), "--expected-updated-at", "2026-10-05T18:00:00.000Z", "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_personal_memory_set_refuses_oversized_memory(tmp_path: Path, capsys):
@@ -100,11 +100,11 @@ def test_direct_publish_upload_streams_file_body(tmp_path: Path):
     assert received == {
         "body": b"x" * 131_071,
         "contentType": "application/octet-stream",
-        "userAgent": "roomtalk-code-agent-runner/1",
+        "userAgent": "coworkerhouse-code-agent-runner/1",
     }
 
 
-def test_publish_static_site_command_posts_roomtalk_payload(tmp_path: Path, monkeypatch, capsys):
+def test_publish_static_site_command_posts_coworkerhouse_payload(tmp_path: Path, monkeypatch, capsys):
     workspace = tmp_path / "workspace"
     site = workspace / "site"
     site.mkdir(parents=True)
@@ -199,7 +199,7 @@ def test_publish_static_site_is_rejected_by_read_only_cli_access(monkeypatch, ca
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
 
     assert platform_tools.main(["publish-static-site", "--slug", "demo", "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_site_publish_command_uses_the_publish_implementation(monkeypatch, capsys):
@@ -288,7 +288,7 @@ def test_unpublish_request_uses_delete_with_bearer_token(monkeypatch):
         "method": "DELETE",
         "url": "https://room.example/api/code-agent/publish-static-site",
         "authorization": "Bearer turn-token",
-        "userAgent": "roomtalk-code-agent-runner/1",
+        "userAgent": "coworkerhouse-code-agent-runner/1",
         "payload": {"slug": "coffee"},
         "timeout": 30,
     }
@@ -298,7 +298,7 @@ def test_site_unpublish_is_rejected_by_read_only_cli_access(monkeypatch, capsys)
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
 
     assert platform_tools.main(["site", "unpublish", "--slug", "coffee", "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_site_list_uses_read_only_room_context_capability(monkeypatch, capsys):
@@ -426,7 +426,7 @@ def test_background_shell_command_is_not_exposed(capsys):
 
 
 def test_memory_library_save_search_and_forget_send_scoped_operations(tmp_path, monkeypatch, capsys):
-    from roomtalk_code_agent_runner import platform_tools
+    from coworkerhouse_code_agent_runner import platform_tools
     calls = []
     monkeypatch.setenv('ROOMTALK_CODE_AGENT_MODE', 'fullAccess')
     monkeypatch.setattr(platform_tools, '_read_room_context_path', lambda path, env, **kwargs: calls.append((path, kwargs)) or {'success': True})
@@ -467,7 +467,7 @@ def test_personal_result_saves_existing_binary_and_reopens_persisted_file(tmp_pa
     capsys.readouterr()
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
     assert platform_tools.main(["result", "save", "--file", str(source), "--kind", "document", "--title", "Report", "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_personal_browser_commands_use_the_private_broker_without_printing_credentials(monkeypatch, capsys):
@@ -490,7 +490,7 @@ def test_personal_browser_commands_use_the_private_broker_without_printing_crede
     capsys.readouterr()
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
     assert platform_tools.main(["browser", "open", "--url", "https://example.org", "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_personal_file_import_fill_and_get_use_confirmed_values_and_hide_binary(tmp_path, monkeypatch, capsys):
@@ -517,7 +517,7 @@ def test_personal_file_import_fill_and_get_use_confirmed_values_and_hide_binary(
     assert "content" not in json.loads(capsys.readouterr().out)
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
     assert platform_tools.main(["file", "fill", "--id", "saved", "--fields-json", '{}', "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_independent_browser_sessions_use_scoped_broker(monkeypatch, capsys):
@@ -559,7 +559,7 @@ def test_personal_task_delegation_and_controls_use_private_broker(tmp_path: Path
     before = len(calls)
     for args in (["task", "delegate", "--file", str(source)], ["task", "control", "--id", "saved-task", "--action", "pause"]):
         assert platform_tools.main([*args, "--json"]) == 1
-        assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+        assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
     assert len(calls) == before
 
 
@@ -584,7 +584,7 @@ def test_personal_task_and_google_commands_use_scoped_broker(tmp_path: Path, mon
     before = len(calls)
     assert platform_tools.main(["google", "propose", "--file", str(source), "--json"]) == 1
     assert len(calls) == before
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
 
 
 def test_personal_choices_uses_turn_broker_and_preserves_controlled_failures(tmp_path: Path, monkeypatch, capsys):
@@ -606,7 +606,7 @@ def test_personal_choices_uses_turn_broker_and_preserves_controlled_failures(tmp
     monkeypatch.setenv("ROOMTALK_CODE_AGENT_CLI_ACCESS", "read-only")
     before = len(calls)
     assert platform_tools.main(["choices", "present", "--file", str(source), "--json"]) == 1
-    assert json.loads(capsys.readouterr().out)["code"] == "roomtalk_cli_read_only"
+    assert json.loads(capsys.readouterr().out)["code"] == "coworkerhouse_cli_read_only"
     assert len(calls) == before
 
 

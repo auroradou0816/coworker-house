@@ -611,7 +611,7 @@ describe('MessagePage room session restore', () => {
   it.each(['/', '/?personal=1'])('restores the selected personal side chat when another tab saved its main room at %s', async url => {
     localStorage.setItem('roomtalk_current_room', JSON.stringify(room({id:'personal-main',personalAgentOwnerId:'client-1',personalAgentThreadKind:'main'})));
     localStorage.setItem('roomtalk_current_view', 'personal');
-    localStorage.setItem('roomtalk.personalAgent.activeChat', 'personal-side');
+    localStorage.setItem('coworkerhouse.personalAgent.activeChat', 'personal-side');
     socketApiMock.joinRoom.mockResolvedValue({room:room({id:'personal-side',personalAgentOwnerId:'client-1',personalAgentThreadKind:'task'}),permissions:permissions({roomId:'personal-side'}),memberCount:1});
     renderPage([url]);
     await waitFor(()=>expect(screen.getByTestId('personal-agent-view').getAttribute('data-conversation-ready')).toBe('true'));
@@ -623,7 +623,7 @@ describe('MessagePage room session restore', () => {
   it('restores ordinary chat independently of the saved personal conversation', async () => {
     localStorage.setItem('roomtalk_current_room', JSON.stringify(room()));
     localStorage.setItem('roomtalk_current_view', 'chat');
-    localStorage.setItem('roomtalk.personalAgent.activeChat', 'personal-side');
+    localStorage.setItem('coworkerhouse.personalAgent.activeChat', 'personal-side');
     renderPage();
     await waitFor(()=>expect(screen.getByTestId('chat-room-view').getAttribute('data-session-ready')).toBe('true'));
     expect(socketApiMock.joinRoom).toHaveBeenCalledWith('room-1', undefined);

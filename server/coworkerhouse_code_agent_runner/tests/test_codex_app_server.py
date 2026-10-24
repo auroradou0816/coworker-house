@@ -11,9 +11,9 @@ from typing import Any
 
 import pytest
 
-from roomtalk_code_agent_runner import _codex_app_server_protocol as codex_app_server_protocol
-from roomtalk_code_agent_runner import codex_app_server
-from roomtalk_code_agent_runner.runner import EventEmitter, parse_request
+from coworkerhouse_code_agent_runner import _codex_app_server_protocol as codex_app_server_protocol
+from coworkerhouse_code_agent_runner import codex_app_server
+from coworkerhouse_code_agent_runner.runner import EventEmitter, parse_request
 from test_runner import event_lines, request
 
 
@@ -97,7 +97,7 @@ class FakeSdkClient:
             self.control_queue.put({
                 "schemaVersion": 1,
                 "type": "approval_response",
-                "turnId": item.roomtalk_turn_id,
+                "turnId": item.coworkerhouse_turn_id,
                 "approvalId": item.approval_id,
                 "decision": item.decision,
             })
@@ -154,8 +154,8 @@ class FakeSdkClientFactory:
 
 
 class ApprovalStep:
-    def __init__(self, *, roomtalk_turn_id: str, approval_id: str, decision: str):
-        self.roomtalk_turn_id = roomtalk_turn_id
+    def __init__(self, *, coworkerhouse_turn_id: str, approval_id: str, decision: str):
+        self.coworkerhouse_turn_id = coworkerhouse_turn_id
         self.approval_id = approval_id
         self.decision = decision
         self.method = "item/commandExecution/requestApproval"
@@ -228,7 +228,7 @@ def test_codex_app_server_maps_sdk_notifications_and_sanitizes_env(tmp_path: Pat
         client_factory=factory,
         env={
             "PATH": "/usr/bin",
-            "HOME": "/home/roomtalk",
+            "HOME": "/home/coworkerhouse",
             "CODE_AGENT_WORKSPACE_ROOT": str(tmp_path),
             "OPENAI_API_KEY": "sk-should-not-leak",
             "ROOMTALK_CODEX_AUTH_JSON_PATH": str(auth_json),
@@ -356,7 +356,7 @@ def test_codex_app_server_resolves_relative_codex_bin_from_path(tmp_path: Path):
         client_factory=factory,
         env={
             "PATH": str(bin_dir),
-            "HOME": "/home/roomtalk",
+            "HOME": "/home/coworkerhouse",
             "CODE_AGENT_WORKSPACE_ROOT": str(tmp_path),
             "ROOMTALK_CODEX_AUTH_JSON_PATH": str(auth_json),
         },
@@ -403,7 +403,7 @@ def test_codex_app_server_routes_interactive_approval_response(tmp_path: Path):
     factory = FakeSdkClientFactory(
         control_queue=controls,
         notifications=[
-            ApprovalStep(roomtalk_turn_id="turn-sdk", approval_id="cmd-approval", decision="accept"),
+            ApprovalStep(coworkerhouse_turn_id="turn-sdk", approval_id="cmd-approval", decision="accept"),
             FakeNotification("turn/completed", {"threadId": "thread-sdk-1", "turn": {"id": "turn-sdk-1", "status": "completed", "items": []}}),
         ],
     )

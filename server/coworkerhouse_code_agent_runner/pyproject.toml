@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coworkerhouse-code-agent-runner"
+version = "0.1.70"
+description = "CoworkerHouse JSONL adapter for code-agent backends"
+requires-python = ">=3.10"
+dependencies = ["agent-client-protocol==0.9.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+coworkerhouse-code-agent-runner = "coworkerhouse_code_agent_runner.runner:main"
+coworkerhouse-codex-cli-runner = "coworkerhouse_code_agent_runner.codex_cli:main"
+coworkerhouse-codex-app-server-runner = "coworkerhouse_code_agent_runner.codex_app_server:main"
+coworkerhouse-acp-harness-runner = "coworkerhouse_code_agent_runner.acp_harness:main"
+coworkerhouse-sandbox-daemon = "coworkerhouse_code_agent_runner.daemon:main"
+coworkerhouse = "coworkerhouse_code_agent_runner.platform_tools:main"
+# Compatibility for commands already saved in conversation history.
+roomtalk = "coworkerhouse_code_agent_runner.platform_tools:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["coworkerhouse_code_agent_runner*"]
